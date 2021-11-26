@@ -11,3 +11,14 @@
 * Restart services and your edit code.
 * From the  project run with : **symfony server:start**
 * then url default : http://127.0.0.1:8000/
+
+**Configuration database**
+
+* Configurate file .env in the line:  DATABASE_URL="mysql://user:pass@127.0.0.1:3306/nameDataBase?serverVersion=5.7"
+* php bin/console doctrine:database:create
+* php bin/console doctrine:schema:update --force
+ 
+**Added users**
+
+* php bin/console doctrine:fixtures:load
+`(*)This data record is in the file src\DataFixtures\AppFixtures.php`

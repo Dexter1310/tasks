@@ -4,10 +4,6 @@
     margin-top: 10px;
 }
 
-#login-user {
-    background: lightyellow;
-}
-
 
 /*Todo: menu admin*/
 
@@ -153,3 +149,10 @@ footer {
     z-index: 999999;
     margin-bottom: 40px;
 }
+
+
+#login-user {
+    background: lightyellow;
+}
+
+
