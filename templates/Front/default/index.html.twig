@@ -2,8 +2,20 @@
 
 {% block title %}Home{% endblock %}
 {% block body %}
+
+
     <div class="container m-5">
         <h2>{{ home }}</h2>
+
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <h3 style="color: #5eb5e0"> Usuario: {{ app.user.username }}</h3>
+            <a href="/logout" title="Salir" style="color: red">
+                <button
+                        class="btn btn-outline-danger " style="border: 0">
+                    <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> Logout
+                </button>
+            </a>
+        {% endif %}
         <a class="nav-link" href="{{ path('login') }}">
             <button class="btn btn-primary">Login
             </button>

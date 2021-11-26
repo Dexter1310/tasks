@@ -23,3 +23,9 @@
 
 * php bin/console doctrine:fixtures:load
 `(*)This data record is in the file src\DataFixtures\AppFixtures.php`
+
+
+
+**GIT**
+
+4vjsj5WwksB8sNL4gbaQ
