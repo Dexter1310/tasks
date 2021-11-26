@@ -1,0 +1,40 @@
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width:600px) {
+
+
+    .navbar-collapse ul{
+        text-align: center;
+    }
+
+    .navbar-collapse li{
+        text-align: center;
+    }
+    .navbar-collapse span{
+        align-items: center;
+        margin-left: 25%;
+    }
+    #login-user .col-sm-6 {
+        text-align: center;
+        margin: 20px;
+    }
+    #login-user div b{
+        float: initial!important;
+        text-align:center ;
+    }
+    #btn-save-user{
+        margin-top:20px;
+        width: 100%;
+    }
+
+}
+
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width:321px) and (max-width:768px) {}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
+
