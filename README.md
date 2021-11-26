@@ -9,6 +9,7 @@
 * Install Composer : https://getcomposer.org/download/
 * Install Symfony : https://symfony.com/download
 * Restart services and your edit code.
+* run: composer install 
 * From the  project run with : **symfony server:start**
 * then url default : http://127.0.0.1:8000/
 
