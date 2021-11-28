@@ -26,7 +26,7 @@
 
 **Create Entity**
 
-1. 
+1. php bin/console make:entity
 
 
 
