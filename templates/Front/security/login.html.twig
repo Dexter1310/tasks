@@ -1,9 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block title %}Home{% endblock %}
 {% block body %}
-
-
-    <div class="container-fluid login-user-front">
+    <div class="container login-user-front">
         <section id="login-user" class="p-3">
             {% if error %}
                 <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>

@@ -24,8 +24,15 @@
 * php bin/console doctrine:fixtures:load
 `(*)This data record is in the file src\DataFixtures\AppFixtures.php`
 
+**Create Entity**
+
+1. 
+
 
 
 **GIT**
 
 4vjsj5WwksB8sNL4gbaQ
+
+**COMANDS**
+* php bin/console cache:clear
