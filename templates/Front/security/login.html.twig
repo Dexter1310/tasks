@@ -1,6 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block title %}Home{% endblock %}
 {% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
     <div class="container login-user-front">
         <section id="login-user" class="p-3">
             {% if error %}

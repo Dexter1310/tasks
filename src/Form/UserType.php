@@ -28,8 +28,9 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, ['constraints' => new NotBlank()])
             ->add('type', ChoiceType::class, [
                 'choices' => [
-                    'Operador' => 'operator',
-                    'Cliente' => 'client',
+                    'Operador' => "operator",
+                    'Cliente' => "client",
+                    'Administrador' => "admin",
                 ],
             ]);
 

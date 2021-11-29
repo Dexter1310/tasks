@@ -2,59 +2,49 @@
 
 {% block title %}Home{% endblock %}
 {% block body %}
-    <div class="container m-5">
-        <h2>{{ home }}</h2>
-        <a class="nav-link" href="{{ path('login') }}">
-            <button class="btn btn-primary">Login
-            </button>
-        </a>
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <a href="/logout" title="Salir" style="color: red">
-                <button
-                        class="btn btn-outline-danger " style="border: 0">
-                    <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> Logout
-                </button>
-            </a>
-            <h3 style="color: #5eb5e0"> Usuario: {{ app.user.username }}</h3>
-
-            {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
-            <hr>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>usuario:</label>
-                    {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
-                    {{ form_errors(formUser.username) }}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    <section id="home-thecircle">
+        <div class="container">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>usuario:</label>
+                        {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
+                        {{ form_errors(formUser.username) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Contraseña:</label>
+                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
+                        {{ form_errors(formUser.password) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Repita contraseña:</label>
+                        <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
+                    </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>Contraseña:</label>
-                    {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
-                    {{ form_errors(formUser.password) }}
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Correo:</label>
+                        {{ form_widget(formUser.email,{ 'attr': {'class': 'form-control','placeholder':'email@email.com' } }) }}
+                        {{ form_errors(formUser.email) }}
+                    </div>
+                    <div class="form-group col-md-3">
+                        <label>¿Que tipo de perfil eres?:</label>
+                        {{ form_widget(formUser.type,{ 'attr': {'class': 'form-control','placeholder':'Tipo' } }) }}
+                        {{ form_errors(formUser.type) }}
+                    </div>
+                    <div id="info-user"></div>
+                    <div class="form-group col-md-1">
+                        <button class="btn btn-dark" type="submit" id="btn-save-user" disabled>Guardar</button>
+                    </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>Repita contraseña:</label>
-                    <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>Correo:</label>
-                    {{ form_widget(formUser.email,{ 'attr': {'class': 'form-control','placeholder':'email@email.com' } }) }}
-                    {{ form_errors(formUser.email) }}
-                </div>
-                <div class="form-group col-md-3">
-                    <label>¿Que tipo de perfil eres?:</label>
-                    {{ form_widget(formUser.type,{ 'attr': {'class': 'form-control','placeholder':'Tipo' } }) }}
-                    {{ form_errors(formUser.type) }}
-                </div>
-                <div id="info-user"></div>
-                <div class="form-group col-md-1">
-                    <button class="btn btn-dark" type="submit" id="btn-save-user"  disabled>Guardar</button>
-                </div>
-            </div>
-            {{ form_end(formUser) }}
+                {{ form_end(formUser) }}
 
 
-        {% endif %}
-
-    </div>
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

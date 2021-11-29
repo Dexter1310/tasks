@@ -1,8 +1,8 @@
 <?php
 
 /**
- * Service for User
- * By: Javier Orti
+ * Note: Service for User
+ * Created by: Javier Orti
  * Date: 29 - 11 - 2021
  */
 
@@ -47,11 +47,20 @@ class UserService
     public function addUser(Request $request, FormInterface $form, $user)
     {
         $data = $request->request;
-        $user->setRoles(['ROLE_USER']);
+        /**
+         * @var User $user
+         */
+        $type = $data->get('user')['type'];
+        if ($type == "admin") {
+            $user->setRoles(User::R_ADMIN);
+        } elseif ($type == "operator") {
+            $user->setRoles(User::R_OPERATOR);
+        } else {
+            $user->setRoles(User::R_USER);
+        }
         $user->setActive(0);
         $pass = $data->get('user')['password'];
         $form->handleRequest($request);
-
         if ($form->isSubmitted() && $form->isValid()) {
             $en = $this->encoder->encodePassword($user, $pass);
             $user->setPassword($en);
