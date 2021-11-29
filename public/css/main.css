@@ -92,7 +92,7 @@
     padding-top: 100px;
 }
 
-.login-user-front,#home-thecircle {
+.login-user-front,#new-user {
     padding-top: 100px;
     width: 90%;
 }
@@ -150,9 +150,14 @@ footer {
     margin-bottom: 40px;
 }
 
-
 #login-user {
     background: lightyellow;
 }
 
+
+
+/*Todo Section new-user*/
+#new-user{
+    margin: auto;
+}
 

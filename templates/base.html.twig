@@ -54,18 +54,21 @@
                                     </button>
                                 </a>
                             </div>
-                            <div class="navbar-nav ms-auto">
-                                {{ app.user.type }}
-                            </div>
-                            <div class="navbar-nav ms-auto">
-                                <a style="color: #1d2124;font-weight: bold" href="#"
-                                   class="nav-item nav-link">{{ app.user.username }}</a>
-                            </div>
+
+
                             {% if is_granted('ROLE_ADMIN') %}
                                 <div class="navbar-nav ms-auto">
                                     <a href="{{ path('newuser') }}" class="nav-item nav-link">New User</a>
                                 </div>
                             {% endif %}
+                            <div style="color: #1d2124;" class="navbar-nav ml-5" >
+                                 Tipo: <b>{{ app.user.type }}</b>
+                            </div>
+
+                            <div class="navbar-nav ms-auto ml-2">
+                                <a style="color: #1d2124;" href="#"
+                                   class="nav-item nav-link">Usuario: <b>{{ app.user.username }}</b></a>
+                            </div>
                         {% else %}
                             <div class="navbar-nav ms-auto">
                                 <a href="{{ path('login') }}" class="nav-item nav-link">Login</a>
