@@ -92,7 +92,7 @@
     padding-top: 100px;
 }
 
-.login-user-front,#new-user {
+.login-user-front, #new-user,#front-show-user{
     padding-top: 100px;
     width: 90%;
 }
@@ -155,9 +155,9 @@ footer {
 }
 
 
-
 /*Todo Section new-user*/
-#new-user{
+#new-user {
     margin: auto;
 }
+
 

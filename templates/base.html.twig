@@ -15,9 +15,9 @@
         <!-- in the <head> section -->
         <link rel="stylesheet" type="text/css"
               href="https://cdn.datatables.net/v/dt/jq-3.2.1/dt-1.10.16/datatables.min.css"/>
-
     {% endblock %}
     {% block javascripts %}
+        <script src="{{ asset('js/bootstrap.js') }}"></script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
         <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
@@ -54,8 +54,6 @@
                                     </button>
                                 </a>
                             </div>
-
-
                             {% if is_granted('ROLE_ADMIN') %}
                                 <div class="navbar-nav ms-auto">
                                     <a href="{{ path('newuser') }}" class="nav-item nav-link">New User</a>
@@ -64,9 +62,8 @@
                             <div style="color: #1d2124;" class="navbar-nav ml-5" >
                                  Tipo: <b>{{ app.user.type }}</b>
                             </div>
-
                             <div class="navbar-nav ms-auto ml-2">
-                                <a style="color: #1d2124;" href="#"
+                                <a style="color: #1d2124;" href="{{ path('show.user', { 'id': app.user.id }) }}"
                                    class="nav-item nav-link">Usuario: <b>{{ app.user.username }}</b></a>
                             </div>
                         {% else %}
