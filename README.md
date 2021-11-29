@@ -14,7 +14,7 @@
 * then url default : http://127.0.0.1:8000/
 
 **Configuration database**
-
+* You can read about this in the documentation at this link: https://symfony.com/doc/current/doctrine.html
 * Configurate file .env in the line:  DATABASE_URL="mysql://user:pass@127.0.0.1:3306/nameDataBase?serverVersion=5.7"
 * php bin/console doctrine:database:create
 * php bin/console doctrine:schema:update --force
