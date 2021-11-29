@@ -4,6 +4,7 @@ namespace App\Controller\Front;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,6 +16,12 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class DefaultController extends AbstractController
 {
+    /**
+     * @var UserService $userService
+     */
+    private $userService;
+
+
     /**
      * @Route("/", name="home")
      * @template("Front/default/index.html.twig")
@@ -47,30 +54,22 @@ class DefaultController extends AbstractController
     }
 
 
-
     /**
      * @Route("/ajax/user",  options={"expose"=true}, name="ajax.user")
      * @return Response
      */
-    public function newUserAction(Request $request,UserPasswordEncoderInterface $encoder):Response
+    public function newUserAction(Request $re, UserPasswordEncoderInterface $encoder): Response
     {
-        $data=$request->request;
+        $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();
-        $user->setRoles(['ROLE_USER']);
-        $user->setActive(0);
-        $pass=$data->get('user')['password'];
         $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $encoded = $encoder->encodePassword($user, $pass);
-            $user->setPassword($encoded);
-            $user->setToken($data->get('user')['_token']);
-            $em=$this->getDoctrine()->getManager();
-            $em->persist($user);
-            $em->flush();
+        $us = $this->userService->addUser($re, $form, $user);
+        if ($us) {
             return $this->json("se grabo el usuario");
+        } else {
+            return $this->render('user');
         }
-        return $this->render('user');
+
 
     }
 

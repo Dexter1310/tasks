@@ -32,6 +32,7 @@ class UserType extends AbstractType
                     'Cliente' => 'client',
                 ],
             ]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

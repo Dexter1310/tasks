@@ -13,6 +13,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     const ALIAS = 'us';
+    const R_USER =['ROLE_USER'];
+    const R_OPERATOR = ['ROLE_OPERATOR'];
+    const R_ADMIN = ['ROLE_ADMIN'];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
