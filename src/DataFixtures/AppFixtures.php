@@ -26,7 +26,7 @@ class AppFixtures extends Fixture
         //Added Normal User
         $user = new User();
         $user->setUsername('tba');
-        $user->setRoles(['ROLE_USER']);
+        $user->setRoles(User::R_USER);
         $user->setActive(1);
         $user->setToken('xxx');
         $user->setType("client");
@@ -38,7 +38,7 @@ class AppFixtures extends Fixture
         //Added Admin User
         $userAdmin = new User();
         $userAdmin->setUsername('admin');
-        $userAdmin->setRoles(['ROLE_ADMIN']);
+        $userAdmin->setRoles(User::R_ADMIN);
         $userAdmin->setActive(1);
         $userAdmin->setToken('xxx');
         $userAdmin->setType("company");

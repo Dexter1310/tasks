@@ -36,3 +36,12 @@
 
 **COMANDS**
 * php bin/console cache:clear
+
+
+***
+****ABOUT THE CIRCLE****
+
+
+*USER:*
+
+Only a user when it is active will be accessible in login to the application. It is activated when you receive an activation email to your email account that you have entered in the form.
