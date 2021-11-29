@@ -28,11 +28,7 @@ class DefaultController extends AbstractController
      */
     public function indexAction(Request $request)
     {
-        $user = new User();
-        $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
-
-        return ['home' => 'inicio',
-            'formUser' => $formUser->createView()];
+        return ['home' => 'inicio'];
     }
 
     /**
@@ -55,10 +51,23 @@ class DefaultController extends AbstractController
 
 
     /**
+     * @Route("/new-user", name="newuser")
+     * @template("Front/user/new.html.twig")
+     */
+    public function newUser(Request $request)
+    {
+        $user = new User();
+        $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
+        return ['home' => 'inicio',
+            'formUser' => $formUser->createView()];
+    }
+
+
+    /**
      * @Route("/ajax/user",  options={"expose"=true}, name="ajax.user")
      * @return Response
      */
-    public function newUserAction(Request $re, UserPasswordEncoderInterface $encoder): Response
+    public function newUserAjaxAction(Request $re, UserPasswordEncoderInterface $encoder): Response
     {
         $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();

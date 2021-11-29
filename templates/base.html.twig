@@ -44,7 +44,6 @@
                             <a href="{{ path('home') }}" class="nav-item nav-link active">Home</a>
                             <a href="#" class="nav-item nav-link">Profile</a>
                             <a href="#" class="nav-item nav-link">Messages</a>
-                            <a href="#" class="nav-item nav-link disabled" tabindex="-1">Reports</a>
                         </div>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <div class="navbar-nav ms-auto">
@@ -56,11 +55,20 @@
                                 </a>
                             </div>
                             <div class="navbar-nav ms-auto">
-                                <a style="color: #1d2124;font-weight: bold" href="#" class="nav-item nav-link">{{ app.user.username }}</a>
+                                {{ app.user.type }}
                             </div>
+                            <div class="navbar-nav ms-auto">
+                                <a style="color: #1d2124;font-weight: bold" href="#"
+                                   class="nav-item nav-link">{{ app.user.username }}</a>
+                            </div>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <div class="navbar-nav ms-auto">
+                                    <a href="{{ path('newuser') }}" class="nav-item nav-link">New User</a>
+                                </div>
+                            {% endif %}
                         {% else %}
                             <div class="navbar-nav ms-auto">
-                                <a  href="{{ path('login') }}" class="nav-item nav-link">Login</a>
+                                <a href="{{ path('login') }}" class="nav-item nav-link">Login</a>
                             </div>
                         {% endif %}
                     </div>
