@@ -92,9 +92,10 @@
     padding-top: 100px;
 }
 
-.login-user-front, #new-user,#front-show-user{
+.login-user-front, #new-user,#front-show-user,#new-service{
     padding-top: 100px;
     width: 90%;
+    margin: auto;
 }
 
 #list-company, #company-view, #edit-company-front, #select-company, #list-company-front {

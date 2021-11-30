@@ -1,0 +1,26 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Service{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    <section id="new-service">
+        <div class="container">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Nombre servicio:</label>
+                        {{ form_widget(formService.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre servicio' } }) }}
+                        {{ form_errors(formService.name) }}
+                    </div>
+                    <div class="form-group col-md-4 mt-4">
+                        <button class="btn btn-dark" type="submit" id="btn-save-service" disabled>Guardar</button>
+                    </div>
+                </div>
+                {{ form_end(formService) }}
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

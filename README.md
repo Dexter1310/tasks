@@ -28,6 +28,10 @@
 
 1. php bin/console make:entity
 
+2. php bin/console doctrine:migrations:diff
+
+3. php bin/console doctrine:migrations:migrate
+
 
 
 **GIT**

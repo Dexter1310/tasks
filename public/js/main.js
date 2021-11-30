@@ -1,8 +1,7 @@
 $(document).ready(function () {
-
-
-
-
+    /**
+     * TODO VALIDATIONS FORMS
+     */
     //Todo Validate pass innew user
     $('.passUser ,#rememberPass').keyup(function () {
         if (($('.passUser').val() === $('#rememberPass').val()) && $('.passUser').val().length >= 7 && $('#rememberPass').val().length >= 7) {
@@ -26,6 +25,12 @@ $(document).ready(function () {
         }
     });
 
+    //Todo: Validate form of service
+    $('#service_name').keyup(function () {
+        if ($('#service_name').val().length >= 2) {
+            $('#btn-save-service').prop("disabled", false);
+        }
+    });
 
 
     //TODO: new user added
@@ -35,15 +40,36 @@ $(document).ready(function () {
         var formSerialize = form.serialize();
         $.ajax({
             type: 'POST',
-            url:Routing.generate('ajax.user'),
+            url: Routing.generate('ajax.user'),
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-           },
+            },
             error: function (data, status, object) {
             }
         });
     });
+
+
+    //TODO: new service added
+    $('form[name="service"]').submit(function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var formSerialize = form.serialize();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.new.service'),
+            data: formSerialize,
+            async: true,
+            success: function (data, status, object) {
+                location.href="/service";
+            },
+            error: function (data, status, object) {
+            }
+        });
+    });
+
+
 
 
 });

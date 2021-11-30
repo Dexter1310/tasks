@@ -1,0 +1,38 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Service{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    <section id="new-service">
+        <div class="container">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+       <h1>Servicios
+                <a style="color: #1d2124;float: right" href="{{ path('newservice') }}"
+                   class="nav-item nav-link"><b><i class="bi bi-bag-plus-fill"></i></b></a>
+       </h1>
+                <div style="width: 95%" id="admin-service">Loading...</div>
+                <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
+                <script>
+                    $(function () {
+                        $('#admin-service').initDataTables({{ datatable_settings(datatable) }}
+                            , {
+                                searching: true,
+                                dom: '<"html5buttons"B>lTfgitp',
+                                buttons: [
+                                    'copy',
+                                    {extend: 'pdf', title: 'domains'},
+                                    {extend: 'print'}
+                                ]
+                            }).then(function (dt) {
+                            // dt contains the initialized instance of DataTables
+                            dt.on('draw', function () {
+                            })
+                        });
+                    });
+                </script>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
