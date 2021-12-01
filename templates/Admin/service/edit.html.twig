@@ -8,20 +8,34 @@
     <section id="new-service">
         <div class="container">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } ,'name':'editService'}) }}
-                <div class="row">
-                    <div class="form-group col-md-4">
-                        <input type="hidden" value="{{ service.id }}" name="id">
-                        <label>Nombre servicio:</label>
-                        {{ form_widget(formService.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre servicio' } }) }}
-                        {{ form_errors(formService.name) }}
-                    </div>
-                    <div class="form-group col-md-4 mt-4">
-                        <button class="btn btn-dark" type="submit" id="btn-save-service" disabled>Modifica</button>
-                    </div>
+            {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } ,'name':'editService'}) }}
+            <div class="row">
+                <div class="form-group col-md-11">
+                    <input type="hidden" value="{{ service.id }}" name="id">
+                    <label>Nombre servicio:</label>
+                    {{ form_widget(formService.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre servicio' } }) }}
+                    {{ form_errors(formService.name) }}
                 </div>
-                {{ form_end(formService) }}
-            {% endif %}
+                <div class="form-group col-md-1 mt-2 text-center">
+                    <a href="{{ path('service') }}" style="font-size: 2.4em;"><i
+                                class="bi bi-arrow-left-circle-fill"></i></a>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="form-group col-md-11">
+                    <label>Comentario:</label>
+                    {{ form_widget(formService.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción sobre el servicio..','rows': 5 } }) }}
+                    {{ form_errors(formService.description) }}
+                </div>
+                <div class="form-group col-md-1 mt-4">
+                    <button class="btn btn-dark" type="submit" id="btn-save-service" disabled>Modifica</button>
+                </div>
+            </div>
+
+        </div>
+        {{ form_end(formService) }}
+        {% endif %}
         </div>
     </section>
 {% endblock %}

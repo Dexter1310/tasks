@@ -143,8 +143,8 @@ class ServiceController extends AbstractController
             /**
              * @var Service $service
              */
-
             $service->setName($name);
+            $service->setUpdatedAt(new \DateTime('now'));
             $em->persist($service);
             $em->flush();
             return $this->json("Se actualizo ".$data->get('service')['name']);
