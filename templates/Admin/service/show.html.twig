@@ -11,6 +11,13 @@
                 <a href="{{ path("service") }}">
                     <button class="btn btn-warning">Volver</button>
                 </a>
+                <b style="float: right">Estado:
+                    {% if service.active == 1 %}
+                        <scan style="color: green;">Activo</scan>
+                    {% else %}
+                        <scan style="color:darkred;">No activo</scan>
+                    {% endif %}
+                </b>
                 <table class="table table-striped table-responsive">
                     <thead>
                     <th>Servicio</th>

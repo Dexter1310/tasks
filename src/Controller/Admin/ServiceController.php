@@ -33,7 +33,14 @@ class ServiceController extends AbstractController
     {
         $table = $dataTableFactory->create()
             ->add('name', TextColumn::class, ['label' => 'Servicio', 'className' => 'bold'])
-            ->add('active', TextColumn::class, ['label' => 'Activo', 'className' => 'bold'])
+            ->add('active', TextColumn::class, ['label' => 'Estado', 'render'=>function($value,$context){
+                 if ($context->getActive()==1){
+                     $state="Activo";
+                 }else{
+                     $state="No activo";
+                 }
+                return sprintf($state);
+            }])
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
                 return sprintf(
