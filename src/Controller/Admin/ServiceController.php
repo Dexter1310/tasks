@@ -117,7 +117,7 @@ class ServiceController extends AbstractController
      * @ParamConverter("service", class="App\Entity\Service")
      * @return array|RedirectResponse
      */
-    public function updateCompanyAction(Request $request,Service $service)
+    public function updateServiceAction(Request $request,Service $service)
     {
         $form = $this->createForm(ServiceType::class, $service);
         $form->handleRequest($request);
