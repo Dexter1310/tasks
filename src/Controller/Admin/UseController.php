@@ -1,5 +1,5 @@
 <?php
-namespace App\Controller\Front;
+namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Form\UserType;
@@ -19,7 +19,7 @@ class UseController extends AbstractController{
 
     /**
      * @Route("/new-user", name="newuser")
-     * @template("Front/user/new.html.twig")
+     * @template("Admin/user/new.html.twig")
      */
     public function newUser(Request $request)
     {
@@ -48,10 +48,10 @@ class UseController extends AbstractController{
 
     /**
      * @Route("/show-user/{id}", name="show.user")
-     * @template("Front/user/show.html.twig")
+     * @template("Admin/user/show.html.twig")
      * @param integer $id
      */
-    public function nshowUserAction(Request $request,int $id)
+    public function showUserAction(Request $request,int $id)
     {
         return [];
     }

@@ -41,7 +41,7 @@ class ServiceController extends AbstractController
                     <div class="text-center">
       <a  href="/admin-service-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>
       <a  class="p-2" href="/admin-service-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>
-      <a class=" deleteService" id="' . $id . '" href="#" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>
+      <a class="deleteService" id="' . $id . '" href="#" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>
       </div>
 ');
             }])
@@ -94,5 +94,62 @@ class ServiceController extends AbstractController
     {
         return ['service'=>$service];
     }
+
+
+    /**
+     * @Route("/admin-service-delete", name="ajax.admin.service.delete", options={"expose"=true})
+     */
+    public function deleteServiceAction(Request $request)
+    {
+        $id=$request->request->get('id');
+        $service=$this->getDoctrine()->getRepository(Service::class)->findOneBy(['id'=>$id]);
+        $this->getDoctrine()->getManager()->remove($service);
+        $this->getDoctrine()->getManager()->flush();
+
+        return $this->json($id);
+    }
+
+
+
+    /**
+     * @Route("/admin-service-update/{id}", name="admin.service.update", options={"expose"=true})
+     * @Template("Admin/service/edit.html.twig")
+     * @ParamConverter("service", class="App\Entity\Service")
+     * @return array|RedirectResponse
+     */
+    public function updateCompanyAction(Request $request,Service $service)
+    {
+        $form = $this->createForm(ServiceType::class, $service);
+        $form->handleRequest($request);
+        return ['formService' => $form->createView(),'service'=>$service];
+    }
+
+
+    /**
+     * @Route("/ajax/edit/service",  options={"expose"=true}, name="editservice")
+     */
+    public function editServiceAction(Request $request,ServiceService  $fileUploader)
+    {
+
+        $em=$this->getDoctrine()->getManager();
+        $data=$request->request;
+        $name=$data->get('service')['name'];
+        $service=$em->getRepository(Service::class)->findOneBy(['id'=>$data->get('id')]);//query for company
+        $form = $this->createForm(ServiceType::class, $service);
+        $form->handleRequest($request);
+
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * @var Service $service
+             */
+
+            $service->setName($name);
+            $em->persist($service);
+            $em->flush();
+            return $this->json("Se actualizo ".$data->get('service')['name']);
+        }
+    }
+
 
 }

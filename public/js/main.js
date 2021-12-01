@@ -69,6 +69,26 @@ $(document).ready(function () {
         });
     });
 
+    //TODO: edit Service
+    $('form[name="editService"]').submit(function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('editservice'),
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data, status, object) {
+                $('#info-admin').html("<span style='color: green'>Actualizada el servicio : " + data + "</span>");
+                location.href="/service";
+            },
+            error: function () {
+            }
+        });
+    });
+
 
 
 

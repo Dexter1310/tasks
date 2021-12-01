@@ -8,15 +8,16 @@
     <section id="new-service">
         <div class="container">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
+                {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } ,'name':'editService'}) }}
                 <div class="row">
                     <div class="form-group col-md-4">
-                        <label>Nuevo servicio:</label>
+                        <input type="hidden" value="{{ service.id }}" name="id">
+                        <label>Nombre servicio:</label>
                         {{ form_widget(formService.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre servicio' } }) }}
                         {{ form_errors(formService.name) }}
                     </div>
                     <div class="form-group col-md-4 mt-4">
-                        <button class="btn btn-dark" type="submit" id="btn-save-service" disabled>Guardar</button>
+                        <button class="btn btn-dark" type="submit" id="btn-save-service" disabled>Modifica</button>
                     </div>
                 </div>
                 {{ form_end(formService) }}

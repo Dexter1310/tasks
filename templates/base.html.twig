@@ -59,6 +59,10 @@
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('newuser') }}" class="nav-item nav-link"><b>Usuarios</b></a>
                                 </div>
+                                <div class="nav-item nav-link">
+                                    <a href="{{ path('service') }}"
+                                       class="nav-item nav-link"><b>Servicios</b></a>
+                                </div>
                             {% endif %}
                             <div  class="nav-item nav-link">
                               <scan  class="nav-item nav-link">Tipo: <b>{{ app.user.type }}</b></scan>
@@ -67,10 +71,7 @@
                                 <a  href="{{ path('show.user', { 'id': app.user.id }) }}"
                                    class="nav-item nav-link">Usuario: <b>{{ app.user.username }}</b></a>
                             </div>
-                            <div class="nav-item nav-link">
-                                <a href="{{ path('service') }}"
-                                   class="nav-item nav-link"><b>Servicios</b></a>
-                            </div>
+
                         {% else %}
                             <div class="nav-item nav-link">
                                 <a href="{{ path('login') }}" class="nav-item nav-link">Login</a>
