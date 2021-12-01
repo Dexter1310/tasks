@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Entity\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\Form;
@@ -38,6 +39,10 @@ class ServiceService
     public function addService(Request $request, FormInterface $form, $service)
     {
         $data = $request->request;
+        /**
+         * @var Service $service
+         */
+        $service->setCreatedAt(new \DateTime('now'));
         $service->setActive(1);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
