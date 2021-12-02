@@ -92,7 +92,7 @@
     padding-top: 100px;
 }
 
-.login-user-front, #new-user,#front-show-user,#new-service,.image-home-admin{
+.login-user-front, #new-user,#front-show-user,#new-service,.image-home-admin,.user-admin-index{
     padding-top: 100px;
     width: 90%;
     margin: auto;

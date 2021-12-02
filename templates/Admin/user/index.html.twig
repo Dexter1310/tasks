@@ -1,0 +1,16 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Home{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+        <div class="container user-admin-index">
+            <h1>Ususarios
+                <a style="color: #1d2124;float: right" href="{{ path('newuser') }}"
+                   class="nav-item nav-link"><b><i class="bi bi-bag-plus-fill"></i></b></a>
+            </h1>
+        </div>
+    {% endif %}
+{% endblock %}

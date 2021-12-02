@@ -17,6 +17,18 @@ class UseController extends AbstractController{
      */
     private $userService;
 
+
+    /**
+     * @Route("/user", name="admin.user")
+     * @template("Admin/user/index.html.twig")
+     */
+    public function userAction(Request $request)
+    {
+
+        return [];
+    }
+
+
     /**
      * @Route("/new-user", name="newuser")
      * @template("Admin/user/new.html.twig")
