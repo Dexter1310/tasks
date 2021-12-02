@@ -82,10 +82,6 @@ class Service
     }
 
 
-
-
-
-
     public function getActive(): ?bool
     {
         return $this->active;

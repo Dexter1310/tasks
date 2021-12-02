@@ -59,6 +59,7 @@ class UserService
             $user->setRoles(User::R_USER);
         }
         $user->setActive(0);
+        $user->setCreatedAt(new \DateTime('now'));
         $pass = $data->get('user')['password'];
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
