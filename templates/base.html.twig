@@ -65,7 +65,8 @@
                                 </div>
                             {% endif %}
                             <div  class="nav-item nav-link">
-                              <scan  class="nav-item nav-link">Tipo: <b>{{ app.user.type }}</b></scan>
+                          <a  href="{{ path('admin.task') }}"
+                                   class="nav-item nav-link"><b>Tareas</b></a>
                             </div>
                             <div class="nav-item nav-link">
                                 <a  href="{{ path('admin.user.show', { 'id': app.user.id }) }}"

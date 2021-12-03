@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
@@ -34,7 +35,34 @@ class TaskController extends AbstractController
      */
     public function taskAction(Request $request, DataTableFactory $dataTableFactory)
     {
-        return [];
+        $table = $dataTableFactory->create()
+            ->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold'])
+            ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
+                /**
+                 * @var Task $context
+                 */
+                $user = $context->getIduser()->toArray();
+                return sprintf($user[0]->getUsername());
+            }
+            ])
+            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
+            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold'])
+            ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
+                $id = $context->getId();
+                $show = '<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>';
+                $update = '<a  class="p-2" href="/admin-user-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>';
+                $delete = ' <a  href="/admin-user-delete/' . $id . '" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>';
+                return sprintf('
+                    <div class="text-center">' . $show . $update . $delete . '</div>');
+            }])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => Task::class,
+
+            ])->handleRequest($request);
+        if ($table->isCallback()) {
+            return $table->getResponse();
+        }
+        return ['datatable' => $table];
     }
 
     /**
@@ -48,11 +76,11 @@ class TaskController extends AbstractController
         /***
          * @var User $user
          */
-        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id'=>$re->request->get('user')]);
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $re->request->get('user')]);
         $task->addIduser($user);
         $user->addTask($task);
         $formTask = $this->createForm(TaskType::class, $task);
-        $ta = $this->taskService->addTask($re, $formTask,$task);
+        $ta = $this->taskService->addTask($re, $formTask, $task);
 
         if ($ta) {
             return $this->json("Se ha grabado la tarea");
@@ -61,6 +89,19 @@ class TaskController extends AbstractController
         }
     }
 
+
+    /**
+     * @Route("/new-task", name="new.multi.task")
+     * @template("Admin/task/new.html.twig")
+     */
+    public function newTask(Request $request)
+    {
+        $task = new Task();
+        $services= $this->getDoctrine()->getRepository(Service::class)->findAll();
+        $users= $this->getDoctrine()->getRepository(User::class)->findBy(['type'=>'operator']);
+        $formTask = $this->createForm(TaskType::class, $task);
+        return ['formTask' => $formTask->createView(),'operators'=>$users,'services'=>$services];
+    }
 
 
 }

@@ -5,7 +5,6 @@
 }
 
 
-/*Todo: menu admin*/
 
 #menu-admin .header-admin {
     padding: 20px;
@@ -21,6 +20,7 @@
     padding: 10px;
     text-align: center;
     list-style: none;
+
 }
 
 #menu-admin #list-menu li a {
@@ -84,15 +84,21 @@
     position: fixed;
     width: 100%;
     z-index: 9;
-    background-color: #7abaff !important;
-
+    background-color: #A3A1A0 !important;
+    opacity: 0.9;
 }
+.navbar a{
+  color: #0c0c0c;
+}
+
+
+
 
 .block-2 {
     padding-top: 100px;
 }
 
-.login-user-front, #new-user,#front-show-user,#new-service,.image-home-admin,.user-admin-index{
+.login-user-front, #new-user,#front-show-user,#new-service,.image-home-admin,.user-admin-index,.task-admin-index,#new-multi-task{
     padding-top: 100px;
     width: 90%;
     margin: auto;
@@ -160,6 +166,8 @@ footer {
 #new-user {
     margin: auto;
 }
+
+
 
 
 /*TODO ADMIN*/
