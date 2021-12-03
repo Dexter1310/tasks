@@ -86,7 +86,7 @@ class UserController extends AbstractController
         if ($us) {
             return $this->json("se grabo el usuario");
         } else {
-            return $this->render('user');
+            return $this->json('No se pudo grabar el usuario');
         }
     }
 
@@ -97,9 +97,9 @@ class UserController extends AbstractController
      * @Template("Admin/user/show.html.twig")
      * @return array|RedirectResponse
      */
-    public function showUserAction(Request $request,User $service)
+    public function showUserAction(Request $request,User $user)
     {
-        return ['service'=>$service];
+        return ['user'=>$user];
     }
 
 

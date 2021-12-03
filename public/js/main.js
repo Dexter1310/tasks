@@ -47,6 +47,7 @@ $(document).ready(function () {
                 location.href="/user";
             },
             error: function (data, status, object) {
+                $('#info-admin').html('<scan style="color:blue">No se ha podido guardar el usuario por que ya existe en base de datos.</scan>')
             }
         });
     });

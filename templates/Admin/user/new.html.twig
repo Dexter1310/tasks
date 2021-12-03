@@ -9,6 +9,7 @@
 
     <div class="container" >
         <h2>Nuevo usuario</h2>
+        <p id="info-admin"></p>
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
             <div class="row" >
