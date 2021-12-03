@@ -6,7 +6,9 @@
         {{ parent() }}
     {% endblock %}
 <section id="new-user" >
+
     <div class="container" >
+        <h2>Nuevo usuario</h2>
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
             {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
             <div class="row" >
@@ -32,8 +34,8 @@
                     {{ form_errors(formUser.email) }}
                 </div>
                 <div class="form-group col-md-3">
-                    <label>¿Que tipo de perfil eres?:</label>
-                    {{ form_widget(formUser.type,{ 'attr': {'class': 'form-control','placeholder':'Tipo' } }) }}
+                    <label>Tipo de usuario:</label>
+                    {{ form_widget(formUser.type,{ 'attr': {'class': 'form-select','placeholder':'Tipo' } }) }}
                     {{ form_errors(formUser.type) }}
                 </div>
                 <div id="info-user"></div>

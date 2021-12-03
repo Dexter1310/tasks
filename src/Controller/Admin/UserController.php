@@ -9,13 +9,15 @@ use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UseController extends AbstractController
+class UserController extends AbstractController
 {
     /**
      * @var UserService $userService
@@ -34,20 +36,18 @@ class UseController extends AbstractController
             ->add('type', TextColumn::class, ['label' => 'Tipo', 'className' => 'bold'])
             ->add('email', TextColumn::class, ['label' => 'E-mail', 'orderable' => false, 'render' => function ($value, $context) {
                     return sprintf('
-                    <a href="mailto:'.$context->getEmail().'">'.$context->getEmail().'</a>
+                    <a href="mailto:' . $context->getEmail() . '">' . $context->getEmail() . '</a>
                     ');
                 }]
             )
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
-                return sprintf(
-                    '
-                    <div class="text-center">
-      <a  href="/admin-service-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>
-      <a  class="p-2" href="/admin-service-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>
-      <a class="deleteService" id="' . $id . '" href="#" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>
-      </div>
-');
+                $show='<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>';
+                $update='<a  class="p-2" href="/admin-user-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>';
+                $delete=' <a  href="/admin-user-delete/' . $id . '" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>';
+
+                return sprintf('
+                    <div class="text-center">'.$show.$update.$delete.'</div>');
             }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => User::class,
@@ -88,15 +88,61 @@ class UseController extends AbstractController
         }
     }
 
+
     /**
-     * @Route("/show-user/{id}", name="show.user")
-     * @template("Admin/user/show.html.twig")
-     * @param integer $id
+     * @Route("/admin-user-show/{id}", name="admin.user.show", options={"expose"=true})
+     * @ParamConverter("user", class="App\Entity\User")
+     * @Template("Admin/user/show.html.twig")
+     * @return array|RedirectResponse
      */
-    public function showUserAction(Request $request, int $id)
+    public function showUserAction(Request $request,User $service)
     {
-        return [];
+        return ['service'=>$service];
     }
 
+
+    /**
+     * @Route("/admin-user-update/{id}", name="admin.user.update", options={"expose"=true})
+     * @Template("Admin/user/edit.html.twig")
+     * @ParamConverter("user", class="App\Entity\User")
+     * @return array|RedirectResponse
+     */
+    public function updateUserAction(Request $request,User $user)
+    {
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        return ['formUser' => $form->createView(),'user'=>$user];
+    }
+
+
+    /**
+     * @Route("/ajax/edit/user",  options={"expose"=true}, name="edituser")
+     */
+    public function editUserAction(Request $request,UserService  $userService)
+    {
+
+        $em=$this->getDoctrine()->getManager();
+        $data=$request->request;
+        $user=$em->getRepository(User::class)->findOneBy(['id'=>$data->get('id')]);
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $userService->updateUser($user);
+            return $this->json("Se actualizo ".$data->get('user')['username']);
+        }else{
+            return $this->json('no se actulizado');
+        }
+    }
+
+    /**
+     * @Route("/admin-user-delete/{id}", name="ajax.admin.user.delete", options={"expose"=true})
+     * @ParamConverter("user", class="App\Entity\User")
+     */
+    public function deleteUserAction(Request $request,User $user)
+    {
+        $this->getDoctrine()->getManager()->remove($user);
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('admin.user');
+    }
 
 }

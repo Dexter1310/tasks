@@ -72,5 +72,17 @@ class UserService
         return $data;
     }
 
+    public function updateUser($user)
+    {
+        /**
+         * @var User $user
+         */
+        $pass = $user->getPassword();
+        $en = $this->encoder->encodePassword($user, $pass);
+        $user->setPassword($en);
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
 
 }

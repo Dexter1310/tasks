@@ -28,26 +28,7 @@
                                 ]
                             }).then(function (dt) {
                             // dt contains the initialized instance of DataTables
-
                             dt.on('draw', function () {
-                                $('.deleteService').click(function (e) {
-                                    var id = $('.deleteService').attr('id');
-                                    console.log(id)
-                                    e.preventDefault()
-                                    $.ajax({
-                                        type: 'POST',
-                                        data: {id: id},
-                                        url: Routing.generate('ajax.admin.service.delete'),
-                                        async: true,
-                                        success: function (data, status, object) {
-                                            var id = '#' + data;
-                                            $(id).remove();
-                                            $('#info-admin').html('<span style="color: green">Se ha eliminado el Servicio.</span>')
-                                        },
-                                        error: function (data, status, object) {
-                                        }
-                                    });
-                                });
 
                             })
                         });

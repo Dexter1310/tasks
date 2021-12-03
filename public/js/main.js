@@ -44,8 +44,28 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
+                location.href="/user";
             },
             error: function (data, status, object) {
+            }
+        });
+    });
+    //TODO: edit User
+    $('form[name="editUser"]').submit(function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('edituser'),
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data, status, object) {
+                $('#info-admin').html("<span style='color: green'>Actualizada el usuario : " + data + "</span>");
+                location.href="/user";
+            },
+            error: function () {
             }
         });
     });
