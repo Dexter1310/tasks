@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
         $userAdmin->setRoles(User::R_ADMIN);
         $userAdmin->setActive(1);
         $userAdmin->setToken('xxx');
-        $userAdmin->setType("company");
+        $userAdmin->setType("admin");
         $userAdmin->setEmail("admin@admin.com");
         $userAdmin->setPassword($this->passwordHasher->hashPassword(
             $userAdmin,

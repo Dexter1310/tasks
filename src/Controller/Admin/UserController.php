@@ -45,7 +45,9 @@ class UserController extends AbstractController
                 $show='<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>';
                 $update='<a  class="p-2" href="/admin-user-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>';
                 $delete=' <a  href="/admin-user-delete/' . $id . '" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>';
-
+                if($context->getType() == 'admin'){
+                    $delete="";
+                }
                 return sprintf('
                     <div class="text-center">'.$show.$update.$delete.'</div>');
             }])
