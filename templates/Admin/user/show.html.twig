@@ -30,7 +30,11 @@
             </div>
         </div>
 
+        <div>
+            {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'} ,'name':'editUser' }) }}
+            {{ form_end(formTask) }}
+        </div>
+
 
     </div>
-
 {% endblock %}
