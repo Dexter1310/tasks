@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -76,6 +78,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updatedAt;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Task::class, mappedBy="iduser")
+     */
+    private $task;
+
+    public function __construct()
+    {
+        $this->task = new ArrayCollection();
+    }
 
 
 
@@ -269,6 +281,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTask(): Collection
+    {
+        return $this->task;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->task->contains($task)) {
+            $this->task[] = $task;
+            $task->addIduser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->task->removeElement($task)) {
+            $task->removeIduser($this);
+        }
+
+        return $this;
     }
 
 

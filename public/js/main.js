@@ -111,6 +111,23 @@ $(document).ready(function () {
     });
 
 
+    //TODO: new TASK added
+    $('form[name="newTask"]').submit(function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var formSerialize = form.serialize();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.new.task'),
+            data: formSerialize,
+            async: true,
+            success: function (data, status, object) {
+                // location.href="/user";
+            },
+            error: function (data, status, object) {
+            }
+        });
+    });
 
 
 });

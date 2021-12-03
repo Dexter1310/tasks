@@ -30,11 +30,36 @@
             </div>
         </div>
 
+        {% if user.type == 'operator' %}
         <div>
-            {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'} ,'name':'editUser' }) }}
+            {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}
+            <div class="row">
+                <input name="user" type="hidden" value="{{ user.id }}">
+                <div class="form-group col-md-2">
+                    <label>Título:</label>
+                    {{ form_widget(formTask.title,{ 'attr': {'class': 'form-control','placeholder':'titulo' } }) }}
+                    {{ form_errors(formTask.title) }}
+                </div>
+                <div class="form-group col-md-10">
+                    <label>Descripción de la tarea:</label>
+                    {{ form_widget(formTask.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción de la tarea' } }) }}
+                    {{ form_errors(formTask.description) }}
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-md-12">
+                    <label>Material utilizado:</label>
+                    {{ form_widget(formTask.material,{ 'attr': {'class': 'form-control','placeholder':'Material utilizado' } }) }}
+                    {{ form_errors(formTask.material) }}
+                </div>
+            </div>
+            <div id="info-task"></div>
+            <div class="form-group col-md-1 mt-2">
+                <button class="btn btn-dark" type="submit"  >Hecho</button>
+            </div>
             {{ form_end(formTask) }}
         </div>
-
+        {% endif %}
 
     </div>
 {% endblock %}

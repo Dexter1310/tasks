@@ -2,7 +2,9 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Task;
 use App\Entity\User;
+use App\Form\TaskType;
 use App\Form\UserType;
 use App\Services\UserService;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
@@ -95,11 +97,12 @@ class UserController extends AbstractController
      * @Route("/admin-user-show/{id}", name="admin.user.show", options={"expose"=true})
      * @ParamConverter("user", class="App\Entity\User")
      * @Template("Admin/user/show.html.twig")
-     * @return array|RedirectResponse
      */
     public function showUserAction(Request $request,User $user)
     {
-        return ['user'=>$user];
+        $task=new Task();
+        $formTask = $this->createForm(TaskType::class, $task);
+        return ['user'=>$user,'formTask'=>$formTask->createView()];
     }
 
 
