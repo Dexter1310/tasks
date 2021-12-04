@@ -104,19 +104,6 @@ class ServiceController extends AbstractController
     }
 
 
-    /**
-     * @Route("/admin-service-delete", name="ajax.admin.service.delete", options={"expose"=true})
-     */
-  /** public function deleteServiceAction(Request $request)
-    {
-        $id = $request->request->get('id');
-        $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $id]);
-        $this->getDoctrine()->getManager()->remove($service);
-        $this->getDoctrine()->getManager()->flush();
-
-        return $this->json($id);
-    }**/
-
 
     /**
      * @Route("/admin-service-update/{id}", name="admin.service.update", options={"expose"=true})

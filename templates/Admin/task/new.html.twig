@@ -13,7 +13,7 @@
                 <div class="col-md-6"><a style="float: right" href="{{ path('admin.task') }}" class="nav-item nav-link"><b>Listado de Tareas</b></a></div>
             </div>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-                {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newMultiTask'}) }}
+                {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newAdvancedTask'}) }}
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Título:</label>

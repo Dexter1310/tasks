@@ -2,7 +2,7 @@ $(document).ready(function () {
     /**
      * TODO VALIDATIONS FORMS
      */
-    //Todo Validate pass innew user
+    //Todo Validate pass innew USER
     $('.passUser ,#rememberPass').keyup(function () {
         if (($('.passUser').val() === $('#rememberPass').val()) && $('.passUser').val().length >= 7 && $('#rememberPass').val().length >= 7) {
             $('#btn-save-user').prop("disabled", false);
@@ -25,7 +25,7 @@ $(document).ready(function () {
         }
     });
 
-    //Todo: Validate form of service
+    //Todo: Validate form of SERVICE
     $('#service_name').keyup(function () {
         if ($('#service_name').val().length >= 2) {
             $('#btn-save-service').prop("disabled", false);
@@ -33,7 +33,7 @@ $(document).ready(function () {
     });
 
 
-    //TODO: new user added
+    //TODO: new USER added
     $('form[name="user"]').submit(function (e) {
         e.preventDefault();
         var form = $(this).closest('form');
@@ -51,7 +51,7 @@ $(document).ready(function () {
             }
         });
     });
-    //TODO: edit User
+    //TODO: edit USER
     $('form[name="editUser"]').submit(function (e) {
         e.preventDefault();
         var data = new FormData(this);
@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
 
 
-    //TODO: new service added
+    //TODO: new SERVICE added
     $('form[name="service"]').submit(function (e) {
         e.preventDefault();
         var form = $(this).closest('form');
@@ -90,7 +90,7 @@ $(document).ready(function () {
         });
     });
 
-    //TODO: edit Service
+    //TODO: edit SERVICE
     $('form[name="editService"]').submit(function (e) {
         e.preventDefault();
         var data = new FormData(this);
@@ -122,11 +122,32 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                 location.href="/user";
+                 location.href="/task";
             },
             error: function (data, status, object) {
             }
         });
+    });
+
+    //TODO :new TASK advanced
+
+    $('form[name="newAdvancedTask"]').submit(function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var formSerialize = form.serialize();
+        console.log(form);
+
+        // $.ajax({
+        //     type: 'POST',
+        //     url: Routing.generate('ajax.new.task'),
+        //     data: formSerialize,
+        //     async: true,
+        //     success: function (data, status, object) {
+        //         location.href="/user";
+        //     },
+        //     error: function (data, status, object) {
+        //     }
+        // });
     });
 
 
