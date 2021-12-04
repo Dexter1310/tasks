@@ -86,6 +86,7 @@
     z-index: 9;
     background-color: #A3A1A0 !important;
     opacity: 0.9;
+    box-shadow: 0px 10px 10px -6px black;
 }
 .navbar a{
   color: #0c0c0c;

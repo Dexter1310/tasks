@@ -84,6 +84,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $task;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="users")
+     */
+    private $service;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
@@ -306,6 +311,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         if ($this->task->removeElement($task)) {
             $task->removeIduser($this);
         }
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): self
+    {
+        $this->service = $service;
 
         return $this;
     }

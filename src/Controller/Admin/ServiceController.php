@@ -107,7 +107,7 @@ class ServiceController extends AbstractController
     /**
      * @Route("/admin-service-delete", name="ajax.admin.service.delete", options={"expose"=true})
      */
-    public function deleteServiceAction(Request $request)
+  /** public function deleteServiceAction(Request $request)
     {
         $id = $request->request->get('id');
         $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $id]);
@@ -115,7 +115,7 @@ class ServiceController extends AbstractController
         $this->getDoctrine()->getManager()->flush();
 
         return $this->json($id);
-    }
+    }**/
 
 
     /**
@@ -162,8 +162,13 @@ class ServiceController extends AbstractController
      */
     public function deleteSerAction(Request $request, Service $service)
     {
-        $this->getDoctrine()->getManager()->remove($service);
-        $this->getDoctrine()->getManager()->flush();
+        $userService = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $service->getId()]);
+        if (!$userService) { //Service will be deleted if there is no associated user
+            $this->getDoctrine()->getManager()->remove($service);
+            $this->getDoctrine()->getManager()->flush();
+        }else{
+            $this->addFlash('warning', 'No se puede eliminar el servicio seleccionado, existe relación asociada con varios o un usuario/s.');
+        }
         return $this->redirectToRoute('service');
     }
 

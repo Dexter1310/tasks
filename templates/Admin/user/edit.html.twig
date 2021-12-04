@@ -7,7 +7,10 @@
     {% endblock %}
     <section id="new-user" >
         <div class="container" >
-            <h1>Modifica usuario: {{ user.username }}</h1>
+            <div class="row">
+                <div class="col-md-6">  <h1>Modifica usuario: {{ user.username }}</h1></div>
+                <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado de Usuarios</b></a></div>
+            </div>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data'} ,'name':'editUser' }) }}
                 <input type="hidden" value="{{ user.id }}" name="id">
@@ -27,21 +30,33 @@
                         <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
                     </div>
                 </div>
+                <br>
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>Correo:</label>
                         {{ form_widget(formUser.email,{ 'attr': {'class': 'form-control','placeholder':'email@email.com' } }) }}
                         {{ form_errors(formUser.email) }}
                     </div>
-                    <div class="form-group col-md-3">
-                        <label>¿Que tipo de perfil eres?:</label>
-                        {{ form_widget(formUser.type,{ 'attr': {'class': 'form-control','placeholder':'Tipo' } }) }}
+                    <div class="form-group col-md-4">
+                        <label>Tipo de usuario:</label>
+                        {{ form_widget(formUser.type,{ 'attr': {'class': 'form-select','placeholder':'email@email.com' } }) }}
                         {{ form_errors(formUser.type) }}
                     </div>
-                    <div id="info-user"></div>
-                    <div class="form-group col-md-1 mt-2">
+                    <div class="form-group col-md-4">
+                        <div id="select-specilialized">
+                            <label>Especialidad:</label>
+                            <select name="specialized" class="form-select">
+                                <option value="">Sin especificar</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name|e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                         <button class="btn btn-dark" type="submit" id="btn-save-user" disabled>Guardar</button>
                     </div>
+
+                    <div id="info-user"></div>
+
                 </div>
                 {{ form_end(formUser) }}
 

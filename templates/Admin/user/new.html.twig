@@ -5,49 +5,61 @@
     {% block nav %}
         {{ parent() }}
     {% endblock %}
-<section id="new-user" >
+    <section id="new-user">
 
-    <div class="container" >
-        <h2>Nuevo usuario</h2>
-        <p id="info-admin"></p>
-        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
-            <div class="row" >
-                <div class="form-group col-md-4">
-                    <label>usuario:</label>
-                    {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
-                    {{ form_errors(formUser.username) }}
+        <div class="container">
+            <h2>Nuevo usuario</h2>
+            <p id="info-admin"></p>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>usuario:</label>
+                        {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
+                        {{ form_errors(formUser.username) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Contraseña:</label>
+                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
+                        {{ form_errors(formUser.password) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Repita contraseña:</label>
+                        <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
+                    </div>
                 </div>
-                <div class="form-group col-md-4">
-                    <label>Contraseña:</label>
-                    {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
-                    {{ form_errors(formUser.password) }}
-                </div>
-                <div class="form-group col-md-4">
-                    <label>Repita contraseña:</label>
-                    <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-4">
-                    <label>Correo:</label>
-                    {{ form_widget(formUser.email,{ 'attr': {'class': 'form-control','placeholder':'email@email.com' } }) }}
-                    {{ form_errors(formUser.email) }}
-                </div>
-                <div class="form-group col-md-3">
-                    <label>Tipo de usuario:</label>
-                    {{ form_widget(formUser.type,{ 'attr': {'class': 'form-select','placeholder':'Tipo' } }) }}
-                    {{ form_errors(formUser.type) }}
-                </div>
-                <div id="info-user"></div>
-                <div class="form-group col-md-1 mt-2">
-                    <button class="btn btn-dark" type="submit" id="btn-save-user" disabled>Guardar</button>
-                </div>
-            </div>
-            {{ form_end(formUser) }}
+                <br>
+                <div class="row">
+                    <div class="form-group col-md-4">
+                        <label>Correo:</label>
+                        {{ form_widget(formUser.email,{ 'attr': {'class': 'form-control','placeholder':'email@email.com' } }) }}
+                        {{ form_errors(formUser.email) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Tipo de usuario:</label>
+                        {{ form_widget(formUser.type,{ 'attr': {'class': 'form-select','placeholder':'Tipo' } }) }}
+                        {{ form_errors(formUser.type) }}
+                    </div>
+                    <div class="form-group col-md-4">
+                        <div id="select-specilialized">
+                            <label>Especialidad:</label>
+                            <select name="specialized" class="form-select">
+                                <option value="">Sin especificar</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}">{{ service.name|e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button class="btn btn-dark" type="submit" id="btn-save-user" disabled>Guardar</button>
+                    </div>
+                    <div id="info-user"></div>
 
 
-        {% endif %}
-    </div>
-</section>
+                </div>
+                {{ form_end(formUser) }}
+
+
+            {% endif %}
+        </div>
+    </section>
 {% endblock %}

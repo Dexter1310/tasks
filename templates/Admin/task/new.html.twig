@@ -6,7 +6,12 @@
         {{ parent() }}
     {% endblock %}
     <section id="new-multi-task">
+
         <div class="container">
+            <div class="row">
+                <div class="col-md-6"><h1>Nueva tarea</h1></div>
+                <div class="col-md-6"><a style="float: right" href="{{ path('admin.task') }}" class="nav-item nav-link"><b>Listado de Tareas</b></a></div>
+            </div>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newMultiTask'}) }}
                 <div class="row">
@@ -32,6 +37,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Descripción de la tarea:</label>

@@ -42,7 +42,12 @@ class TaskController extends AbstractController
                  * @var Task $context
                  */
                 $user = $context->getIduser()->toArray();
-                return sprintf($user[0]->getUsername());
+                if ($user) {
+                    $nameUser = '<a  href="/admin-user-show/' . $user[0]->getId() . '" title="visualiza"><span>'.$user[0]->getUsername().'</span></a>';
+                } else {
+                    $nameUser = "Sin asignar";
+                }
+                return sprintf($nameUser);
             }
             ])
             ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
@@ -97,10 +102,14 @@ class TaskController extends AbstractController
     public function newTask(Request $request)
     {
         $task = new Task();
-        $services= $this->getDoctrine()->getRepository(Service::class)->findAll();
-        $users= $this->getDoctrine()->getRepository(User::class)->findBy(['type'=>'operator']);
+        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        /**
+         * @var User $users
+         */
+        $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
-        return ['formTask' => $formTask->createView(),'operators'=>$users,'services'=>$services];
+
+        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services];
     }
 
 

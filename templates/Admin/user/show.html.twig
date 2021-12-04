@@ -5,60 +5,67 @@
         {{ parent() }}
     {% endblock %}
     <div class="container" id="front-show-user">
-        <h3>Información del usuario </h3>
         <div class="row">
-            <div class="col-3">
+            <div class="col-md-6">  <h3>Información del usuario </h3></div>
+            <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado de Usuarios</b></a></div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
                 <b>Usuario: </b><span>{{ user.username }}</span>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
                 <b>Email: </b> <span>{{ user.email }}</span>
             </div>
-            <div class="col-3">
+            <div class="col-md-3">
                 <b>Tipo de usuario: </b> <span>{{ user.type }}</span>
             </div>
-            <div class="col-3">
+            <div class="col-md-3 text-center">
                 {% if user.type == 'operator' %}
-                    <div class="container">
-                        <a href="{{ path('admin.user') }}">
-                            <button class="btn btn-warning">Volver</button>
-                        </a>
-                        <a href="#">
-                            <button class="btn btn-dark">Asignar Tarea</button>
-                        </a>
-                    </div>
+                    <br>
+                    <a href="#" style="float: right">
+                        <button class="btn btn-dark">Asignar nueva tarea</button>
+                    </a>
                 {% endif %}
             </div>
         </div>
 
         {% if user.type == 'operator' %}
-        <div>
-            {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}
-            <div class="row">
-                <input name="user" type="hidden" value="{{ user.id }}">
-                <div class="form-group col-md-2">
-                    <label>Título:</label>
-                    {{ form_widget(formTask.title,{ 'attr': {'class': 'form-control','placeholder':'titulo' } }) }}
-                    {{ form_errors(formTask.title) }}
+            <div>
+                {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}
+                <div class="row">
+                    <input name="user" type="hidden" value="{{ user.id }}">
+                    <div class="form-group col-md-6">
+                        <label>Título:</label>
+                        {{ form_widget(formTask.title,{ 'attr': {'class': 'form-control','placeholder':'titulo' } }) }}
+                        {{ form_errors(formTask.title) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Servicio:</label>
+                        <select name="service" class="form-select">
+                            {% for service in services %}
+                                <option value="{{ service.id }}">{{ service.name|e }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group col-md-10">
-                    <label>Descripción de la tarea:</label>
-                    {{ form_widget(formTask.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción de la tarea' } }) }}
-                    {{ form_errors(formTask.description) }}
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label>Descripción de la tarea:</label>
+                        {{ form_widget(formTask.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción de la tarea' } }) }}
+                        {{ form_errors(formTask.description) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Material utilizado:</label>
+                        {{ form_widget(formTask.material,{ 'attr': {'class': 'form-control','placeholder':'Material utilizado' } }) }}
+                        {{ form_errors(formTask.material) }}
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label>Material utilizado:</label>
-                    {{ form_widget(formTask.material,{ 'attr': {'class': 'form-control','placeholder':'Material utilizado' } }) }}
-                    {{ form_errors(formTask.material) }}
+                <div id="info-task"></div>
+                <div class="form-group col-md-1 mt-2">
+                    <button class="btn btn-dark" type="submit">Hecho</button>
                 </div>
+                {{ form_end(formTask) }}
             </div>
-            <div id="info-task"></div>
-            <div class="form-group col-md-1 mt-2">
-                <button class="btn btn-dark" type="submit"  >Hecho</button>
-            </div>
-            {{ form_end(formTask) }}
-        </div>
         {% endif %}
 
     </div>

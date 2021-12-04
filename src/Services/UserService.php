@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Entity\Service;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -51,6 +52,8 @@ class UserService
          * @var User $user
          */
         $type = $data->get('user')['type'];
+        $specialized=$data->get('specialized');
+        $service=$this->em->getRepository(Service::class)->find(['id'=>$specialized]);
         if ($type == "admin") {
             $user->setRoles(User::R_ADMIN);
         } elseif ($type == "operator") {
@@ -59,6 +62,7 @@ class UserService
             $user->setRoles(User::R_USER);
         }
         $user->setActive(0);
+        $user->setService($service);
         $user->setCreatedAt(new \DateTime('now'));
         $pass = $data->get('user')['password'];
         $form->handleRequest($request);

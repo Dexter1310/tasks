@@ -13,7 +13,12 @@
                    class="nav-item nav-link"><b><i class="bi bi-bag-plus-fill"></i></b></a>
        </h1>
                 <p id="info-admin"></p>
-                <div style="width: 95%" id="admin-service">Loading...</div>
+                {% for message in app.flashes('warning') %}
+                <div class="alert alert-warning">
+                    {{ message }}
+                </div>
+                {% endfor %}
+                <div  id="admin-service" class="table-bordered table-responsive">Loading...</div>
                 <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
                 <script>
                     $(function () {
