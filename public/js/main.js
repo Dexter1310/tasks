@@ -137,17 +137,17 @@ $(document).ready(function () {
         var formSerialize = form.serialize();
         console.log(form);
 
-        // $.ajax({
-        //     type: 'POST',
-        //     url: Routing.generate('ajax.new.task'),
-        //     data: formSerialize,
-        //     async: true,
-        //     success: function (data, status, object) {
-        //         location.href="/user";
-        //     },
-        //     error: function (data, status, object) {
-        //     }
-        // });
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.new.advanced.task'),
+            data: formSerialize,
+            async: true,
+            success: function (data, status, object) {
+
+            },
+            error: function (data, status, object) {
+            }
+        });
     });
 
 

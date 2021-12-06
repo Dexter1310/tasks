@@ -24,7 +24,9 @@ class UserType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, ['constraints' => new NotBlank()])
-            ->add('password', PasswordType::class, ['constraints' => new NotBlank()])
+            ->add('name', TextType::class, ['constraints' => new NotBlank()])
+            ->add('lastname', TextType::class, ['constraints' => new NotBlank()])
+            ->add('password', PasswordType::class)
             ->add('email', EmailType::class, ['constraints' => new NotBlank()])
             ->add('type', ChoiceType::class, [
                 'choices' => [

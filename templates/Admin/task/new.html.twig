@@ -12,7 +12,9 @@
                 <div class="col-md-6"><h1>Nueva tarea</h1></div>
                 <div class="col-md-6"><a style="float: right" href="{{ path('admin.task') }}" class="nav-item nav-link"><b>Listado de Tareas</b></a></div>
             </div>
-            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+
+            <scan style="color:red;">{{ infoTask }}</scan>
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and infoTask is null %}
                 {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newAdvancedTask'}) }}
                 <div class="row">
                     <div class="form-group col-md-4">
@@ -23,13 +25,14 @@
                     <div class="form-group col-md-4">
                         <label>Servicio:</label>
                         <select name="service" class="form-select">
+                            <option value="" selected>Sin especificar</option>
                             {% for service in services %}
                                 <option value="{{ service.id }}" >{{ service.name|e }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Operador:</label>
+                        <label id="label-operator">Operador:</label>
                         <select name="operator" class="form-select">
                             {% for user in operators %}
                                 <option value="{{ user.id }}">{{ user.username|e }}</option>
@@ -37,7 +40,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="form-group col-md-6">
                         <label>Descripción de la tarea:</label>
@@ -50,7 +52,6 @@
                         {{ form_errors(formTask.material) }}
                     </div>
                 </div>
-
                 <div id="info-task"></div>
                 <div class="form-group col-md-1 mt-2">
                     <button class="btn btn-dark" type="submit">Hecho</button>

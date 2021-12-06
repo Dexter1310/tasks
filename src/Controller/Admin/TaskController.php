@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class TaskController extends AbstractController
@@ -43,7 +44,7 @@ class TaskController extends AbstractController
                  */
                 $user = $context->getIduser()->toArray();
                 if ($user) {
-                    $nameUser = '<a  href="/admin-user-show/' . $user[0]->getId() . '" title="visualiza"><span>'.$user[0]->getUsername().'</span></a>';
+                    $nameUser = '<a  href="/admin-user-show/' . $user[0]->getId() . '" title="visualiza"><span>' . $user[0]->getUsername() . '</span></a>';
                 } else {
                     $nameUser = "Sin asignar";
                 }
@@ -107,9 +108,45 @@ class TaskController extends AbstractController
          * @var User $users
          */
         $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
+        if (count($services) == 0) {
+            $infoTask = "No hay servicios agregados";
+        } elseif (count($users) == 0) {
+            $infoTask = "No existen operarios  agregados";
+        }else{
+            $infoTask= null;
+        }
         $formTask = $this->createForm(TaskType::class, $task);
 
-        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services];
+        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask'=>$infoTask];
+    }
+
+    /**
+     * @Route("/ajax/task/advanced",  options={"expose"=true}, name="ajax.new.advanced.task")
+     * @return Response
+     */
+    public function newTaskAdvancedAjaxAction(Request $re): Response
+    {
+        $data = $re->request;
+        return $this->json($data);
+
+    }
+
+
+    /**
+     * @Route("/ajax/task/advanced/select/operator",  options={"expose"=true}, name="ajax.select.operators")
+     * @return Response
+     */
+    public function newTaskAdvancedSelectOperatorAjaxAction(Request $re, SerializerInterface $serializer): Response
+    {
+        $data = $re->request;
+        $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $data->get('id')]);
+        $json = $serializer->serialize(
+            $operators,
+            'json',
+            ['groups' => 'show_user']
+        );
+        return $this->json(json_decode($json));
+
     }
 
 

@@ -5,30 +5,48 @@
     {% block nav %}
         {{ parent() }}
     {% endblock %}
-    <section id="new-user" >
-        <div class="container" >
+    <section id="new-user">
+        <div class="container">
             <div class="row">
-                <div class="col-md-6">  <h1>Modifica usuario: {{ user.username }}</h1></div>
-                <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado de Usuarios</b></a></div>
+                <div class="col-md-6"><h1>Modifica usuario: {{ user.username }}</h1></div>
+                <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado
+                            de Usuarios</b></a></div>
             </div>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <button class="btn btn-dark" id="admin-recover-pass-user">Restablecer Contraseña</button>
                 {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data'} ,'name':'editUser' }) }}
                 <input type="hidden" value="{{ user.id }}" name="id">
-                <div class="row" >
+                <br>
+                <div class="row">
                     <div class="form-group col-md-4">
-                        <label>usuario:</label>
+                        <label>Usuario:</label>
                         {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
                         {{ form_errors(formUser.username) }}
                     </div>
                     <div class="form-group col-md-4">
-                        <label>Contraseña:</label>
-                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
-                        {{ form_errors(formUser.password) }}
+                        <label>Nombre:</label>
+                        {{ form_widget(formUser.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre' } }) }}
+                        {{ form_errors(formUser.name) }}
                     </div>
                     <div class="form-group col-md-4">
+                        <label>Apellidos:</label>
+                        {{ form_widget(formUser.lastname,{ 'attr': {'class': 'form-control','placeholder':'Apellidos' } }) }}
+                        {{ form_errors(formUser.lastname) }}
+                    </div>
+                </div>
+                <br>
+
+                <div class="row" id="block-recover-pass" style="display: none">
+                    <div class="form-group col-md-6">
+                        <label>Contraseña:</label>
+                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' ,'value': user.password} }) }}
+                        {{ form_errors(formUser.password) }}
+                    </div>
+                    <div class="form-group col-md-6">
                         <label>Repita contraseña:</label>
                         <input class="form-control" type="password" id="rememberPass" placeholder="Repita contraseña">
                     </div>
+
                 </div>
                 <br>
                 <div class="row">
@@ -52,7 +70,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <button class="btn btn-dark" type="submit" id="btn-save-user" disabled>Guardar</button>
+                        <button class="btn btn-dark" type="submit" id="btn-save-user">Guardar</button>
                     </div>
 
                     <div id="info-user"></div>
