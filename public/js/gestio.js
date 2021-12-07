@@ -34,7 +34,7 @@ $(document).ready(function () {
             async: true,
             success: function (data, status, object) {
                 var operator = object.responseJSON;
-                $('#label-operator').html('Operador/es de ' + service);
+                $('#label-operator').html('Operador de ' + service);
                 $('select[name="operator"]').empty();
                 $.each(operator, function (index, value) {
                     $('select[name="operator"]').append("<option value=" + value.id + ">" + value.username + "</option>");

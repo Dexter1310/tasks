@@ -6,8 +6,9 @@
     {% endblock %}
     <div class="container" id="front-show-user">
         <div class="row">
-            <div class="col-md-6">  <h3>Información del usuario </h3></div>
-            <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado de Usuarios</b></a></div>
+            <div class="col-md-6"><h3>Información del usuario </h3></div>
+            <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado
+                        de Usuarios</b></a></div>
         </div>
         <br>
         <div class="row">
@@ -22,7 +23,7 @@
             </div>
             <div class="col-md-3">
                 {% if user.service %}
-                <b>Especialidad: </b> <span>{{ user.service.name }}</span>
+                    <b>Especialidad: </b> <span>{{ user.service.name }}</span>
                 {% else %}
                     <b>Especialidad: </b> <span>Sin especificar</span>
                 {% endif %}
@@ -43,12 +44,35 @@
                 <label> <b>Información del usuario {{ user.name }} {{ user.lastname }} :</b></label>
                 <p style="color:blue">{{ user.information }}</p>
             </div>
-
         </div>
+
+        <hr>
+
+        <div class="row">
+            <h3>Tareas pendientes </h3>
+            <div class="col-md-12 mt-2">
+                {% if taskUser %}
+                <ul>
+                    {% for task in taskUser %}
+                        <li style="list-style: none">
+                            <h6>{{ task.title|upper }}</h6>
+                            <p><b>Descripción: </b><i style="color:blue"> {{ task.description }}</i></p>
+                            <p><b>Material: </b><i style="color:blue"> {{ task.material }}</i></p>
+
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% else %}
+                <p style="color:blue">No hay tareas pendientes. Añada alguna tarea
+                    para {{ user.name }} {{ user.lastname }}</p>
+            {% endif %}
+        </div>
+
 
         {% if user.type == 'operator' %}
             <div id="newTask">
-                <h4>Nueva actividad para {{ user.name  }} {{ user.lastname }}</h4>
+                <h4>Nueva actividad para {{ user.name }} {{ user.lastname }}</h4>
                 {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}
                 <div class="row">
                     <input name="user" type="hidden" value="{{ user.id }}">

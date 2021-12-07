@@ -7,6 +7,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Form\UserType;
+use App\Repository\TaskRepository;
 use App\Services\UserService;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
@@ -112,13 +113,14 @@ class UserController extends AbstractController
      * @ParamConverter("user", class="App\Entity\User")
      * @Template("Admin/user/show.html.twig")
      */
-    public function showUserAction(Request $request, User $user)
+    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository)
     {
         $task = new Task();
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
-        return ['user' => $user, 'formTask' => $formTask->createView(), 'operators' => $operators, 'services' => $services];
+        $taskUser=$user->getTask()->toArray();
+        return ['user' => $user, 'formTask' => $formTask->createView(), 'operators' => $operators, 'services' => $services ,'taskUser'=>$taskUser];
     }
 
 
