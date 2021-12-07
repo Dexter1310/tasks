@@ -34,7 +34,7 @@ class UserType extends AbstractType
                     'Cliente' => "client",
                     'Administrador' => "admin",
                 ],
-            ]);
+            ])->add('information', TextareaType::class);
 
     }
 

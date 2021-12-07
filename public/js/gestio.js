@@ -15,6 +15,13 @@ $(document).ready(function () {
         }
     })
 
+    //TODO: btn forn open form new task only for one operator
+    $('#newTask').hide();
+    $('#btn-task-admin').click(function (){
+        $('#newTask').toggle();
+    });
+
+
     //TODO: select for operator depending on which service you select
     $("select[name='service']").change(function () {
 

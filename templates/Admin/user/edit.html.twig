@@ -66,19 +66,36 @@
                             <select name="specialized" class="form-select">
                                 <option value="">Sin especificar</option>
                                 {% for service in services %}
-                                    <option value="{{ service.id }}">{{ service.name|e }}</option>
+                                    {% if  user.service %}
+                                        {% if service == user.service %}
+                                            <option value="{{ service.id }}" selected>{{ service.name }}</option>
+                                        {% else %}
+                                            <option value="{{ service.id }}">{{ service.name }}</option>
+                                        {% endif %}
+                                    {% else %}
+                                        <option value="{{ service.id }}">{{ service.name }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
-                        <button class="btn btn-dark" type="submit" id="btn-save-user">Guardar</button>
                     </div>
-
-                    <div id="info-user"></div>
-
                 </div>
+                <br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Información adicional:</label>
+                        {{ form_widget(formUser.information,{ 'attr': {'class': 'form-control','placeholder':'...' } }) }}
+                        {{ form_errors(formUser.information) }}
+                    </div>
+                </div>
+                <div class="row mt-2 text-center">
+                    <div class="col-md-12">
+                        <div id="info-user"></div>
+                        <button class="btn btn-dark" type="submit" id="btn-save-user">Modifica</button>
+                    </div>
+                </div>
+
                 {{ form_end(formUser) }}
-
-
             {% endif %}
         </div>
     </section>

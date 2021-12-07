@@ -77,6 +77,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $token;
 
+    /**
+     * @ORM\Column(type="string", length=6000, nullable=true)
+     */
+    private $information;
+
 
     /**
      * @var \DateTime
@@ -273,6 +278,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail($email): void
     {
         $this->email = $email;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getInformation()
+    {
+        return $this->information;
+    }
+
+    /**
+     * @param mixed $information
+     */
+    public function setInformation($information): void
+    {
+        $this->information = $information;
     }
 
     /**

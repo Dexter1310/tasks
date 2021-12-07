@@ -9,28 +9,46 @@
             <div class="col-md-6">  <h3>Información del usuario </h3></div>
             <div class="col-md-6"><a style="float: right" href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado de Usuarios</b></a></div>
         </div>
+        <br>
         <div class="row">
-            <div class="col-md-3">
-                <b>Usuario: </b><span>{{ user.username }}</span>
+            <div class="col-md-2">
+                <b>Usuario: </b><span>{{ user.username }} <small>({{ user.name }} {{ user.lastname }})</small></span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <b>Email: </b> <span>{{ user.email }}</span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <b>Tipo de usuario: </b> <span>{{ user.type }}</span>
             </div>
+            <div class="col-md-3">
+                {% if user.service %}
+                <b>Especialidad: </b> <span>{{ user.service.name }}</span>
+                {% else %}
+                    <b>Especialidad: </b> <span>Sin especificar</span>
+                {% endif %}
+            </div>
+
             <div class="col-md-3 text-center">
                 {% if user.type == 'operator' %}
                     <br>
                     <a href="#" style="float: right">
-                        <button class="btn btn-dark">Asignar nueva tarea</button>
+                        <button class="btn btn-dark" id="btn-task-admin">Asignar nueva tarea</button>
                     </a>
                 {% endif %}
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <label> <b>Información del usuario {{ user.name }} {{ user.lastname }} :</b></label>
+                <p style="color:blue">{{ user.information }}</p>
+            </div>
+
+        </div>
+
         {% if user.type == 'operator' %}
-            <div>
+            <div id="newTask">
+                <h4>Nueva actividad para {{ user.name  }} {{ user.lastname }}</h4>
                 {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}
                 <div class="row">
                     <input name="user" type="hidden" value="{{ user.id }}">
