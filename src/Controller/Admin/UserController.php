@@ -36,7 +36,15 @@ class UserController extends AbstractController
     public function userAction(Request $request, DataTableFactory $dataTableFactory)
     {
         $table = $dataTableFactory->create()
-            ->add('username', TextColumn::class, ['label' => 'Usuario', 'className' => 'bold'])
+            ->add('username', TextColumn::class, ['label' => 'Usuario',
+                'render' => function ($value, $context) {
+                    $id = $context->getId();
+                    $username=$context->getUsername();
+                    $show = '<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green">'.$username.'</span></a>';
+                    return sprintf('
+                    <div class="text-center">' . $show . '</div>');
+                }
+            ])
             ->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
                 /**
                  * @var User $context
@@ -119,8 +127,8 @@ class UserController extends AbstractController
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
-        $taskUser=$user->getTask()->toArray();
-        return ['user' => $user, 'formTask' => $formTask->createView(), 'operators' => $operators, 'services' => $services ,'taskUser'=>$taskUser];
+        $taskUser = $user->getTask()->toArray();
+        return ['user' => $user, 'formTask' => $formTask->createView(), 'operators' => $operators, 'services' => $services, 'taskUser' => $taskUser];
     }
 
 
@@ -148,7 +156,7 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $data = $request->request;
         $user = $em->getRepository(User::class)->findOneBy(['id' => $data->get('id')]);
-        $service = $em->getRepository(Service::class)->findOneBy(['id'=>$data->get('specialized')]);
+        $service = $em->getRepository(Service::class)->findOneBy(['id' => $data->get('specialized')]);
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

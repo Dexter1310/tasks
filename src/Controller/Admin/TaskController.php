@@ -36,12 +36,19 @@ class TaskController extends AbstractController
      */
     public function taskAction(Request $request, DataTableFactory $dataTableFactory)
     {
+
+
         $table = $dataTableFactory->create()
             ->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold'])
+            ->add('name', TextColumn::class, ['label' => 'Servicio', 'render' => function ($value, $context) {
+                if ($context->getService()) {
+                    $nameService = $context->getService()->getName();
+                } else {
+                    $nameService = 'Otros';
+                }
+                return sprintf($nameService);
+            }])
             ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
-                /**
-                 * @var Task $context
-                 */
                 $user = $context->getIduser()->toArray();
                 if ($user) {
                     $nameUser = '<a  href="/admin-user-show/' . $user[0]->getId() . '" title="visualiza"><span>' . $user[0]->getUsername() . '</span></a>';
@@ -114,12 +121,12 @@ class TaskController extends AbstractController
             $infoTask = "No hay servicios agregados";
         } elseif (count($users) == 0) {
             $infoTask = "No existen operarios  agregados";
-        }else{
-            $infoTask= null;
+        } else {
+            $infoTask = null;
         }
         $formTask = $this->createForm(TaskType::class, $task);
 
-        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask'=>$infoTask];
+        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask];
     }
 
     /**

@@ -112,6 +112,7 @@
                     <div class="form-group col-md-4">
                         <label>Servicio:</label>
                         <select name="service" class="form-select">
+                            <option value="">Sin especificar</option>
                             {% for service in services %}
                                 <option value="{{ service.id }}">{{ service.name|e }}</option>
                             {% endfor %}
