@@ -55,9 +55,15 @@ class Service
      */
     private $users;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="service")
+     */
+    private $tasks;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -176,6 +182,36 @@ class Service
             // set the owning side to null (unless already changed)
             if ($user->getService() === $this) {
                 $user->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->tasks->contains($task)) {
+            $this->tasks[] = $task;
+            $task->setService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->tasks->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getService() === $this) {
+                $task->setService(null);
             }
         }
 

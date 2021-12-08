@@ -24,6 +24,18 @@ class Task
      */
     private $title;
 
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $state;
+
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $viewOperator;
+
     /**
      * @ORM\Column(type="string", length=6000)
      */
@@ -38,6 +50,11 @@ class Task
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="task")
      */
     private $iduser;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="tasks")
+     */
+    private $service;
 
     public function __construct()
     {
@@ -60,6 +77,39 @@ class Task
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getState()
+    {
+        return $this->state;
+    }
+
+    /**
+     * @param mixed $state
+     */
+    public function setState($state): void
+    {
+        $this->state = $state;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getViewOperator()
+    {
+        return $this->viewOperator;
+    }
+
+    /**
+     * @param mixed $viewOperator
+     */
+    public function setViewOperator($viewOperator): void
+    {
+        $this->viewOperator = $viewOperator;
+    }
+
 
     public function getDescription(): ?string
     {
@@ -105,6 +155,18 @@ class Task
     public function removeIduser(User $iduser): self
     {
         $this->iduser->removeElement($iduser);
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): self
+    {
+        $this->service = $service;
 
         return $this;
     }

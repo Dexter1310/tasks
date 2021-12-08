@@ -40,6 +40,8 @@ class TaskService
 
     public function addTask(Request $request, FormInterface $form, Task $task)
     {
+        $task->setState('Pendiente');
+        $task->setViewOperator(false);
         $data = $request->request;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

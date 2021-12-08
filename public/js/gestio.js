@@ -17,14 +17,38 @@ $(document).ready(function () {
 
     //TODO: btn forn open form new task only for one operator
     $('#newTask').hide();
-    $('#btn-task-admin').click(function (){
+    $('#btn-task-admin').click(function () {
         $('#newTask').toggle();
+    });
+    //TODO selected type task
+    $('select[name="type-task"]').change(function () {
+        var typeselect = this.value;
+        if (typeselect == 1) {
+            $('#label-operator').html('Selecciona los operarios destinados');
+            $('select[name="operator"]').toggle();
+        } else {
+            $('select[name="operator"]').toggle();
+        }
+        var select = $("select[name='service']").val();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.select.operators'),
+            data: {id: select},
+            async: true,
+            success: function (data, status, object) {
+                var operator = object.responseJSON;
+                console.log(operator)
+
+            },
+            error: function (data, status, object) {
+            }
+        });
+
     });
 
 
     //TODO: select for operator depending on which service you select
     $("select[name='service']").change(function () {
-
         var select = this.value;
         var service = $('select[name="service"] option:selected').text();
         $.ajax({
@@ -43,7 +67,9 @@ $(document).ready(function () {
             error: function (data, status, object) {
             }
         });
+
     });
+
 
 //    Todo recover pass for user since Admin
     $('#admin-recover-pass-user').click(function () {

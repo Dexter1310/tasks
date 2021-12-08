@@ -15,6 +15,7 @@ use App\Entity\Task;
 
 use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -36,7 +37,17 @@ class TaskType extends AbstractType
                 'label' => 'Descripción de la Tarea',
             ])->add('material', TextareaType::class, [
                 'label' => 'Materiales usados',
-            ]);
+            ])->add('state', ChoiceType::class, [
+                'label' => 'Estado',
+                'choices' => [
+                    'Estado' => [
+                        'Pendiente' => '0',
+                        'En proceso' => '1',
+                        'Realizado' => '2',
+                        'Verificado' => '3'
+                    ]
+                ],
+            ]);;
 
     }
 

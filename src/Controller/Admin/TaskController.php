@@ -83,7 +83,9 @@ class TaskController extends AbstractController
          * @var User $user
          */
         $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $re->request->get('user')]);
+        $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $re->request->get('service')]);
         $task->addIduser($user);
+        $task->setService($service);
         $user->addTask($task);
         $formTask = $this->createForm(TaskType::class, $task);
         $ta = $this->taskService->addTask($re, $formTask, $task);
