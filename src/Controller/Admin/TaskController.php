@@ -51,13 +51,30 @@ class TaskController extends AbstractController
             ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
                 $user = $context->getIduser()->toArray();
                 if ($user) {
-                    $nameUser = '<a  href="/admin-user-show/' . $user[0]->getId() . '" title="visualiza"><span>' . $user[0]->getUsername() . '</span></a>';
+                    $nameUser=[];
+                    foreach ($user as $us){
+                        $name = '<a  href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getUsername() . '</span></a>';
+                        array_push($nameUser, $name."</br>");
+                    }
                 } else {
                     $nameUser = "Sin asignar";
                 }
-                return sprintf($nameUser);
+                return $nameUser;
             }
             ])
+            ->add('state', TextColumn::class, ['label' => 'Estado', 'render' => function ($value, $context) {
+                $state = $context->getState();
+                if ($state == 0) {
+                    $state = '<span style="color:red">Pendiente</span>';
+                } elseif ($state == 1) {
+                    $state = '<span style="color:orange;">En proceso</span>';
+                } elseif ($state == 1) {
+                    $state = '<span style="color:blue;">Realizada</span>';
+                } else {
+                    $state = '<span style="color:green;">Verificada</span>';
+                }
+                return sprintf($state);
+            }])
             ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
             ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold'])
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
@@ -135,7 +152,32 @@ class TaskController extends AbstractController
      */
     public function newTaskAdvancedAjaxAction(Request $re): Response
     {
+        $this->taskService = new TaskService($this->getDoctrine()->getManager());
         $data = $re->request;
+        $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $data->get('service')]);
+
+        $operator = $data->get('operator');
+        if (is_array($operator)) { //when is many opoerator task
+            $task = new Task();
+            foreach ($operator as $oper){
+                $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
+                $task->addIduser($user);
+                $task->setService($service);
+                $user->addTask($task);
+                $formTask = $this->createForm(TaskType::class, $task);
+                $this->taskService->addTask($re, $formTask, $task);
+            }
+        } else { //when is one operator task
+            $task = new Task();
+            $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
+            $task->addIduser($user);
+            $task->setService($service);
+            $user->addTask($task);
+            $formTask = $this->createForm(TaskType::class, $task);
+            $this->taskService->addTask($re, $formTask, $task);
+        }
+
+
         return $this->json($data);
 
     }
@@ -149,6 +191,9 @@ class TaskController extends AbstractController
     {
         $data = $re->request;
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $data->get('id')]);
+        if (!$operators) {
+            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
+        }
         $json = $serializer->serialize(
             $operators,
             'json',

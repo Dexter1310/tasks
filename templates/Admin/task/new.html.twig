@@ -32,6 +32,7 @@
                             {% endfor %}
                         </select>
                     </div>
+
                     <div class="form-group col-md-3">
                         <label>Tipo:</label>
                         <select name="type-task" class="form-select">
@@ -39,16 +40,18 @@
                             <option value="1">Grupo</option>
                         </select>
                     </div>
+
                     <div class="form-group col-md-3">
                         <label id="label-operator">Operador:</label>
-                        <div id="operators-task">
-                        </div>
                         <select name="operator" class="form-select">
                             {% for user in operators %}
                                 <option value="{{ user.id }}">{{ user.username|e }}</option>
                             {% endfor %}
                         </select>
+                        <div id="check"></div>
                     </div>
+
+
                 </div>
                 <br>
                 <div class="row">

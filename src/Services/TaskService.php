@@ -45,7 +45,6 @@ class TaskService
         $data = $request->request;
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->em->persist($task);
             $this->em->flush();
         }
@@ -57,7 +56,6 @@ class TaskService
         /**
          * @var Task $task
          */
-
         $this->em->persist($task);
         $this->em->flush();
     }

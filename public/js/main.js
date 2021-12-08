@@ -136,14 +136,13 @@ $(document).ready(function () {
         var form = $(this).closest('form');
         var formSerialize = form.serialize();
         console.log(form);
-
         $.ajax({
             type: 'POST',
             url: Routing.generate('ajax.new.advanced.task'),
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-
+            location.href="/task";
             },
             error: function (data, status, object) {
             }

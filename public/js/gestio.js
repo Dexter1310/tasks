@@ -20,15 +20,11 @@ $(document).ready(function () {
     $('#btn-task-admin').click(function () {
         $('#newTask').toggle();
     });
+
+
     //TODO selected type task
     $('select[name="type-task"]').change(function () {
-        var typeselect = this.value;
-        if (typeselect == 1) {
-            $('#label-operator').html('Selecciona los operarios destinados');
-            $('select[name="operator"]').toggle();
-        } else {
-            $('select[name="operator"]').toggle();
-        }
+
         var select = $("select[name='service']").val();
         $.ajax({
             type: 'POST',
@@ -37,18 +33,17 @@ $(document).ready(function () {
             async: true,
             success: function (data, status, object) {
                 var operator = object.responseJSON;
-                console.log(operator)
-
+                addcheckOperator($('select[name="type-task"]').val());
             },
             error: function (data, status, object) {
             }
         });
-
     });
 
 
     //TODO: select for operator depending on which service you select
     $("select[name='service']").change(function () {
+
         var select = this.value;
         var service = $('select[name="service"] option:selected').text();
         $.ajax({
@@ -63,6 +58,7 @@ $(document).ready(function () {
                 $.each(operator, function (index, value) {
                     $('select[name="operator"]').append("<option value=" + value.id + ">" + value.username + "</option>");
                 });
+                addcheckOperator($('select[name="type-task"]').val());
             },
             error: function (data, status, object) {
             }
@@ -75,5 +71,27 @@ $(document).ready(function () {
     $('#admin-recover-pass-user').click(function () {
         $('#block-recover-pass').fadeIn();
     });
+
+
+    function addcheckOperator(typeselect) {
+        if (typeselect == 1) {
+            $('#label-operator').html('Selecciona los operarios destinados');
+            $('select[name="operator"]').hide();
+            $("#check").empty();
+            $('select[name="operator"] option').each(function () {
+                var val = $(this).text();
+                $("#check").append('<div class="form-check">\n' +
+                    '  <input class="form-check-input" name="operator[]" type="checkbox" value="' + $(this).val() + '" id="flexCheckIndeterminate">\n' +
+                    '  <label class="form-check-label" for="flexCheckIndeterminate">\n' + val + '</label>' +
+                    '</div>');
+            })
+        } else {
+            $("#check").empty();
+            $('select[name="operator"]').show();
+        }
+    }
+
+
+
 
 });
