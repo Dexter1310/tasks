@@ -35,7 +35,11 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <a href="#" class="navbar-brand">
-                        <img src="{{ asset('images/logo.png') }}" height="28" alt="CoolBrand">
+                        {% if is_granted('ROLE_SUPER_ADMIN') %}
+                            <img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand">
+                        {% else %}
+                            <img src="{{ asset('images/logo.png') }}" height="28" alt="CoolBrand">
+                        {% endif %}
                     </a>
                     <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
                             data-bs-target="#navbarCollapse">
@@ -57,11 +61,11 @@
                                 </a>
                             </div>
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
-                                  <div class="nav-item nav-link">
+                                <div class="nav-item nav-link">
                                     <a href="{{ path('admin.company') }}" class="nav-item nav-link"><b>Empresas</b></a>
                                 </div>
                             {% endif %}
-                            {% if is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN')%}
+                            {% if is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN') %}
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Usuarios</b></a>
                                 </div>

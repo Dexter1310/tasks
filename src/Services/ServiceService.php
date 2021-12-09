@@ -9,6 +9,7 @@
 namespace App\Services;
 
 
+use App\Entity\Company;
 use App\Entity\Service;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
@@ -42,6 +43,8 @@ class ServiceService
         /**
          * @var Service $service
          */
+        $company=$this->em->getRepository(Company::class)->findOneBy(['id'=>$data->get('company')]);
+        $service->setCompany($company);
         $service->setCreatedAt(new \DateTime('now'));
         $service->setActive(1);
         $form->handleRequest($request);

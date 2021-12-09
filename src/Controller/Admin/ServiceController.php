@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Company;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Form\ServiceType;
@@ -70,8 +71,9 @@ class ServiceController extends AbstractController
     public function newServiceAction(Request $request)
     {
         $service = new Service();
+        $company= $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(ServiceType::class, $service);//todo: if new service added. this is your form
-        return ['formService' => $formUser->createView()];
+        return ['formService' => $formUser->createView(),'company'=>$company];
     }
 
 

@@ -10,10 +10,18 @@
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
                 <div class="row">
-                    <div class="form-group col-md-12">
+                    <div class="form-group col-md-6">
                         <label>Nuevo servicio:</label>
                         {{ form_widget(formService.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre servicio' } }) }}
                         {{ form_errors(formService.name) }}
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Empresa :</label>
+                        <select name="company" class="form-select">
+                            {% for comp in company %}
+                                <option value="{{ comp.id }}">{{ comp.name|e }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
                 </div>
                 <br>

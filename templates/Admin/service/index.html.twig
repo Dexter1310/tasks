@@ -8,17 +8,19 @@
     <section id="new-service">
         <div class="container">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-       <h1>Servicios
-                <a style="color: #1d2124;float: right" href="{{ path('newservice') }}"
-                   class="nav-item nav-link"><b><i class="bi bi-bag-plus-fill"></i></b></a>
-       </h1>
+                <h1>Servicios
+                    {% if  is_granted('ROLE_SUPER_ADMIN') %}
+                        <a style="color: #1d2124;float: right" href="{{ path('newservice') }}"
+                           class="nav-item nav-link"><b><i class="bi bi-bag-plus-fill"></i></b></a>
+                    {% endif %}
+                </h1>
                 <p id="info-admin"></p>
                 {% for message in app.flashes('warning') %}
                 <div class="alert alert-warning">
                     {{ message }}
                 </div>
                 {% endfor %}
-                <div  id="admin-service" class="table-bordered table-responsive">Loading...</div>
+                <div id="admin-service" class="table-bordered table-responsive">Loading...</div>
                 <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
                 <script>
                     $(function () {
