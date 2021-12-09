@@ -60,6 +60,11 @@ class Service
      */
     private $tasks;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="service")
+     */
+    private $company;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -214,6 +219,18 @@ class Service
                 $task->setService(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }

@@ -7,6 +7,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Company;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -51,8 +52,37 @@ class AppFixtures extends Fixture
             $userAdmin,
             'admin'
         ));
+
+        //Added SUPER Admin User
+        $userSuperAdmin = new User();
+        $userSuperAdmin->setUsername('superadmin');
+        $userSuperAdmin->setName("Norberto");
+        $userSuperAdmin->setLastname("Sanchez");
+        $userSuperAdmin->setRoles(User::R_SUPER_ADMIN);
+        $userSuperAdmin->setActive(1);
+        $userSuperAdmin->setToken('xxx');
+        $userSuperAdmin->setType("super");
+        $userSuperAdmin->setEmail("superadmin@superadmin.com");
+        $userSuperAdmin->setPassword($this->passwordHasher->hashPassword(
+            $userSuperAdmin,
+            'superadmin'
+        ));
+
+
+        //Added COMPANY  THE CIRCLE
+        $company = new Company();
+        $company->setName('THE CIRCLE');
+        $company->setCreatedAt(new \DateTime('now'));//created  in date today now
+        $company->setEmail('thecircle@thecircle.es');
+        $company->setLogo("https://thecirclemgt.com/img/logo.png");
+        $company->setAddress('c/ Gavarres, nave 6 , La Pera (Gerona)');
+        $company->setDescription("Empresa de servicios");
+
+
+        $manager->persist($company);
         $manager->persist($user);
         $manager->persist($userAdmin);
+        $manager->persist($userSuperAdmin);
         $manager->flush();
     }
 }

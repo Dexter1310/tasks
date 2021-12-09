@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\CompanyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -55,6 +57,16 @@ class Company
      * @ORM\Column(type="datetime", nullable=true)
      */
     protected $updatedAt;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Service::class, mappedBy="company")
+     */
+    private $service;
+
+    public function __construct()
+    {
+        $this->service = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -164,6 +176,36 @@ class Company
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    /**
+     * @return Collection|Service[]
+     */
+    public function getService(): Collection
+    {
+        return $this->service;
+    }
+
+    public function addService(Service $service): self
+    {
+        if (!$this->service->contains($service)) {
+            $this->service[] = $service;
+            $service->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeService(Service $service): self
+    {
+        if ($this->service->removeElement($service)) {
+            // set the owning side to null (unless already changed)
+            if ($service->getCompany() === $this) {
+                $service->setCompany(null);
+            }
+        }
+
+        return $this;
     }
 
 }

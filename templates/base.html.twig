@@ -56,7 +56,12 @@
                                     </button>
                                 </a>
                             </div>
-                            {% if is_granted('ROLE_ADMIN') %}
+                            {% if is_granted('ROLE_SUPER_ADMIN') %}
+                                  <div class="nav-item nav-link">
+                                    <a href="{{ path('admin.company') }}" class="nav-item nav-link"><b>Empresas</b></a>
+                                </div>
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN')%}
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Usuarios</b></a>
                                 </div>
@@ -65,19 +70,20 @@
                                        class="nav-item nav-link"><b>Servicios</b></a>
                                 </div>
                             {% endif %}
-                            <div  class="nav-item nav-link">
-                          <a  href="{{ path('admin.task') }}"
+                            <div class="nav-item nav-link">
+                                <a href="{{ path('admin.task') }}"
                                    class="nav-item nav-link"><b>Tareas</b></a>
                             </div>
                             <div class="nav-item nav-link">
-                                <a  href="{{ path('admin.user.show', { 'id': app.user.id }) }}"
+                                <a href="{{ path('admin.user.show', { 'id': app.user.id }) }}"
                                    class="nav-item nav-link">Usuario: <b>{{ app.user.username }}</b></a>
                             </div>
 
                         {% else %}
                             <div class="nav-item nav-link">
                                 <a href="{{ path('login') }}" class="nav-item nav-link">
-                                    <button class="btn btn-warning"><i class="bi bi-door-open"></i> Login</button></a>
+                                    <button class="btn btn-warning"><i class="bi bi-door-open"></i> Login</button>
+                                </a>
                             </div>
                         {% endif %}
                     </div>

@@ -147,6 +147,27 @@ $(document).ready(function () {
             error: function (data, status, object) {
             }
         });
+
+    });
+
+    //TODO :new COMPANY advanced
+
+    $('form[name="company"]').submit(function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var formSerialize = form.serialize();
+        console.log(form);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.new.company'),
+            data: formSerialize,
+            async: true,
+            success: function (data, status, object) {
+                location.href="/company";
+            },
+            error: function (data, status, object) {
+            }
+        });
     });
 
 

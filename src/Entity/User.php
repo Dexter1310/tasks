@@ -19,6 +19,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     const R_USER =['ROLE_USER'];
     const R_OPERATOR = ['ROLE_OPERATOR'];
     const R_ADMIN = ['ROLE_ADMIN'];
+    const R_SUPER_ADMIN = ['ROLE_SUPER_ADMIN'];
 
     /**
      * @ORM\Id
