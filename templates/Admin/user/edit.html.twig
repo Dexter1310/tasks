@@ -34,8 +34,20 @@
                         {{ form_errors(formUser.lastname) }}
                     </div>
                 </div>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <br>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label>Empresa :</label>
+                            <select name="company" class="form-select">
+                                {% for comp in company %}
+                                    <option value="{{ comp.id }}">{{ comp.name|e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                {% endif %}
                 <br>
-
                 <div class="row" id="block-recover-pass" style="display: none">
                     <div class="form-group col-md-6">
                         <label>Contraseña:</label>

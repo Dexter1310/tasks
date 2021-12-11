@@ -2,11 +2,13 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Company;
 use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Services\TaskService;
+use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
@@ -36,9 +38,15 @@ class TaskController extends AbstractController
      */
     public function taskAction(Request $request, DataTableFactory $dataTableFactory)
     {
-
-
         $table = $dataTableFactory->create()
+            ->add('company', TextColumn::class, ['label' => 'Home', 'render' => function ($valus, $context) {
+                if ($context->getCompany()) {
+                    $company = ' <div class="text-center mt-3"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"></div> ';
+                } else {
+                    $company = null;
+                }
+                return $company;
+            }])
             ->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold'])
             ->add('name', TextColumn::class, ['label' => 'Servicio', 'render' => function ($value, $context) {
                 if ($context->getService()) {
@@ -51,10 +59,10 @@ class TaskController extends AbstractController
             ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
                 $user = $context->getIduser()->toArray();
                 if ($user) {
-                    $nameUser=[];
-                    foreach ($user as $us){
+                    $nameUser = [];
+                    foreach ($user as $us) {
                         $name = '<a  href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getUsername() . '</span></a>';
-                        array_push($nameUser, $name."</br>");
+                        array_push($nameUser, $name . "</br>");
                     }
                 } else {
                     $nameUser = "Sin asignar";
@@ -87,7 +95,15 @@ class TaskController extends AbstractController
             }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => Task::class,
-
+                'query' => function (QueryBuilder $builder) {
+                    $builder
+                        ->select(Task::ALIAS)
+                        ->from(Task::class, Task::ALIAS);
+                    if ($this->getUser()->getType() != 'super') {
+                        $builder->andWhere(Task::ALIAS . '.company = :val')
+                            ->setParameter('val', $this->getUser()->getCompany()->getId());
+                    }
+                }
             ])->handleRequest($request);
         if ($table->isCallback()) {
             return $table->getResponse();
@@ -129,11 +145,16 @@ class TaskController extends AbstractController
     public function newTask(Request $request)
     {
         $task = new Task();
-        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
-        /**
-         * @var User $users
-         */
-        $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
+        if ($this->getUser()->getType() == 'super') {
+            $company= $this->getDoctrine()->getRepository(Company::class)->findAll();
+            $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+            $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+        } else {
+            $company=null;
+            $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
+            $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
+        }
+
         if (count($services) == 0) {
             $infoTask = "No hay servicios agregados";
         } elseif (count($users) == 0) {
@@ -143,7 +164,7 @@ class TaskController extends AbstractController
         }
         $formTask = $this->createForm(TaskType::class, $task);
 
-        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask];
+        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask ,'company'=>$company];
     }
 
     /**
@@ -159,10 +180,11 @@ class TaskController extends AbstractController
         $operator = $data->get('operator');
         if (is_array($operator)) { //when is many opoerator task
             $task = new Task();
-            foreach ($operator as $oper){
+            foreach ($operator as $oper) {
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);
                 $task->setService($service);
+                $task->setCompany($this->getUser()->getCompany());
                 $user->addTask($task);
                 $formTask = $this->createForm(TaskType::class, $task);
                 $this->taskService->addTask($re, $formTask, $task);
@@ -172,16 +194,30 @@ class TaskController extends AbstractController
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
             $task->addIduser($user);
             $task->setService($service);
+            $task->setCompany($this->getUser()->getCompany());
             $user->addTask($task);
             $formTask = $this->createForm(TaskType::class, $task);
             $this->taskService->addTask($re, $formTask, $task);
         }
-
-
         return $this->json($data);
-
     }
 
+    /**
+     * @Route("/ajax/task/advanced/select/company",  options={"expose"=true}, name="ajax.select.company")
+     * @return Response
+     */
+    public function newTaskAdvancedSelectCompanyAjaxAction(Request $re, SerializerInterface $serializer): Response
+    {
+        $data = $re->request;
+        $service= $this->getDoctrine()->getRepository(Service::class)->findBy([ 'company' => $data->get('id')]);
+        $json = $serializer->serialize(
+            $service,
+            'json',
+            ['groups' => 'show_service']
+        );
+        return $this->json(json_decode($json));
+
+    }
 
     /**
      * @Route("/ajax/task/advanced/select/operator",  options={"expose"=true}, name="ajax.select.operators")
@@ -190,16 +226,22 @@ class TaskController extends AbstractController
     public function newTaskAdvancedSelectOperatorAjaxAction(Request $re, SerializerInterface $serializer): Response
     {
         $data = $re->request;
-        $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $data->get('id')]);
-        if (!$operators) {
-            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
+        $idService=$data->get('id');
+
+        if($idService){
+            $service= $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id'=>$idService]);
+            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $idService,'type' => 'operator', 'company' => $service->getCompany()]);
+        }else{
+            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
         }
+
         $json = $serializer->serialize(
             $operators,
             'json',
             ['groups' => 'show_user']
         );
         return $this->json(json_decode($json));
+
 
     }
 

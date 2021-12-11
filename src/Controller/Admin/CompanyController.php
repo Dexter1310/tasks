@@ -35,7 +35,34 @@ class CompanyController extends AbstractController
      */
     public function companyAction(Request $request, DataTableFactory $dataTableFactory)
     {
-        return [];
+        $table = $dataTableFactory->create()
+            ->add('logo',TextColumn::class,['label'=>'logo','render'=>function($value,$context){
+                if($context->getLogo()){
+                    $logo = ' <div class="text-center mt-3"><img  src="'.$context->getLogo().'" height="28" alt="CoolBrand"></div> ' ;
+                }else{
+                    $logo=null;
+                }
+                return $logo;
+            }])
+            ->add('name', TextColumn::class, ['label'=>'Empresa', 'className' => 'bold'])
+            ->add('address', TextColumn::class, ['label'=>'Dirección', 'className' => 'bold'])
+            ->add('email', TextColumn::class, ['label'=>'E-mail', 'className' => 'bold'])
+            ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
+                $id = $context->getId();
+                $show = 'show<br>';
+                $update = 'update<br>';
+                $delete = 'delete';
+                return sprintf('
+                    <div class="text-center">' . $show . $update . $delete . '</div>');
+            }])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => Company::class,
+            ])->handleRequest($request);
+        if ($table->isCallback()) {
+            return $table->getResponse();
+        }
+        return ['datatable' => $table];
+
     }
 
     /**

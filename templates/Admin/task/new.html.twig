@@ -17,6 +17,22 @@
             <scan style="color:red;">{{ infoTask }}</scan>
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and infoTask is null %}
                 {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newAdvancedTask'}) }}
+
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label>Seleccione empresa:</label>
+                            <select name="company" class="form-select">
+                                <option value="" disabled selected>SELECCIONA EMPRESA</option>
+                                {% for company in company %}
+                                    <option value="{{ company.id }}">{{ company.name|e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                {% endif %}
+
                 <div class="row">
                     <div class="form-group col-md-3">
                         <label>Título:</label>

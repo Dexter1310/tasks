@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Company
 {
+    const ALIAS = 'com';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -63,9 +64,21 @@ class Company
      */
     private $service;
 
+    /**
+     * @ORM\OneToMany(targetEntity=User::class, mappedBy="company")
+     */
+    private $user;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="company")
+     */
+    private $task;
+
     public function __construct()
     {
         $this->service = new ArrayCollection();
+        $this->user = new ArrayCollection();
+        $this->task = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,6 +215,66 @@ class Company
             // set the owning side to null (unless already changed)
             if ($service->getCompany() === $this) {
                 $service->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+            $user->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        if ($this->user->removeElement($user)) {
+            // set the owning side to null (unless already changed)
+            if ($user->getCompany() === $this) {
+                $user->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTask(): Collection
+    {
+        return $this->task;
+    }
+
+    public function addTask(Task $task): self
+    {
+        if (!$this->task->contains($task)) {
+            $this->task[] = $task;
+            $task->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTask(Task $task): self
+    {
+        if ($this->task->removeElement($task)) {
+            // set the owning side to null (unless already changed)
+            if ($task->getCompany() === $this) {
+                $task->setCompany(null);
             }
         }
 

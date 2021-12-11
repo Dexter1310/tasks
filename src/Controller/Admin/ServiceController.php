@@ -9,6 +9,7 @@ use App\Form\ServiceType;
 use App\Form\UserType;
 use App\Services\ServiceService;
 use App\Services\UserService;
+use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
@@ -24,8 +25,6 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ServiceController extends AbstractController
 {
-
-
     /**
      * @Route("/service", name="service")
      * @template("Admin/service/index.html.twig")
@@ -33,6 +32,10 @@ class ServiceController extends AbstractController
     public function serviceAction(Request $request, DataTableFactory $dataTableFactory)
     {
         $table = $dataTableFactory->create()
+            ->add('company', TextColumn::class, ['label' => 'Empresa', 'render' => function ($value, $context) {
+                $company = ' <img style="float: right;" src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"> ' . '<small >' . $context->getCompany()->getName() . '</small>';
+                return $company;
+            }])
             ->add('name', TextColumn::class, ['label' => 'Servicio', 'className' => 'bold'])
             ->add('active', TextColumn::class, ['label' => 'Estado', 'render' => function ($value, $context) {
                 if ($context->getActive() == 1) {
@@ -56,6 +59,15 @@ class ServiceController extends AbstractController
             }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => Service::class,
+                'query' => function (QueryBuilder $builder) {
+                    $builder
+                        ->select(Service::ALIAS)
+                        ->from(Service::class, Service::ALIAS);
+                    if ($this->getUser()->getType() != 'super') {
+                        $builder->andWhere(Service::ALIAS . '.company = :val')
+                            ->setParameter('val', $this->getUser()->getCompany()->getId());
+                    }
+                }
             ])->handleRequest($request);
         if ($table->isCallback()) {
             return $table->getResponse();
@@ -71,9 +83,9 @@ class ServiceController extends AbstractController
     public function newServiceAction(Request $request)
     {
         $service = new Service();
-        $company= $this->getDoctrine()->getRepository(Company::class)->findAll();
+        $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(ServiceType::class, $service);//todo: if new service added. this is your form
-        return ['formService' => $formUser->createView(),'company'=>$company];
+        return ['formService' => $formUser->createView(), 'company' => $company];
     }
 
 
@@ -104,7 +116,6 @@ class ServiceController extends AbstractController
     {
         return ['service' => $service];
     }
-
 
 
     /**
@@ -155,7 +166,7 @@ class ServiceController extends AbstractController
         if (!$userService) { //Service will be deleted if there is no associated user
             $this->getDoctrine()->getManager()->remove($service);
             $this->getDoctrine()->getManager()->flush();
-        }else{
+        } else {
             $this->addFlash('warning', 'No se puede eliminar el servicio seleccionado, existe relación asociada con varios o un usuario/s.');
         }
         return $this->redirectToRoute('service');

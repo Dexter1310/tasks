@@ -35,10 +35,14 @@
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
                     <a href="#" class="navbar-brand">
-                        {% if is_granted('ROLE_SUPER_ADMIN') %}
-                            <img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand">
+                        {% if is_granted('ROLE_SUPER_ADMIN') and  is_granted('IS_AUTHENTICATED_FULLY') %}
+                           <a href="{{ asset('images/super.png') }}" target="_blank"><img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand"></a>
                         {% else %}
-                            <img src="{{ asset('images/logo.png') }}" height="28" alt="CoolBrand">
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                                {% if app.user.company %}
+                                    <img src="{{ app.user.company.logo }}" height="28" alt="CoolBrand">
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     </a>
                     <button type="button" class="navbar-toggler" data-bs-toggle="collapse"
@@ -48,8 +52,6 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="navbar-nav">
                             <a href="{{ path('home') }}" class="nav-item nav-link active">Home</a>
-                            <a href="#" class="nav-item nav-link">Profile</a>
-                            <a href="#" class="nav-item nav-link">Messages</a>
                         </div>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                             <div class="nav-item nav-link">

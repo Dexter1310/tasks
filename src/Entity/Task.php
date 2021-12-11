@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Task
 {
+    const ALIAS = 'task';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
@@ -55,6 +56,11 @@ class Task
      * @ORM\ManyToOne(targetEntity=Service::class, inversedBy="tasks")
      */
     private $service;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="task")
+     */
+    private $company;
 
     public function __construct()
     {
@@ -167,6 +173,18 @@ class Task
     public function setService(?Service $service): self
     {
         $this->service = $service;
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
 
         return $this;
     }

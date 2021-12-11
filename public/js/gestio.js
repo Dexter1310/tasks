@@ -21,10 +21,43 @@ $(document).ready(function () {
         $('#newTask').toggle();
     });
 
+    //TODO selected company
+
+    if($('select[name="company"]').length){  // if exists element select company in the form
+        $('select[name="service"]').empty();
+        $('select[name="operator"]').empty();
+        $('select[name="specialized"]').empty();
+        $('select[name="company"]').change(function () {
+            $('select[name="service"]').empty();
+            $('select[name="operator"]').empty();
+            $('select[name="specialized"]').empty();
+            var idCompany = this.value;
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('ajax.select.company'),
+                data: {id: idCompany},
+                async: true,
+                success: function (data, status, object) {
+                    var services = object.responseJSON;
+                    if(services || $('select[name="specialized"]').length){
+                        $('select[name="service"],select[name="specialized"]').append("<option value='' disabled selected>SELECCIONA SERVICIO</option>");
+                        $.each(services, function (index, value) {
+                            $('select[name="service"],select[name="specialized"]').append("<option value=" + value.id + ">" + value.name + "</option>");
+                        });
+                    }
+
+                },
+                error: function (data, status, object) {
+                }
+            });
+
+        });
+
+    }
+
 
     //TODO selected type task
     $('select[name="type-task"]').change(function () {
-
         var select = $("select[name='service']").val();
         $.ajax({
             type: 'POST',
@@ -43,7 +76,6 @@ $(document).ready(function () {
 
     //TODO: select for operator depending on which service you select
     $("select[name='service']").change(function () {
-
         var select = this.value;
         var service = $('select[name="service"] option:selected').text();
         $.ajax({

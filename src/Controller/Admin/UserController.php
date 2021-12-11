@@ -2,13 +2,16 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\Company;
 use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Form\UserType;
 use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use App\Services\UserService;
+use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
@@ -33,16 +36,21 @@ class UserController extends AbstractController
      * @Route("/user", name="admin.user")
      * @template("Admin/user/index.html.twig")
      */
-    public function userAction(Request $request, DataTableFactory $dataTableFactory)
+    public function userAction(Request $request, DataTableFactory $dataTableFactory, UserRepository $userRepository)
     {
         $table = $dataTableFactory->create()
             ->add('username', TextColumn::class, ['label' => 'Usuario',
                 'render' => function ($value, $context) {
                     $id = $context->getId();
-                    $username=$context->getUsername();
-                    $show = '<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green">'.$username.'</span></a>';
-                    return sprintf('
-                    <div class="text-center">' . $show . '</div>');
+                    $username = $context->getUsername();
+                    $show = '<a style="float:left;" href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green">' . $username . '</span></a>';
+                    if ($context->getCompany()) {
+                        $company = ' <img style="float: right;" src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"> ';
+                    } else {
+                        $company = null;
+                    }
+                    return $company . '
+                    <div class="text-center">' . $show . '</div>';
                 }
             ])
             ->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
@@ -69,7 +77,7 @@ class UserController extends AbstractController
                 $show = '<a  href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>';
                 $update = '<a  class="p-2" href="/admin-user-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>';
                 $delete = ' <a  href="/admin-user-delete/' . $id . '" title="Elimina"><span style="color: red"><i class="bi bi-trash"></i></span></a>';
-                if ($context->getType() == 'admin') {
+                if ($context->getType() == 'admin' or $context->getType() == 'super') {
                     $delete = "";
                 }
                 return sprintf('
@@ -77,6 +85,15 @@ class UserController extends AbstractController
             }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => User::class,
+                'query' => function (QueryBuilder $builder) {
+                    $builder
+                        ->select(User::ALIAS)
+                        ->from(User::class, User::ALIAS);
+                    if ($this->getUser()->getType() != 'super') {
+                        $builder->andWhere(User::ALIAS . '.company = :val')
+                            ->setParameter('val', $this->getUser()->getCompany()->getId());
+                    }
+                }
             ])->handleRequest($request);
         if ($table->isCallback()) {
             return $table->getResponse();
@@ -93,8 +110,9 @@ class UserController extends AbstractController
     {
         $user = new User();
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
-        return ['formUser' => $formUser->createView(), 'services' => $services];
+        return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company];
     }
 
 
@@ -107,6 +125,16 @@ class UserController extends AbstractController
         $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
+        $userAdmin = $this->getUser();
+        if ($userAdmin->getRoles() == USER::R_ADMIN) {// if user is ADMIN
+            if ($userAdmin) {
+                $user->setCompany($userAdmin->getCompany());
+            }
+        } else { // if user is  SUPER ADMIN
+            $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $re->request->get('company')]);
+            $user->setCompany($company);
+        }
+
         $us = $this->userService->addUser($re, $form, $user);
         if ($us) {
             return $this->json("se grabo el usuario");
@@ -123,6 +151,7 @@ class UserController extends AbstractController
      */
     public function showUserAction(Request $request, User $user, TaskRepository $taskRepository)
     {
+
         $task = new Task();
         $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
@@ -141,9 +170,16 @@ class UserController extends AbstractController
     public function updateUserAction(Request $request, User $user)
     {
         $form = $this->createForm(UserType::class, $user);
-        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        if ($this->getUser()->getType() == 'super') {
+            $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+            $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+        } else {
+            $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
+            $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+        }
+
         $form->handleRequest($request);
-        return ['formUser' => $form->createView(), 'user' => $user, 'services' => $services];
+        return ['formUser' => $form->createView(), 'user' => $user, 'services' => $services, 'company' => $company];
     }
 
 
@@ -161,6 +197,13 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setService($service);
+            $userAdmin = $this->getUser();
+            if ($userAdmin->getRoles() == USER::R_SUPER_ADMIN) {// if user is ADMIN
+                if ($userAdmin) {
+                    $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $request->request->get('company')]);
+                    $user->setCompany($company);
+                }
+            }
             $userService->updateUser($user);
             return $this->json("Se actualizo " . $data->get('user')['username']);
         } else {

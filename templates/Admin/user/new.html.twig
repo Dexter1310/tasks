@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="form-group col-md-4">
                         <label>usuario:</label>
-                        {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' } }) }}
+                        {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' ,'value':''} }) }}
                         {{ form_errors(formUser.username) }}
                     </div>
                     <div class="form-group col-md-4">
@@ -29,6 +29,20 @@
                         {{ form_errors(formUser.lastname) }}
                     </div>
                 </div>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                    <br>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            <label>Empresa :</label>
+                            <select name="company" class="form-select">
+                                <option value="" selected disabled>SELECCIONA EMPRESA</option>
+                                {% for comp in company %}
+                                    <option value="{{ comp.id }}">{{ comp.name|e }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                {% endif %}
                 <br>
                 <div class="row">
                     <div class="form-group col-md-6">

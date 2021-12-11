@@ -6,82 +6,101 @@ use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 
 /**
  * @ORM\Entity(repositoryClass=ServiceRepository::class)
  */
 class Service
+
 {
+    const ALIAS = 'ser';
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"show_service"})
      */
-    private $id;
+    private
+    $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"show_service"})
      */
-    private $name;
+    private
+    $name;
 
     /**
      * @ORM\Column(type="string", length=5255, nullable=true)
      */
-    private $description;
+    private
+    $description;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $createdAt;
+    protected
+    $createdAt;
 
     /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
      */
-    protected $updatedAt;
+    protected
+    $updatedAt;
 
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $active;
+    private
+    $active;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="service")
      */
-    private $users;
+    private
+    $users;
 
     /**
      * @ORM\OneToMany(targetEntity=Task::class, mappedBy="service")
      */
-    private $tasks;
+    private
+    $tasks;
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="service")
+     * @Groups({"show_service"})
      */
-    private $company;
+    private
+    $company;
 
-    public function __construct()
+    public
+    function __construct()
     {
         $this->users = new ArrayCollection();
         $this->tasks = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public
+    function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public
+    function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public
+    function setName(string $name): self
     {
         $this->name = $name;
 
@@ -91,7 +110,8 @@ class Service
     /**
      * @return mixed
      */
-    public function getDescription()
+    public
+    function getDescription()
     {
         return $this->description;
     }
@@ -99,18 +119,21 @@ class Service
     /**
      * @param mixed $description
      */
-    public function setDescription($description): void
+    public
+    function setDescription($description): void
     {
         $this->description = $description;
     }
 
 
-    public function getActive(): ?bool
+    public
+    function getActive(): ?bool
     {
         return $this->active;
     }
 
-    public function setActive(bool $active): self
+    public
+    function setActive(bool $active): self
     {
         $this->active = $active;
 
@@ -121,7 +144,8 @@ class Service
     /**
      * @return \DateTime
      */
-    public function getCreatedAt()
+    public
+    function getCreatedAt()
     {
         return $this->createdAt;
     }
@@ -129,7 +153,8 @@ class Service
     /**
      * @param \DateTime $createdAt
      */
-    public function setCreatedAt($createdAt)
+    public
+    function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
     }
@@ -137,7 +162,8 @@ class Service
     /**
      * @return \DateTime
      */
-    public function getUpdatedAt()
+    public
+    function getUpdatedAt()
     {
         return $this->updatedAt;
     }
@@ -145,7 +171,8 @@ class Service
     /**
      * @param \DateTime $updatedAt
      */
-    public function setUpdatedAt($updatedAt)
+    public
+    function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
     }
@@ -154,7 +181,8 @@ class Service
      * @ORM\PrePersist
      * @ORM\PreUpdate
      */
-    public function updatedTimestamps()
+    public
+    function updatedTimestamps()
     {
         $this->setUpdatedAt(new \DateTime('now'));
 
@@ -166,12 +194,14 @@ class Service
     /**
      * @return Collection|User[]
      */
-    public function getUsers(): Collection
+    public
+    function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user): self
+    public
+    function addUser(User $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
@@ -181,7 +211,8 @@ class Service
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public
+    function removeUser(User $user): self
     {
         if ($this->users->removeElement($user)) {
             // set the owning side to null (unless already changed)
@@ -196,12 +227,14 @@ class Service
     /**
      * @return Collection|Task[]
      */
-    public function getTasks(): Collection
+    public
+    function getTasks(): Collection
     {
         return $this->tasks;
     }
 
-    public function addTask(Task $task): self
+    public
+    function addTask(Task $task): self
     {
         if (!$this->tasks->contains($task)) {
             $this->tasks[] = $task;
@@ -211,7 +244,8 @@ class Service
         return $this;
     }
 
-    public function removeTask(Task $task): self
+    public
+    function removeTask(Task $task): self
     {
         if ($this->tasks->removeElement($task)) {
             // set the owning side to null (unless already changed)
@@ -223,18 +257,19 @@ class Service
         return $this;
     }
 
-    public function getCompany(): ?Company
+    public
+    function getCompany(): ?Company
     {
         return $this->company;
     }
 
-    public function setCompany(?Company $company): self
+    public
+    function setCompany(?Company $company): self
     {
         $this->company = $company;
 
         return $this;
     }
-
 
 
 }
