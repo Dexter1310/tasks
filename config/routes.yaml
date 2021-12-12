@@ -1,7 +1,8 @@
 #index:
 #    path: /
 #    controller: App\Controller\DefaultController::index
-
+fos_js_routing:
+  resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
 
 app_logout:
   path: /logout
