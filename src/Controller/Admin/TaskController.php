@@ -83,8 +83,8 @@ class TaskController extends AbstractController
                 }
                 return sprintf($state);
             }])
-            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
-            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold'])
+            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold description-task'])
+            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold material-task'])
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
                 $show = 'show<br>';

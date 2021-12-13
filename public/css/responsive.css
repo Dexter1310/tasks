@@ -22,6 +22,12 @@
         text-align:center ;
     }
 
+    .email-company,.address-company,.email-user,.material-task,.description-task{
+        display: none;
+    }
+
+
+
 }
 
 

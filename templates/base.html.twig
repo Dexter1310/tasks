@@ -35,13 +35,13 @@
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a href="#" class="navbar-brand">
+                    <a href="#" class="navbar-brand " >
                         {% if is_granted('ROLE_SUPER_ADMIN') and  is_granted('IS_AUTHENTICATED_FULLY') %}
-                           <a href="{{ asset('images/super.png') }}" target="_blank"><img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand"></a>
+                           <a  href="{{ asset('images/super.png') }}" target="_blank"><img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand"></a>
                         {% else %}
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 {% if app.user.company %}
-                                    <img src="{{ app.user.company.logo }}" height="28" alt="CoolBrand">
+                                    <img  src="{{ app.user.company.logo }}" height="28" alt="CoolBrand">
                                 {% endif %}
                             {% endif %}
                         {% endif %}

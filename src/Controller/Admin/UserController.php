@@ -66,7 +66,7 @@ class UserController extends AbstractController
                 }
                 return sprintf($type . $especialized);
             }])
-            ->add('email', TextColumn::class, ['label' => 'E-mail', 'orderable' => false, 'render' => function ($value, $context) {
+            ->add('email', TextColumn::class, ['label' => 'E-mail','className' => 'email-user', 'orderable' => false, 'render' => function ($value, $context) {
                     return sprintf('
                     <a href="mailto:' . $context->getEmail() . '">' . $context->getEmail() . '</a>
                     ');

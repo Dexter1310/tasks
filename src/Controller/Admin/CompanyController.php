@@ -45,8 +45,8 @@ class CompanyController extends AbstractController
                 return $logo;
             }])
             ->add('name', TextColumn::class, ['label'=>'Empresa', 'className' => 'bold'])
-            ->add('address', TextColumn::class, ['label'=>'Dirección', 'className' => 'bold'])
-            ->add('email', TextColumn::class, ['label'=>'E-mail', 'className' => 'bold'])
+            ->add('address', TextColumn::class, ['label'=>'Dirección', 'className' => 'bold address-company'])
+            ->add('email', TextColumn::class, ['label'=>'E-mail', 'className' => 'bold email-company'])
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
                 $show = 'show<br>';
