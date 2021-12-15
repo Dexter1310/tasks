@@ -8,6 +8,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Services\TaskService;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
@@ -61,7 +62,7 @@ class TaskController extends AbstractController
                 if ($user) {
                     $nameUser = [];
                     foreach ($user as $us) {
-                        $name = '<a  href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getUsername() . '</span></a>';
+                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getUsername() . '</span></a>';
                         array_push($nameUser, $name . "</br>");
                     }
                 } else {
@@ -98,9 +99,12 @@ class TaskController extends AbstractController
                 'query' => function (QueryBuilder $builder) {
                     $builder
                         ->select(Task::ALIAS)
+
                         ->from(Task::class, Task::ALIAS);
                     if ($this->getUser()->getType() != 'super') {
-                        $builder->andWhere(Task::ALIAS . '.company = :val')
+                        if ($this->getUser()->getType() == 'operator') {
+                        }
+                        $builder->andWhere(Task::ALIAS . '.company= :val')
                             ->setParameter('val', $this->getUser()->getCompany()->getId());
                     }
                 }
@@ -185,7 +189,11 @@ class TaskController extends AbstractController
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);
                 $task->setService($service);
-                $task->setCompany($service->getCompany());
+                if ($service) {
+                    $task->setCompany($service->getCompany());
+                } else {
+                    $task->setCompany($this->getUser()->getCompany());
+                }
                 $user->addTask($task);
                 $formTask = $this->createForm(TaskType::class, $task);
                 $this->taskService->addTask($re, $formTask, $task);

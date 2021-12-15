@@ -109,7 +109,12 @@ class UserController extends AbstractController
     public function newUser(Request $request)
     {
         $user = new User();
-        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        if ($this->getUser()->getCompany()) {
+            $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
+        } else {
+            $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        }
+
         $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
         return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company];
@@ -125,11 +130,8 @@ class UserController extends AbstractController
         $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
-        $userAdmin = $this->getUser();
-        if ($userAdmin->getRoles() == USER::R_ADMIN) {// if user is ADMIN
-            if ($userAdmin) {
-                $user->setCompany($userAdmin->getCompany());
-            }
+        if ($this->getUser()->getCompany()) {// if user is ADMIN
+            $user->setCompany($this->getUser()->getCompany());
         } else { // if user is  SUPER ADMIN
             $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $re->request->get('company')]);
             $user->setCompany($company);
