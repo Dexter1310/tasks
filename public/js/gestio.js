@@ -23,7 +23,7 @@ $(document).ready(function () {
 
     //TODO selected company
 
-    if($('select[name="company"]').length){  // if exists element select company in the form
+    if ($('select[name="company"]').length) {  // if exists element select company in the form
         $('select[name="service"]').empty();
         $('select[name="operator"]').empty();
         $('select[name="specialized"]').empty();
@@ -39,7 +39,7 @@ $(document).ready(function () {
                 async: true,
                 success: function (data, status, object) {
                     var services = object.responseJSON;
-                    if(services || $('select[name="specialized"]').length){
+                    if (services || $('select[name="specialized"]').length) {
                         $('select[name="service"],select[name="specialized"]').append("<option value='' disabled selected>SELECCIONA SERVICIO</option>");
                         $.each(services, function (index, value) {
                             $('select[name="service"],select[name="specialized"]').append("<option value=" + value.id + ">" + value.name + "</option>");
@@ -125,3 +125,40 @@ $(document).ready(function () {
 
 
 });
+
+function confirState(id) {
+    var bool = confirm("¿Seguro que quiere cambiar el estado de la empresa?");
+    if (bool) {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.state.company'),
+            data: {id: id},
+            async: true,
+            success: function (data, status, object) {
+                location.href = "/company";
+            },
+            error: function (data, status, object) {
+            }
+        });
+    }
+}
+
+function confirStateService(id) {
+    var bool = confirm("¿Seguro que quiere cambiar el estado del servicio?");
+    if (bool) {
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.state.service'),
+            data: {id: id},
+            async: true,
+            success: function (data, status, object) {
+                location.href = "/service";
+            },
+            error: function (data, status, object) {
+            }
+        });
+    }
+}
+
+
+

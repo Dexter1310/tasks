@@ -7,6 +7,7 @@ use App\Form\UserType;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,14 +19,22 @@ class DefaultController extends AbstractController
 {
 
 
-
     /**
      * @Route("/", name="home")
      * @template("Front/default/index.html.twig")
      */
     public function indexAction(Request $request)
     {
-        return ['home' => 'inicio'];
+        if ($this->getUser() && $this->getUser()->getType() != "super") {
+            if ($this->getUser()->getCompany()->isActive() == 1) {
+                return ['home' => 'inicio'];
+            } else {
+                return $this->redirect('/logout');
+            }
+        } else {
+            return ['home' => 'inicio'];
+        }
+
     }
 
     /**
@@ -45,8 +54,6 @@ class DefaultController extends AbstractController
             'formUser' => $formUser->createView(),
         ]);
     }
-
-
 
 
 }

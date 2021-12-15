@@ -31,7 +31,7 @@ class ServiceService
     /**
      * @param EntityManagerInterface $em
      */
-    public function __construct( EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
     }
@@ -43,7 +43,7 @@ class ServiceService
         /**
          * @var Service $service
          */
-        $company=$this->em->getRepository(Company::class)->findOneBy(['id'=>$data->get('company')]);
+        $company = $this->em->getRepository(Company::class)->findOneBy(['id' => $data->get('company')]);
         $service->setCompany($company);
         $service->setCreatedAt(new \DateTime('now'));
         $service->setActive(1);
@@ -53,6 +53,20 @@ class ServiceService
             $this->em->flush();
         }
         return $data;
+    }
+
+    public function stateService($id)
+    {
+
+        $service = $this->em->getRepository(Service::class)->findOneBy(['id' => $id]);
+        if ($service->getActive()) {
+            $service->setActive(0);
+        } else {
+            $service->setActive(1);
+        }
+        $service->setUpdatedAt(new \DateTime('now'));
+        $this->em->persist($service);
+        $this->em->flush();
     }
 
 

@@ -38,10 +38,11 @@ class ServiceController extends AbstractController
             }])
             ->add('name', TextColumn::class, ['label' => 'Servicio', 'className' => 'bold'])
             ->add('active', TextColumn::class, ['label' => 'Estado', 'render' => function ($value, $context) {
+                $id = $context->getId();
                 if ($context->getActive() == 1) {
-                    $state = "Activo";
+                    $state = " <button title='Desactivar' onClick='confirStateService(" . $id . ")'> <span style='color: green;'><i class='bi bi-heart-fill'></i></span></button>";
                 } else {
-                    $state = "No activo";
+                    $state = "    <button title='Activar' onClick='confirStateService(" . $id . ")'>  <span style='color: red;'><i class='bi bi-heart'></i></span></button> ";
                 }
                 return sprintf($state);
             }])
@@ -172,5 +173,16 @@ class ServiceController extends AbstractController
         return $this->redirectToRoute('service');
     }
 
+
+    /**
+     * @Route("/ajax/state/service",  options={"expose"=true}, name="ajax.state.service")
+     */
+    public function stateServiceAction(Request $request, ServiceService $serviceService)
+    {
+
+        $data = $request->request;
+        $serviceService->stateService($data->get('id'));
+        return $this->redirectToRoute('service');
+    }
 
 }

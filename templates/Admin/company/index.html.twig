@@ -8,19 +8,17 @@
     <section id="new-company">
         <div class="container">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-
                 <h1>Empresas
                     <a style="color: #1d2124;float: right" href="{{ path('newcompany') }}"
                        class="nav-item nav-link"><b><i class="bi bi-plus-lg"></i><i class="bi bi-building"></i></b></a>
                 </h1>
-
                 <p id="info-admin-company"></p>
                 {% for message in app.flashes('warning') %}
                 <div class="alert alert-warning">
                     {{ message }}
                 </div>
                 {% endfor %}
-                <div  id="admin-company" class="table-bordered table-responsive">Loading...</div>
+                <div id="admin-company" class="table-bordered table-responsive">Loading...</div>
                 <script src="{{ asset('bundles/datatables/js/datatables.js') }}"></script>
             {% endif %}
             <script>

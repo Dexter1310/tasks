@@ -39,6 +39,7 @@ class ServiceCompany
     {
         $data = $request->request;
         $form->handleRequest($request);
+        $company->setActive(1);
         $company->setCreatedAt(new \DateTime('now'));//created  in date today now
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($company);
@@ -52,6 +53,19 @@ class ServiceCompany
         /**
          * @var Company $task
          */
+        $this->em->persist($company);
+        $this->em->flush();
+    }
+
+    public function stateCompany($id)
+    {
+        $company = $this->em->getRepository(Company::class)->findOneBy(['id' => $id]);
+        if ($company->isActive()) {
+            $company->setActive(0);
+        } else {
+            $company->setActive(1);
+        }
+        $company->setUpdatedAt(new \DateTime('now'));
         $this->em->persist($company);
         $this->em->flush();
     }

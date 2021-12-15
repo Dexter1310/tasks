@@ -46,6 +46,14 @@ class Company
     private $description;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", name="active", nullable=false)
+     */
+    private $active;
+
+
+    /**
      * @var \DateTime
      *
      * @ORM\Column(type="datetime", nullable=true)
@@ -144,6 +152,22 @@ class Company
         $this->description = $description;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->active;
+    }
+
+    /**
+     * @param bool $active
+     */
+    public function setActive(bool $active): void
+    {
+        $this->active = $active;
     }
 
     /**

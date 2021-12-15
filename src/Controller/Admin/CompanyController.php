@@ -6,6 +6,8 @@ namespace App\Controller\Admin;
 use App\Entity\Company;
 use App\Form\CompanyType;
 use App\Services\ServiceCompany;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
@@ -36,24 +38,32 @@ class CompanyController extends AbstractController
     public function companyAction(Request $request, DataTableFactory $dataTableFactory)
     {
         $table = $dataTableFactory->create()
-            ->add('logo',TextColumn::class,['label'=>'logo','render'=>function($value,$context){
-                if($context->getLogo()){
-                    $logo = ' <div class="text-center mt-3"><img  src="'.$context->getLogo().'" height="28" alt="CoolBrand"></div> ' ;
-                }else{
-                    $logo=null;
+            ->add('logo', TextColumn::class, ['label' => 'logo', 'render' => function ($value, $context) {
+                if ($context->getLogo()) {
+                    $logo = ' <div class="text-center mt-3"><img  src="' . $context->getLogo() . '" height="28" alt="CoolBrand"></div> ';
+                } else {
+                    $logo = null;
                 }
                 return $logo;
             }])
-            ->add('name', TextColumn::class, ['label'=>'Empresa', 'className' => 'bold'])
-            ->add('address', TextColumn::class, ['label'=>'Dirección', 'className' => 'bold address-company'])
-            ->add('email', TextColumn::class, ['label'=>'E-mail', 'className' => 'bold email-company'])
+            ->add('name', TextColumn::class, ['label' => 'Empresa', 'className' => 'bold'])
+            ->add('active', TextColumn::class, ['label' => '', 'className' => 'bold state-company', 'render' => function ($value, $context) {
+                $id = $context->getId();
+                if ($context->isActive() == 1) {
+
+                    return " <button title='Desactivar' onClick='confirState(" . $id . ")'> <span style='color: green;'><i class='bi bi-heart-fill'></i></span></button>";
+                } else {
+                    return "    <button title='Activar' onClick='confirState(" . $id . ")'>  <span style='color: red;'><i class='bi bi-heart'></i></span></button> ";
+                }
+            }])
+            ->add('address', TextColumn::class, ['label' => 'Dirección', 'className' => 'bold address-company'])
+            ->add('email', TextColumn::class, ['label' => 'E-mail', 'className' => 'bold email-company'])
             ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
-                $show = 'show<br>';
-                $update = 'update<br>';
-                $delete = 'delete';
+                $show = '<a  href="/admin-company-show/' . $id . '" title="visualiza"><span style="color:green"><i class="bi bi-eye"></i></span></a>';
+                $update = '<a  class="p-2" href="/admin-company-update/' . $id . '" title="Edita"><i class="bi bi-gear"></i></a>';
                 return sprintf('
-                    <div class="text-center">' . $show . $update . $delete . '</div>');
+                    <div class="text-center">' . $show . $update . '</div>');
             }])
             ->createAdapter(ORMAdapter::class, [
                 'entity' => Company::class,
@@ -94,6 +104,66 @@ class CompanyController extends AbstractController
         }
     }
 
+    /**
+     * @Route("/admin-company-show/{id}", name="admin.company.show", options={"expose"=true})
+     * @ParamConverter("company", class="App\Entity\Company")
+     * @Template("Admin/company/show.html.twig")
+     * @return array|RedirectResponse
+     */
+    public function showCompanyAction(Request $request, Company $company)
+    {
+        return ['company' => $company];
+    }
 
+
+    /**
+     * @Route("/admin-company-update/{id}", name="admin.company.update", options={"expose"=true})
+     * @Template("Admin/company/edit.html.twig")
+     * @ParamConverter("company", class="App\Entity\Company")
+     * @return array|RedirectResponse
+     */
+    public function updateCompanyAction(Request $request, Company $company)
+    {
+        $form = $this->createForm(CompanyType::class, $company);
+        $form->handleRequest($request);
+        return ['formCompany' => $form->createView(), 'company' => $company];
+    }
+
+    /**
+     * @Route("/ajax/edit/company",  options={"expose"=true}, name="editcompany")
+     */
+    public function editServiceAction(Request $request, ServiceCompany $companyService)
+    {
+
+        $em = $this->getDoctrine()->getManager();
+        $data = $request->request;
+        $name = $data->get('company')['name'];
+        $company = $em->getRepository(Company::class)->findOneBy(['id' => $data->get('id')]);//query for company
+        $form = $this->createForm(CompanyType::class, $company);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * @var Company $company
+             */
+            $company->setName($name);
+            $company->setUpdatedAt(new \DateTime('now'));
+            $em->persist($company);
+            $em->flush();
+            return $this->json("Se actualizo " . $data->get('company')['name']);
+        }
+
+    }
+
+
+    /**
+     * @Route("/ajax/state/company",  options={"expose"=true}, name="ajax.state.company")
+     */
+    public function stateCompanyAction(Request $request, ServiceCompany $serviceCompany)
+    {
+
+        $data = $request->request;
+        $serviceCompany->stateCompany($data->get('id'));
+        return $this->redirectToRoute('admin.company');
+    }
 
 }

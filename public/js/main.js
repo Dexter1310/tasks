@@ -169,6 +169,26 @@ $(document).ready(function () {
             }
         });
     });
+    //TODO: edit COMPANY
+    $('form[name="editCompany"]').submit(function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('editcompany'),
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data, status, object) {
+                // $('#info-admin').html("<span style='color: green'>Actualizada la empresa : " + data + "</span>");
+                location.href="/company";
+            },
+            error: function () {
+            }
+        });
+    });
+
 
 
 });

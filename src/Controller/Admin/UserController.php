@@ -66,7 +66,7 @@ class UserController extends AbstractController
                 }
                 return sprintf($type . $especialized);
             }])
-            ->add('email', TextColumn::class, ['label' => 'E-mail','className' => 'email-user', 'orderable' => false, 'render' => function ($value, $context) {
+            ->add('email', TextColumn::class, ['label' => 'E-mail', 'className' => 'email-user', 'orderable' => false, 'render' => function ($value, $context) {
                     return sprintf('
                     <a href="mailto:' . $context->getEmail() . '">' . $context->getEmail() . '</a>
                     ');
@@ -153,7 +153,7 @@ class UserController extends AbstractController
     {
 
         $task = new Task();
-        $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $user->getCompany()]);
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
         $taskUser = $user->getTask()->toArray();

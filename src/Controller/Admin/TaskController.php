@@ -126,6 +126,7 @@ class TaskController extends AbstractController
         $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $re->request->get('service')]);
         $task->addIduser($user);
         $task->setService($service);
+        $task->setCompany($service->getCompany());
         $user->addTask($task);
         $formTask = $this->createForm(TaskType::class, $task);
         $ta = $this->taskService->addTask($re, $formTask, $task);
@@ -146,11 +147,11 @@ class TaskController extends AbstractController
     {
         $task = new Task();
         if ($this->getUser()->getType() == 'super') {
-            $company= $this->getDoctrine()->getRepository(Company::class)->findAll();
+            $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
             $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
             $users = $this->getDoctrine()->getRepository(User::class)->findAll();
         } else {
-            $company=null;
+            $company = null;
             $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
             $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
         }
@@ -164,7 +165,7 @@ class TaskController extends AbstractController
         }
         $formTask = $this->createForm(TaskType::class, $task);
 
-        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask ,'company'=>$company];
+        return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask, 'company' => $company];
     }
 
     /**
@@ -184,7 +185,7 @@ class TaskController extends AbstractController
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);
                 $task->setService($service);
-                $task->setCompany($this->getUser()->getCompany());
+                $task->setCompany($service->getCompany());
                 $user->addTask($task);
                 $formTask = $this->createForm(TaskType::class, $task);
                 $this->taskService->addTask($re, $formTask, $task);
@@ -194,7 +195,7 @@ class TaskController extends AbstractController
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
             $task->addIduser($user);
             $task->setService($service);
-            $task->setCompany($this->getUser()->getCompany());
+            $task->setCompany($service->getCompany());
             $user->addTask($task);
             $formTask = $this->createForm(TaskType::class, $task);
             $this->taskService->addTask($re, $formTask, $task);
@@ -209,7 +210,7 @@ class TaskController extends AbstractController
     public function newTaskAdvancedSelectCompanyAjaxAction(Request $re, SerializerInterface $serializer): Response
     {
         $data = $re->request;
-        $service= $this->getDoctrine()->getRepository(Service::class)->findBy([ 'company' => $data->get('id')]);
+        $service = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $data->get('id')]);
         $json = $serializer->serialize(
             $service,
             'json',
@@ -226,12 +227,12 @@ class TaskController extends AbstractController
     public function newTaskAdvancedSelectOperatorAjaxAction(Request $re, SerializerInterface $serializer): Response
     {
         $data = $re->request;
-        $idService=$data->get('id');
+        $idService = $data->get('id');
 
-        if($idService){
-            $service= $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id'=>$idService]);
-            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $idService,'type' => 'operator', 'company' => $service->getCompany()]);
-        }else{
+        if ($idService) {
+            $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $idService]);
+            $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $idService, 'type' => 'operator', 'company' => $service->getCompany()]);
+        } else {
             $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
         }
 

@@ -53,7 +53,12 @@ class UserService
          */
         $type = $data->get('user')['type'];
         $specialized=$data->get('specialized');
-        $service=$this->em->getRepository(Service::class)->find(['id'=>$specialized]);
+        if($specialized){// si existe servicio para el usuario
+            $service=$this->em->getRepository(Service::class)->find(['id'=>$specialized]);
+        }else{
+            $service=null;
+        }
+
         if ($type == "admin") {
             $user->setRoles(User::R_ADMIN);
         } elseif ($type == "operator") {

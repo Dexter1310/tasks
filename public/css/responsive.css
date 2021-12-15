@@ -22,7 +22,7 @@
         text-align:center ;
     }
 
-    .email-company,.address-company,.email-user,.material-task,.description-task{
+    .email-company,.address-company,.email-user,.material-task,.description-task,.state-company{
         display: none;
     }
 

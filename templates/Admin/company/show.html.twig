@@ -1,0 +1,40 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Company{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    <section id="new-company">
+        <div class="container">
+            {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <a href="{{ path("admin.company") }}">
+                    <button class="btn btn-warning">Volver</button>
+                </a>
+                <b style="float: right">Estado:
+                    {% if company.active == 1 %}
+                        <scan style="color: green;">Activa</scan>
+                    {% else %}
+                        <scan style="color:red;">Inactiva</scan>
+                    {% endif %}
+                </b>
+                <table class="table table-striped table-responsive">
+                    <thead>
+                    <th>Empresa</th>
+                    <th>Dirección</th>
+                    <th>Descripción</th>
+                    <th>Correo</th>
+                    </thead>
+                    <tr>
+                    </tr>
+                    <tbody>
+                    <td>{{ company.name }}</td>
+                    <td>{{ company.address }}</td>
+                    <td>{{ company.description }}</td>
+                    <td>{{ company.email }}</td>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
