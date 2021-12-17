@@ -44,7 +44,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                location.href="/user";
+                location.href = "/user";
             },
             error: function (data, status, object) {
                 $('#info-admin').html('<scan style="color:blue">No se ha podido guardar el usuario por que ya existe en base de datos.</scan>')
@@ -64,7 +64,7 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 $('#info-admin').html("<span style='color: green'>Actualizada el usuario : " + data + "</span>");
-                location.href="/user";
+                location.href = "/user";
             },
             error: function () {
             }
@@ -83,7 +83,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                location.href="/service";
+                location.href = "/service";
             },
             error: function (data, status, object) {
             }
@@ -103,7 +103,7 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 $('#info-admin').html("<span style='color: green'>Actualizada el servicio : " + data + "</span>");
-                location.href="/service";
+                location.href = "/service";
             },
             error: function () {
             }
@@ -122,7 +122,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                 location.href="/task";
+                location.href = "/task";
             },
             error: function (data, status, object) {
             }
@@ -142,7 +142,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-            location.href="/task";
+                location.href = "/task";
             },
             error: function (data, status, object) {
             }
@@ -163,7 +163,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                location.href="/company";
+                location.href = "/company";
             },
             error: function (data, status, object) {
             }
@@ -182,13 +182,33 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 // $('#info-admin').html("<span style='color: green'>Actualizada la empresa : " + data + "</span>");
-                location.href="/company";
+                location.href = "/company";
             },
             error: function () {
             }
         });
     });
 
+
+    //TODO:edit TASK For OPERATOR
+
+    $('form[name="editTaskOperator"]').submit(function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.edit.task.operator'),
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data, status, object) {
+                location.reload();
+            },
+            error: function () {
+            }
+        });
+    });
 
 
 });

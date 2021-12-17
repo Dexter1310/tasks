@@ -40,9 +40,9 @@ class ServiceController extends AbstractController
             ->add('active', TextColumn::class, ['label' => 'Estado', 'render' => function ($value, $context) {
                 $id = $context->getId();
                 if ($context->getActive() == 1) {
-                    $state = " <button title='Desactivar' onClick='confirStateService(" . $id . ")'> <span style='color: green;'><i class='bi bi-heart-fill'></i></span></button>";
+                    $state = " <button title='Desactivar' onClick='confirStateService(" . $id . ")'> <span style='color: green;'><i class='bi bi-circle-fill'></i></span></button>";
                 } else {
-                    $state = "    <button title='Activar' onClick='confirStateService(" . $id . ")'>  <span style='color: red;'><i class='bi bi-heart'></i></span></button> ";
+                    $state = "    <button title='Activar' onClick='confirStateService(" . $id . ")'>  <span style='color: red;'><i class='bi bi-circle-fill'></i></span></button> ";
                 }
                 return sprintf($state);
             }])

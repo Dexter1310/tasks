@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Tests\Fixtures\AppBundle\AppBundle;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 class TaskController extends AbstractController
@@ -39,6 +40,7 @@ class TaskController extends AbstractController
      */
     public function taskAction(Request $request, DataTableFactory $dataTableFactory)
     {
+
         $table = $dataTableFactory->create()
             ->add('company', TextColumn::class, ['label' => 'Home', 'render' => function ($valus, $context) {
                 if ($context->getCompany()) {
@@ -77,38 +79,48 @@ class TaskController extends AbstractController
                     $state = '<span style="color:red">Pendiente</span>';
                 } elseif ($state == 1) {
                     $state = '<span style="color:orange;">En proceso</span>';
-                } elseif ($state == 1) {
+                } elseif ($state == 2) {
                     $state = '<span style="color:blue;">Realizada</span>';
                 } else {
                     $state = '<span style="color:green;">Verificada</span>';
                 }
-                return sprintf($state);
-            }])
-            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold description-task'])
-            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold material-task'])
-            ->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
+                return $state;
+            }]);
+//            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold description-task'])
+//            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold material-task']);
+        if ($this->getUser()->getType() == "admin" || $this->getUser()->getType() == "super") {
+            $table->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
                 $id = $context->getId();
-                $show = 'show<br>';
                 $update = 'update<br>';
                 $delete = 'delete';
                 return sprintf('
-                    <div class="text-center">' . $show . $update . $delete . '</div>');
-            }])
-            ->createAdapter(ORMAdapter::class, [
-                'entity' => Task::class,
-                'query' => function (QueryBuilder $builder) {
-                    $builder
-                        ->select(Task::ALIAS)
+                    <div class="text-center">' . $update . $delete . '</div>');
+            }]);
+        }
 
-                        ->from(Task::class, Task::ALIAS);
-                    if ($this->getUser()->getType() != 'super') {
-                        if ($this->getUser()->getType() == 'operator') {
+        $table->createAdapter(ORMAdapter::class, [
+
+            'entity' => Task::class,
+            'query' => function (QueryBuilder $builder) {
+
+                $builder
+                    ->select(Task::ALIAS)
+                    ->from(Task::class, Task::ALIAS);
+                if ($this->getUser()->getType() != 'super') {
+                    if ($this->getUser()->getType() == 'operator') { //TODO ONLY IF USER OPERATOR
+                        $tasks = $this->getUser()->getTask()->toArray();
+                        $builder->andWhere(Task::ALIAS . '.id IN (:valid)');
+                        $id = [];
+                        foreach ($tasks as $task) {
+                            array_push($id, $task->getId());
                         }
-                        $builder->andWhere(Task::ALIAS . '.company= :val')
-                            ->setParameter('val', $this->getUser()->getCompany()->getId());
+                        $builder->setParameter('valid', $id);
                     }
+                    $builder->andWhere(Task::ALIAS . '.company= :val')
+                        ->setParameter('val', $this->getUser()->getCompany()->getId());
                 }
-            ])->handleRequest($request);
+            }
+        ])->handleRequest($request);
         if ($table->isCallback()) {
             return $table->getResponse();
         }
@@ -203,7 +215,11 @@ class TaskController extends AbstractController
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
             $task->addIduser($user);
             $task->setService($service);
-            $task->setCompany($service->getCompany());
+            if ($service) {
+                $task->setCompany($service->getCompany());
+            } else {
+                $task->setCompany($this->getUser()->getCompany());
+            }
             $user->addTask($task);
             $formTask = $this->createForm(TaskType::class, $task);
             $this->taskService->addTask($re, $formTask, $task);
@@ -253,6 +269,44 @@ class TaskController extends AbstractController
 
 
     }
+
+    /**
+     * @Route("/admin/task/show/{id}", name="admin.task.show", options={"expose"=true})
+     * @ParamConverter("task", class="App\Entity\Task")
+     * @Template("Admin/task/show.html.twig")
+     * @return array|RedirectResponse
+     */
+    public function showTaskAction(Request $request, Task $task)
+    {
+        return ['task' => $task];
+    }
+
+    /**
+     * @Route("/ajax/show/task",  options={"expose"=true}, name="ajax.admin.show.task")
+     */
+    public function showTaskAjaxAction(Request $request,TaskService $taskService)
+    {
+        $idTask = $request->request->get('id');
+        $task= $taskService->showTask($idTask);
+        return $this->json($task->getId());
+
+    }
+    /**
+     * @Route("/ajax/edit/task/operator",  options={"expose"=true}, name="ajax.edit.task.operator")
+     */
+    public function editTaskOperatorAjaxAction(Request $request,TaskService $taskService)
+    {
+        $data = $request->request;
+        $stateOper=$data->get('stateOper');
+        $idTask=$data->get('id');
+        $task=$taskService->showTask($idTask);
+        $task->setState($stateOper);
+        $taskService->updateTask($task);
+
+        return $this->json($idTask);
+
+    }
+
 
 
 }

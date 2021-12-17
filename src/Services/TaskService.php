@@ -60,5 +60,19 @@ class TaskService
         $this->em->flush();
     }
 
+    public function showTask($idTask)
+    {
+        /**
+         * @var Task $task
+         */
+        $task = $this->em->getRepository(Task::class)->findOneBy(['id' => $idTask]);
+        if($task->getViewOperator()==0){
+            $task->setViewOperator(1);
+            $this->updateTask($task);
+        }
+        return $task;
+    }
+
+
 
 }

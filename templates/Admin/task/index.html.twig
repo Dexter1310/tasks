@@ -26,13 +26,40 @@
                                 'copy',
                                 {extend: 'pdf', title: 'domains'},
                                 {extend: 'print'}
-                            ]
+                            ],
+                            // columnDefs: [ {
+                            //     targets: 3,
+                            //     type: "date",
+                            //     data: "startDate",
+                            //     render: function (data, type, row) {
+                            //
+                            //     }
+                            // }],
                         }).then(function (dt) {
                         // dt contains the initialized instance of DataTables
+
                         dt.on('draw',
                             function () {
+                                $('#admin-task table tr').click(function (e){
+                                    e.preventDefault();
+                                    var id_task = $(this).attr('id');
+                                    $.ajax({
+                                        type: 'POST',
+                                        url: Routing.generate('ajax.admin.show.task'),
+                                        data: {id: id_task},
+                                        async: true,
+                                        success: function (data, status, object) {
+                                            location.href='/admin/task/show/'+data;
+                                        },
+                                        error: function () {
+                                        }
+                                    });
+
+                                });
+
+
                             })
-                    });
+                    })
                 });
             </script>
         </div>

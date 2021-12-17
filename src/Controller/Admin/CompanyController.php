@@ -51,9 +51,9 @@ class CompanyController extends AbstractController
                 $id = $context->getId();
                 if ($context->isActive() == 1) {
 
-                    return " <button title='Desactivar' onClick='confirState(" . $id . ")'> <span style='color: green;'><i class='bi bi-heart-fill'></i></span></button>";
+                    return " <button title='Desactivar' onClick='confirState(" . $id . ")'> <span style='color: green;'><i class='bi bi-circle-fill'></i></span></button>";
                 } else {
-                    return "    <button title='Activar' onClick='confirState(" . $id . ")'>  <span style='color: red;'><i class='bi bi-heart'></i></span></button> ";
+                    return "    <button title='Activar' onClick='confirState(" . $id . ")'>  <span style='color: red;'><i class='bi bi-circle-fill'></i></span></button> ";
                 }
             }])
             ->add('address', TextColumn::class, ['label' => 'Dirección', 'className' => 'bold address-company'])
