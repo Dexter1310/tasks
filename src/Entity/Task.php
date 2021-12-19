@@ -31,6 +31,35 @@ class Task
      */
     private $state;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $time;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $time_end;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $time_total;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    protected $updatedAt;
+
 
     /**
      * @ORM\Column(type="boolean")
@@ -106,6 +135,100 @@ class Task
     public function getViewOperator()
     {
         return $this->viewOperator;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTime()
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param mixed $time
+     */
+    public function setTime($time): void
+    {
+        $this->time = $time;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeEnd()
+    {
+        return $this->time_end;
+    }
+
+    /**
+     * @param mixed $time_end
+     */
+    public function setTimeEnd($time_end): void
+    {
+        $this->time_end = $time_end;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTimeTotal()
+    {
+        return $this->time_total;
+    }
+
+    /**
+     * @param mixed $time_total
+     */
+    public function setTimeTotal($time_total): void
+    {
+        $this->time_total = $time_total;
+    }
+
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param \DateTime $createdAt
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param \DateTime $updatedAt
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdatedAt(new \DateTime('now'));
+
+        if ($this->getCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime('now'));
+        }
     }
 
     /**

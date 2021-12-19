@@ -6,7 +6,7 @@
         {{ parent() }}
     {% endblock %}
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <div class="container task-admin-index">
+        <div class="container-jumbotron task-admin-index">
             <h1>Tareas
                 {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
                     <a style="color: #1d2124;float: right" href="{{ path('new.multi.task') }}"
@@ -40,7 +40,7 @@
 
                         dt.on('draw',
                             function () {
-                                $('#admin-task table tr').click(function (e){
+                                $('#admin-task table tr').click(function (e) {
                                     e.preventDefault();
                                     var id_task = $(this).attr('id');
                                     $.ajax({
@@ -49,15 +49,12 @@
                                         data: {id: id_task},
                                         async: true,
                                         success: function (data, status, object) {
-                                            location.href='/admin/task/show/'+data;
+                                            location.href = '/admin/task/show/' + data;
                                         },
                                         error: function () {
                                         }
                                     });
-
                                 });
-
-
                             })
                     })
                 });

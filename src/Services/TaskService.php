@@ -41,6 +41,8 @@ class TaskService
     public function addTask(Request $request, FormInterface $form, Task $task)
     {
         $task->setState('Pendiente');
+        $task->setTime(0);
+        $task->setCreatedAt(new \DateTime('now'));
         $task->setViewOperator(false);
         $data = $request->request;
         $form->handleRequest($request);
@@ -56,23 +58,31 @@ class TaskService
         /**
          * @var Task $task
          */
+        $task->updatedTimestamps();
         $this->em->persist($task);
         $this->em->flush();
     }
 
-    public function showTask($idTask)
+    public function showTask($idTask, $user)
     {
         /**
          * @var Task $task
          */
         $task = $this->em->getRepository(Task::class)->findOneBy(['id' => $idTask]);
-        if($task->getViewOperator()==0){
+        if ($task->getViewOperator() == 0 && $user->getType() == 'operator') {
             $task->setViewOperator(1);
             $this->updateTask($task);
         }
+
         return $task;
     }
 
+    public function deleteTask($task)
+    {
+        $this->em->remove($task);
+        $this->em->flush();
+
+    }
 
 
 }

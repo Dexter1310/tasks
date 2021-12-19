@@ -37,7 +37,7 @@
                 <div class="container-fluid">
                     <a href="#" class="navbar-brand " >
                         {% if is_granted('ROLE_SUPER_ADMIN') and  is_granted('IS_AUTHENTICATED_FULLY') %}
-                           <a  href="{{ asset('images/super.png') }}" target="_blank"><img src="{{ asset('images/super.png') }}" height="28" alt="CoolBrand"></a>
+                           <a  href="{{ asset('images/tba.png') }}" target="_blank"><img src="{{ asset('images/tba.png') }}" height="28" alt="CoolBrand"></a>
                         {% else %}
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 {% if app.user.company %}
@@ -52,38 +52,39 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
                         <div class="navbar-nav">
-                            <a href="{{ path('home') }}" class="nav-item nav-link active">Home</a>
+                            <a href="{{ path('home') }}" class="nav-item nav-link active">HOME</a>
                         </div>
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                            <div class="nav-item nav-link">
-                                <a href="/logout" title="Salir" style="color: red">
-                                    <button
-                                            class="btn btn-outline-danger " style="border: 0">
-                                        <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> Logout
-                                    </button>
-                                </a>
-                            </div>
+
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
                                 <div class="nav-item nav-link">
-                                    <a href="{{ path('admin.company') }}" class="nav-item nav-link"><b>Empresas</b></a>
+                                    <a href="{{ path('admin.company') }}" class="nav-item nav-link"><b>EMPRESAS</b></a>
                                 </div>
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN') %}
                                 <div class="nav-item nav-link">
-                                    <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Usuarios</b></a>
+                                    <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>USUARIOS</b></a>
                                 </div>
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('service') }}"
-                                       class="nav-item nav-link"><b>Servicios</b></a>
+                                       class="nav-item nav-link"><b>SERVICIOS</b></a>
                                 </div>
                             {% endif %}
                             <div class="nav-item nav-link">
                                 <a href="{{ path('admin.task') }}"
-                                   class="nav-item nav-link"><b>Tareas</b></a>
+                                   class="nav-item nav-link"><b>TAREAS</b></a>
                             </div>
                             <div class="nav-item nav-link">
                                 <a href="{{ path('admin.user.show', { 'id': app.user.id }) }}"
-                                   class="nav-item nav-link">Usuario: <b>{{ app.user.username }}</b></a>
+                                   class="nav-item nav-link">USUARIO: <b>{{ app.user.username }}</b></a>
+                            </div>
+                            <div class="nav-item nav-link" style=" margin-left: auto;">
+                                <a href="/logout" title="Salir" style="color: red">
+                                    <button
+                                            class="btn btn-outline-danger " style="border: 0">
+                                        <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> <b>SALIR</b>
+                                    </button>
+                                </a>
                             </div>
 
                         {% else %}

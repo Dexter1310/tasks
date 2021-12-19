@@ -6,58 +6,118 @@
         {{ parent() }}
     {% endblock %}
     <section id="show-task">
-        <div class="container">
+        <div class="container-jumbotron">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <a href="{{ path("admin.task") }}">
                     <button class="btn btn-warning">Volver</button>
                 </a>
-                <table class="table table-striped table-responsive">
-                    <thead>
-                    <th>tarea</th>
-                    <th>Descripción de la tarea</th>
-                    <th>Material a utilizar</th>
-                    <th>Estado actual</th>
-                    <th>Tiempo</th>
-                    </thead>
-                    <tr>
-                    </tr>
-                    <tbody>
-                    <td>{{ task.title }}</td>
-                    <td>{{ task.description }}</td>
-                    <td>{{ task.material }}</td>
+                <a href="{{ path("admin.task.delete",{id:task.id}) }}" style="float: right">
+                    <button class="btn btn-danger">Borrar <i class="bi bi-trash"></i></button>
+                </a>
+                <br>
+                <div class=" table-responsive mt-5">
+                    <table class="table table-striped ">
+                        <thead>
+                        <th>tarea</th>
+                        <th>Estado actual</th>
+                        <th>Tiempo</th>
+                        </thead>
+                        <tr>
+                        </tr>
+                        <tbody>
+                        <td>{{ task.title }}</td>
+                        <td>
+                            {% if task.state == 0 %}
+                                <span style="color:red">Pendiente</span>
+                            {% elseif task.state == 1 %}
+                                <span style="color:orange;">En proceso</span>
+                            {% elseif task.state == 2 %}
+                                <span style="color:blue;">Realizada</span>
+                            {% else %}
+                                <span style="color:green;">Verificada</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <b>{{ time }}
+                            </b>
+                            {% if timeTotal %}
+                                <form name="edit-time-task" id="form-edit-time" method="Post" style="display: none;">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <input type="hidden" name="id" value="{{ task.id }}">
+                                            {% for key,value  in timeTotal %}
+                                                <input class="form-group" name="time{{ key }}" value="{{ value }}"
+                                                       type="number"
+                                                       style="width: 20%">
+                                                {% if key !=2 %}
+                                                    :
+                                                {% else %}
+                                                    s.
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-12">
+                                            <button class="btn btn-dark btn-sm">ACEPTAR</button>
+                                        </div>
+                                    </div>
+                                </form>
 
-                    <td>
-                        {% if task.state == 0 %}
-                            <span style="color:red">Pendiente</span>
-                        {% elseif task.state == 1 %}
-                            <span style="color:orange;">En proceso</span>
-                        {% elseif task.state == 2 %}
-                            <span style="color:blue;">Realizada</span>
-                        {% else %}
-                            <span style="color:green;">Verificada</span>
-                        {% endif %}
-                    </td>
-                    </tbody>
-                </table>
-                <form name="editTaskOperator" method="Post">
-                    <input type="hidden" name="id" value="{{ task.id }}">
-                    {% if task.state != 3 %}
-                        <div class="row">
-                            <div class="form-group col-md-6">
-
-                                <select name="stateOper" class="form-select">
-                                    <option value="" disabled selected>SELECCIONA EL ESTADO</option>
-                                    <option value="0">Pendiente</option>
-                                    <option value="1">En proceso</option>
-                                    <option value="2">Realizado</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-md-6 text-center">
-                                <button type="submit" class="btn btn-dark btn-lg">Modifica</button>
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') and timeTotal %}
+                                    <a id="edit-time-task" href="#" style="font-size: 1.9em;float: right"><i
+                                                class="bi bi-gear"></i></a>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="container-jumbotron">
+                    <form name="editTaskOperator" method="Post">
+                        <input type="hidden" name="id" value="{{ task.id }}">
+                        <div class="row mb-2">
+                            <div class="col-12">
+                                <label><b>Información:</b></label>
+                                <textarea class="form-control" rows="5" name="description"
+                                          required>{{ task.description }}</textarea>
                             </div>
                         </div>
-                    {% endif %}
-                </form>
+                        <div class="row mb-2 mt-2">
+                            <div class="col-12">
+                                <label><b>Material:</b></label>
+                                <textarea class="form-control" rows="5" name="material"
+                                          required>{{ task.material }}</textarea>
+                            </div>
+                        </div>
+                        {% if task.state != 3 or is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN')%}
+                            <div class="row mt-4">
+                                <div class="container col-sm-6">
+                                    <div style="color: grey">
+                                        <b>Creada: </b> {{ task.createdAt|date() }} <br>
+                                        <b>Actulizada: </b>{{ task.updatedAt|date() }}
+                                    </div>
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <select name="stateOper" class="form-select" required>
+                                        <option value="" disabled selected>SELECCIONA EL ESTADO</option>
+                                        <option value="0">Pendiente</option>
+                                        <option value="1">En proceso</option>
+                                        <option value="2">Realizado</option>
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') and timeTotal %}
+                                            <option value="3">Verificado</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-4 text-center">
+                                <div class=" col-12">
+                                    <button type="submit" class="btn btn-dark btn-lg">Modifica</button>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </form>
+                </div>
             {% endif %}
         </div>
     </section>

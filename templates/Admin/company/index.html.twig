@@ -6,7 +6,7 @@
         {{ parent() }}
     {% endblock %}
     <section id="new-company">
-        <div class="container">
+        <div class="container-jumbotron">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <h1>Empresas
                     <a style="color: #1d2124;float: right" href="{{ path('newcompany') }}"

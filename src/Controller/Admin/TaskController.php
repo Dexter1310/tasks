@@ -23,6 +23,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\Date;
+use Symfony\Component\Validator\Constraints\DateTime;
 use Tests\Fixtures\AppBundle\AppBundle;
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
@@ -86,20 +88,7 @@ class TaskController extends AbstractController
                 }
                 return $state;
             }]);
-//            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold description-task'])
-//            ->add('material', TextColumn::class, ['label' => 'Material usado', 'className' => 'bold material-task']);
-        if ($this->getUser()->getType() == "admin" || $this->getUser()->getType() == "super") {
-            $table->add('actions', TextColumn::class, ['label' => 'Opciones', 'orderable' => false, 'render' => function ($value, $context) {
-                $id = $context->getId();
-                $update = 'update<br>';
-                $delete = 'delete';
-                return sprintf('
-                    <div class="text-center">' . $update . $delete . '</div>');
-            }]);
-        }
-
         $table->createAdapter(ORMAdapter::class, [
-
             'entity' => Task::class,
             'query' => function (QueryBuilder $builder) {
 
@@ -276,37 +265,107 @@ class TaskController extends AbstractController
      * @Template("Admin/task/show.html.twig")
      * @return array|RedirectResponse
      */
-    public function showTaskAction(Request $request, Task $task)
+    public function showTaskAction(Request $request, Task $task, TaskService $taskService)
     {
-        return ['task' => $task];
+        $time = 0;
+        $timeTotal = null;
+        if ($this->getUser()) {
+            if ($task->getTime() != 0 && $task->getTimeEnd() != 0) {//calcul for hours execute task
+
+                $horaInicio = Date($task->getTime());
+                $horaTermino = Date($task->getTimeEnd());
+                $total = $horaTermino - $horaInicio;
+                $t = Date($total);
+                $time = date(" H:i:s", strtotime('-1 hours', $t));
+                if ($this->getUser()->getType() == 'operator' || $task->getTimeTotal() == null) {
+                    $task->setTimeTotal($time);
+                } else {
+                    $time = $task->getTimeTotal();
+                }
+
+                if ($task->getTimeTotal() != null) {
+                    $timeTotal = explode(':', $task->getTimeTotal());
+                    $timeTotal[0] = (int)$timeTotal[0];//hour
+                    $timeTotal[1] = (int)$timeTotal[1];//minute
+                    $timeTotal[2] = (int)$timeTotal[2];//seconds
+                }
+
+            }
+        }
+        return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal];
     }
 
     /**
      * @Route("/ajax/show/task",  options={"expose"=true}, name="ajax.admin.show.task")
      */
-    public function showTaskAjaxAction(Request $request,TaskService $taskService)
+    public function showTaskAjaxAction(Request $request, TaskService $taskService)
     {
         $idTask = $request->request->get('id');
-        $task= $taskService->showTask($idTask);
+        $task = $taskService->showTask($idTask, $this->getUser());
         return $this->json($task->getId());
 
     }
+
+    /**
+     * @Route("/ajax/edit/time/task",  options={"expose"=true}, name="ajax.edit.time.task")
+     */
+    public function editTimeTaskAjaxAction(Request $request, TaskService $taskService)
+    {
+        $data = $request->request;
+        /**
+         * @var Task $task
+         */
+        $task = $taskService->showTask($data->get('id'), $this->getUser());
+        $hour = (string)$data->get('time0');
+        $minute = (string)$data->get('time1');
+        $second = (string)$data->get('time2');
+        $timeTotal = $hour . ':' . $minute . ':' . $second;
+        $task->setTimeTotal($timeTotal);
+        $taskService->updateTask($task);
+        return $this->json($data);
+
+    }
+
+
     /**
      * @Route("/ajax/edit/task/operator",  options={"expose"=true}, name="ajax.edit.task.operator")
      */
-    public function editTaskOperatorAjaxAction(Request $request,TaskService $taskService)
+    public function editTaskOperatorAjaxAction(Request $request, TaskService $taskService)
     {
         $data = $request->request;
-        $stateOper=$data->get('stateOper');
-        $idTask=$data->get('id');
-        $task=$taskService->showTask($idTask);
+        $stateOper = $data->get('stateOper');
+        $idTask = $data->get('id');
+        $task = $taskService->showTask($idTask, $this->getUser());
         $task->setState($stateOper);
-        $taskService->updateTask($task);
+        $task->setDescription($data->get('description'));
+        $task->setMaterial($data->get('material'));
+        if ($stateOper == 0) {
+            $task->setTime(0);
+            $task->setTimeEnd(null);
+            $task->setTimeTotal(null);
+        }
 
+        if ($stateOper == 1) { //en proceso
+            $task->setTime(strtotime("now"));
+            $task->setTimeEnd(0);
+        }
+        if ($stateOper == 2) {// realizado
+            $task->setTimeEnd(strtotime("now"));
+        }
+        $taskService->updateTask($task);
         return $this->json($idTask);
 
     }
 
+    /**
+     * @Route("/admin-task-delete/{id}", name="admin.task.delete", options={"expose"=true})
+     * @ParamConverter("task", class="App\Entity\Task")
+     */
+    public function deleteTaskAction(Request $request, Task $task, TaskService $taskService)
+    {
+        $taskService->deleteTask($task);
+        return $this->redirectToRoute('admin.task');
+    }
 
 
 }

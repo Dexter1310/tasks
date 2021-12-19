@@ -6,7 +6,7 @@
         {{ parent() }}
     {% endblock %}
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-        <div class="container user-admin-index">
+        <div class="container-jumbotron user-admin-index">
             <h1>Usuarios
                 <a style="color: #1d2124;float: right" href="{{ path('newuser') }}"
                    class="nav-item nav-link"><b><i class="bi bi-person-plus-fill"></i></b></a>

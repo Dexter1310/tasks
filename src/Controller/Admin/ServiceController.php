@@ -85,6 +85,9 @@ class ServiceController extends AbstractController
     {
         $service = new Service();
         $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+        if ($this->getUser()->getType() == 'admin') {
+            $company = $this->getUser()->getCompany();
+        }
         $formUser = $this->createForm(ServiceType::class, $service);//todo: if new service added. this is your form
         return ['formService' => $formUser->createView(), 'company' => $company];
     }

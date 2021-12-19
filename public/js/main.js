@@ -204,6 +204,7 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 location.reload();
+                alert("Actualización correcta")
             },
             error: function () {
             }

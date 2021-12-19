@@ -123,6 +123,32 @@ $(document).ready(function () {
         }
     }
 
+    $('#edit-time-task').click(function () {
+        $('#form-edit-time').toggle()
+    })
+
+    //TODO : Edit time task with admin or superadmin
+
+    $("form[name='edit-time-task']").submit(function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.edit.time.task'),
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
+            success: function (data, status, object) {
+                location.href="/admin/task/show/"+data.id;
+                alert("Editado el tiempo");
+            },
+            error: function (data, status, object) {
+            }
+        });
+
+    });
+
 
 });
 
