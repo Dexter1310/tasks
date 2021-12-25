@@ -277,7 +277,7 @@ class TaskController extends AbstractController
                 $total = $horaTermino - $horaInicio;
                 $t = Date($total);
                 $time = date(" H:i:s", strtotime('-1 hours', $t));
-                if ($this->getUser()->getType() == 'operator' || $task->getTimeTotal() == null) {
+                if (($this->getUser()->getType() == 'operator' && $task->getState()!=3) || $task->getTimeTotal() == null ) {
                     $task->setTimeTotal($time);
                 } else {
                     $time = $task->getTimeTotal();

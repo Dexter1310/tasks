@@ -38,7 +38,12 @@
                             {% endif %}
                         </td>
                         <td>
-                            <b>{{ time }}
+                            <b>
+                                {% if task.state == 3 %}
+                                    {{ task.timeTotal }}
+                                {% else %}
+                                    {{ time }}
+                                {% endif %}
                             </b>
                             {% if timeTotal %}
                                 <form name="edit-time-task" id="form-edit-time" method="Post" style="display: none;">
@@ -47,7 +52,7 @@
                                             <input type="hidden" name="id" value="{{ task.id }}">
                                             {% for key,value  in timeTotal %}
                                                 <input class="form-group" name="time{{ key }}" value="{{ value }}"
-                                                       type="number"
+                                                       type="number"  min="00" max="59"
                                                        style="width: 20%">
                                                 {% if key !=2 %}
                                                     :
@@ -90,7 +95,7 @@
                                           required>{{ task.material }}</textarea>
                             </div>
                         </div>
-                        {% if task.state != 3 or is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN')%}
+                        {% if task.state != 3 or is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN') %}
                             <div class="row mt-4">
                                 <div class="container col-sm-6">
                                     <div style="color: grey">
