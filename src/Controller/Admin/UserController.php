@@ -151,7 +151,7 @@ class UserController extends AbstractController
      * @ParamConverter("user", class="App\Entity\User")
      * @Template("Admin/user/show.html.twig")
      */
-    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository)
+    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository,UserService $userService)
     {
 
         $task = new Task();
@@ -159,7 +159,9 @@ class UserController extends AbstractController
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
         $taskUser = $user->getTask()->toArray();
-        return ['user' => $user, 'formTask' => $formTask->createView(), 'operators' => $operators, 'services' => $services, 'taskUser' => $taskUser];
+        return ['user' => $user, 'formTask' => $formTask->createView(),
+            'operators' => $operators, 'services' => $services, 'taskUser' => $taskUser,
+            'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0)];
     }
 
 

@@ -52,11 +52,11 @@ class UserService
          * @var User $user
          */
         $type = $data->get('user')['type'];
-        $specialized=$data->get('specialized');
-        if($specialized){// si existe servicio para el usuario
-            $service=$this->em->getRepository(Service::class)->find(['id'=>$specialized]);
-        }else{
-            $service=null;
+        $specialized = $data->get('specialized');
+        if ($specialized) {// si existe servicio para el usuario
+            $service = $this->em->getRepository(Service::class)->find(['id' => $specialized]);
+        } else {
+            $service = null;
         }
 
         if ($type == "admin") {
@@ -91,6 +91,19 @@ class UserService
         $user->setPassword($en);
         $this->em->persist($user);
         $this->em->flush();
+    }
+
+    public function countTaskPendienteOperator( $user, $countTaskPendiente)
+    {
+        if ($user->getTask()->toArray()) { //if exist task pendiente for operator
+            $tasksUser = $user->getTask()->toArray();
+            foreach ($tasksUser as $task) {
+                if ($task->getState() == 0) {
+                    $countTaskPendiente++;
+                }
+            }
+        }
+        return $countTaskPendiente;
     }
 
 

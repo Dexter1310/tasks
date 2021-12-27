@@ -1,4 +1,22 @@
 $(document).ready(function () {
+
+    //Todo options selectec repeats
+
+    removeItemsOptions('#select-state');
+    removeItemsOptions('#select-periodic');
+
+    function removeItemsOptions(select) {
+        var finishItems = {};
+        $(select + " > option").each(function () {
+            if (finishItems[this.text]) {
+                $(this).remove();
+            } else {
+                finishItems[this.text] = this.value;
+            }
+        });
+    }
+
+
     /**
      * TODO VALIDATIONS FORMS
      */
@@ -181,7 +199,6 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data, status, object) {
-                // $('#info-admin').html("<span style='color: green'>Actualizada la empresa : " + data + "</span>");
                 location.href = "/company";
             },
             error: function () {
@@ -203,8 +220,9 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data, status, object) {
-                location.reload();
                 alert("Actualización correcta")
+                location.reload();
+
             },
             error: function () {
             }

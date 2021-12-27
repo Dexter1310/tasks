@@ -35,13 +35,14 @@
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <div class="container-fluid">
-                    <a href="#" class="navbar-brand " >
+                    <a href="#" class="navbar-brand ">
                         {% if is_granted('ROLE_SUPER_ADMIN') and  is_granted('IS_AUTHENTICATED_FULLY') %}
-                           <a  href="{{ asset('images/tba.png') }}" target="_blank"><img src="{{ asset('images/tba.png') }}" height="28" alt="CoolBrand"></a>
+                            <a href="{{ asset('images/tba.png') }}" target="_blank"><img
+                                        src="{{ asset('images/tba.png') }}" height="28" alt="CoolBrand"></a>
                         {% else %}
                             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                                 {% if app.user.company %}
-                                    <img  src="{{ app.user.company.logo }}" height="28" alt="CoolBrand">
+                                    <img src="{{ app.user.company.logo }}" height="28" alt="CoolBrand">
                                 {% endif %}
                             {% endif %}
                         {% endif %}
@@ -79,11 +80,21 @@
                                    class="nav-item nav-link">USUARIO: <b>{{ app.user.username }}</b></a>
                             </div>
                             <div class="nav-item nav-link" style=" margin-left: auto;">
+                                {% if is_granted('ROLE_OPERATOR') %}
+                                    <a href="{{ path('admin.task') }}" style="color:red;">
+                                            {% if pendientes > 0 %}
+                                                <b>{{ pendientes }}</b> <span
+                                                    style="color: #0c0c0c">tareas pendientes</span>
+                                            {% endif %}
+                                    </a>
+                                {% endif %}
                                 <a href="/logout" title="Salir" style="color: red">
+
                                     <button
                                             class="btn btn-outline-danger " style="border: 0">
                                         <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> <b>SALIR</b>
                                     </button>
+
                                 </a>
                             </div>
 

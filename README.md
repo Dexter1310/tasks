@@ -49,3 +49,12 @@
 *USER:*
 
 Only a user when it is active will be accessible in login to the application. It is activated when you receive an activation email to your email account that you have entered in the form.
+
+CRON for TASK PERIODIC:
+
+$crontab -e 
+
+example:
+50 13 * * * cd  /home/dexter/Escritorio/projects/the_circle && /usr/local/bin/symfony console app:task-periodic
+
+after **control+X**  for load 

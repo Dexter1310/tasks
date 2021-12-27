@@ -60,7 +60,6 @@ class Task
      */
     protected $updatedAt;
 
-
     /**
      * @ORM\Column(type="boolean")
      */
@@ -77,6 +76,12 @@ class Task
     private $material;
 
     /**
+     * @ORM\Column(type="string", length=255,nullable=true)
+     */
+    private $periodic;
+
+
+    /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="task")
      */
     private $iduser;
@@ -90,6 +95,8 @@ class Task
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="task")
      */
     private $company;
+
+
 
     public function __construct()
     {
@@ -263,6 +270,23 @@ class Task
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getPeriodic()
+    {
+        return $this->periodic;
+    }
+
+    /**
+     * @param mixed $periodic
+     */
+    public function setPeriodic($periodic): void
+    {
+        $this->periodic = $periodic;
+    }
+
 
     /**
      * @return Collection|User[]

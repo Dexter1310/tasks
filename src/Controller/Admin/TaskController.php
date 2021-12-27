@@ -8,6 +8,7 @@ use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
 use App\Services\TaskService;
+use App\Services\UserService;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
@@ -40,19 +41,29 @@ class TaskController extends AbstractController
      * @Route("/task", name="admin.task")
      * @template("Admin/task/index.html.twig")
      */
-    public function taskAction(Request $request, DataTableFactory $dataTableFactory)
+    public function taskAction(Request $request, DataTableFactory $dataTableFactory,UserService $userService)
     {
 
         $table = $dataTableFactory->create()
             ->add('company', TextColumn::class, ['label' => 'Home', 'render' => function ($valus, $context) {
+                $periodic="";
+                if($context->getPeriodic()){
+                    $periodic='<i class="bi bi-file-ppt"></i>';
+                }
                 if ($context->getCompany()) {
-                    $company = ' <div class="text-center mt-3"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"></div> ';
+                    $company = ' <div class="text-center mt-3"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"><b style="float: right" title="periódica">'.$periodic.'</b></div> ';
                 } else {
-                    $company = null;
+                    $company = null.$periodic;
                 }
                 return $company;
             }])
             ->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold'])
+            ->add('created_at', TextColumn::class, ['label' => 'Creada', 'render' => function ($value, $context) {
+                if ($context->getCreatedAt()) {
+                    $dayCreated = date_format($context->getCreatedAt(),'d-m-Y');
+                }
+                return $dayCreated;
+            }])
             ->add('name', TextColumn::class, ['label' => 'Servicio', 'render' => function ($value, $context) {
                 if ($context->getService()) {
                     $nameService = $context->getService()->getName();
@@ -113,7 +124,7 @@ class TaskController extends AbstractController
         if ($table->isCallback()) {
             return $table->getResponse();
         }
-        return ['datatable' => $table];
+        return ['datatable' => $table, 'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0)];
     }
 
     /**
@@ -169,7 +180,6 @@ class TaskController extends AbstractController
             $infoTask = null;
         }
         $formTask = $this->createForm(TaskType::class, $task);
-
         return ['formTask' => $formTask->createView(), 'operators' => $users, 'services' => $services, 'infoTask' => $infoTask, 'company' => $company];
     }
 
@@ -230,7 +240,6 @@ class TaskController extends AbstractController
             ['groups' => 'show_service']
         );
         return $this->json(json_decode($json));
-
     }
 
     /**
@@ -241,22 +250,18 @@ class TaskController extends AbstractController
     {
         $data = $re->request;
         $idService = $data->get('id');
-
         if ($idService) {
             $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $idService]);
             $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['service' => $idService, 'type' => 'operator', 'company' => $service->getCompany()]);
         } else {
             $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
         }
-
         $json = $serializer->serialize(
             $operators,
             'json',
             ['groups' => 'show_user']
         );
         return $this->json(json_decode($json));
-
-
     }
 
     /**
@@ -265,7 +270,7 @@ class TaskController extends AbstractController
      * @Template("Admin/task/show.html.twig")
      * @return array|RedirectResponse
      */
-    public function showTaskAction(Request $request, Task $task, TaskService $taskService)
+    public function showTaskAction(Request $request, Task $task, TaskService $taskService,UserService $userService)
     {
         $time = 0;
         $timeTotal = null;
@@ -277,7 +282,7 @@ class TaskController extends AbstractController
                 $total = $horaTermino - $horaInicio;
                 $t = Date($total);
                 $time = date(" H:i:s", strtotime('-1 hours', $t));
-                if (($this->getUser()->getType() == 'operator' && $task->getState()!=3) || $task->getTimeTotal() == null ) {
+                if (($this->getUser()->getType() == 'operator' && $task->getState() != 3) || $task->getTimeTotal() == null) {
                     $task->setTimeTotal($time);
                 } else {
                     $time = $task->getTimeTotal();
@@ -292,7 +297,7 @@ class TaskController extends AbstractController
 
             }
         }
-        return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal];
+        return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal,'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0)];
     }
 
     /**
@@ -336,6 +341,7 @@ class TaskController extends AbstractController
         $stateOper = $data->get('stateOper');
         $idTask = $data->get('id');
         $task = $taskService->showTask($idTask, $this->getUser());
+        $task->setPeriodic($data->get('period'));
         $task->setState($stateOper);
         $task->setDescription($data->get('description'));
         $task->setMaterial($data->get('material'));

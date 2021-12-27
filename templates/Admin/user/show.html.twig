@@ -30,7 +30,8 @@
             </div>
 
             <div class="col-md-3 text-center">
-                {% if user.type == 'operator' %}
+
+                {% if not is_granted('ROLE_OPERATOR') %}
                     <br>
                     <a href="#" style="float: right">
                         <button class="btn btn-dark" id="btn-task-admin">Asignar nueva tarea</button>

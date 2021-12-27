@@ -11,9 +11,11 @@
                 <a href="{{ path("admin.task") }}">
                     <button class="btn btn-warning">Volver</button>
                 </a>
-                <a href="{{ path("admin.task.delete",{id:task.id}) }}" style="float: right">
-                    <button class="btn btn-danger">Borrar <i class="bi bi-trash"></i></button>
-                </a>
+                {% if not is_granted('ROLE_OPERATOR') %}
+                    <a href="{{ path("admin.task.delete",{id:task.id}) }}" style="float: right">
+                        <button class="btn btn-danger">Borrar <i class="bi bi-trash"></i></button>
+                    </a>
+                {% endif %}
                 <br>
                 <div class=" table-responsive mt-5">
                     <table class="table table-striped ">
@@ -52,7 +54,7 @@
                                             <input type="hidden" name="id" value="{{ task.id }}">
                                             {% for key,value  in timeTotal %}
                                                 <input class="form-group" name="time{{ key }}" value="{{ value }}"
-                                                       type="number"  min="00" max="59"
+                                                       type="number" min="00" max="59"
                                                        style="width: 20%">
                                                 {% if key !=2 %}
                                                     :
@@ -97,19 +99,79 @@
                         </div>
                         {% if task.state != 3 or is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN') %}
                             <div class="row mt-4">
-                                <div class="container col-sm-6">
+                                <div class="container col-sm-3">
                                     <div style="color: grey">
                                         <b>Creada: </b> {{ task.createdAt|date() }} <br>
                                         <b>Actulizada: </b>{{ task.updatedAt|date() }}
                                     </div>
                                 </div>
-                                <div class="form-group col-sm-6">
-                                    <select name="stateOper" class="form-select" required>
-                                        <option value="" disabled selected>SELECCIONA EL ESTADO</option>
+                                <div class="form-group col-md-4">
+                                    {% if task.periodic==1 %}
+                                        {% set period = "1 día" %}
+                                    {% elseif  task.periodic==2 %}
+                                        {% set period = "7 días" %}
+                                    {% elseif  task.periodic==3 %}
+                                        {% set period = "14 días" %}
+                                    {% elseif  task.periodic==4 %}
+                                        {% set period = "1 mes" %}
+                                    {% elseif  task.periodic==5 %}
+                                        {% set period = "3 meses" %}
+                                    {% elseif  task.periodic==6 %}
+                                        {% set period = "6 meses" %}
+                                    {% elseif  task.periodic==7 %}
+                                        {% set period = "9 meses" %}
+                                    {% elseif  task.periodic==8 %}
+                                        {% set period = "1 año" %}
+                                    {% elseif  task.periodic==9 %}
+                                        {% set period = "2 años" %}
+                                    {% else %}
+                                        {% set period = "solo una vez" %}
+                                    {% endif %}
+                                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                                        <label>Selecciona la opción periódica:</label>
+                                        <select name="period" class="form-select" id="select-periodic">
+                                            <option value="{{ task.periodic }}" selected>{{ period }}</option>
+                                            <option value="">Solo una vez</option>
+                                            <option value="1">1 día</option>
+                                            <option value="2">7 días</option>
+                                            <option value="3">14 días</option>
+                                            <option value="4">1 mes</option>
+                                            <option value="5">3 meses</option>
+                                            <option value="6">6 meses</option>
+                                            <option value="7">9 meses</option>
+                                            <option value="8">1 año</option>
+                                            <option value="9">2 años</option>
+                                        </select>
+                                    {% else %}
+                                        <label>Repetición de la tarea:</label>
+                                        <h5> {{period}}</h5>
+
+                                    {% endif %}
+                                </div>
+                                <div class="form-group col-sm-5">
+                                    {% set state="" %}
+                                    {% if task.state == 0 %}
+                                        {% set state="Pendiente" %}
+                                    {% elseif task.state == 1 %}
+                                        {% set state="En proceso" %}
+                                    {% elseif task.state == 2 %}
+                                        {% set state="Realizado" %}
+                                    {% elseif task.state == 3 %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
+                                            {% set state="Verificado" %}
+                                        {% endif %}
+                                    {% else %}
+                                        {% set state="Selecciona un estado" %}
+                                    {% endif %}
+
+
+                                    <label>Selecciona el estado:</label>
+                                    <select name="stateOper" class="form-select" required id="select-state">
+                                        <option value="{{ task.state }}" selected>{{ state }}</option>
                                         <option value="0">Pendiente</option>
                                         <option value="1">En proceso</option>
                                         <option value="2">Realizado</option>
-                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') and timeTotal %}
+                                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_SUPER_ADMIN') %}
                                             <option value="3">Verificado</option>
                                         {% endif %}
                                     </select>

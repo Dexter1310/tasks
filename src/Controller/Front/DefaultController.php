@@ -5,6 +5,8 @@ namespace App\Controller\Front;
 use App\Entity\User;
 use App\Form\UserType;
 
+use App\Services\TaskService;
+use App\Services\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -23,10 +25,16 @@ class DefaultController extends AbstractController
      * @Route("/", name="home")
      * @template("Front/default/index.html.twig")
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, UserService $userService, TaskService $taskService)
     {
+
+        $countTaskPendiente = 0;
         if ($this->getUser() && $this->getUser()->getType() != "super") {
             if ($this->getUser()->getCompany()->isActive() == 1) {
+                if ($this->getUser()->getType() == 'operator') {
+                    $countTaskPendiente = $userService->countTaskPendienteOperator($this->getUser(), $countTaskPendiente);
+                    return ['home' => 'inicio', 'pendientes' => $countTaskPendiente];
+                }
                 return ['home' => 'inicio'];
             } else {
                 return $this->redirect('/logout');

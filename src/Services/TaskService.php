@@ -41,6 +41,7 @@ class TaskService
     public function addTask(Request $request, FormInterface $form, Task $task)
     {
         $task->setState('Pendiente');
+        $task->setPeriodic($request->request->get('period'));
         $task->setTime(0);
         $task->setCreatedAt(new \DateTime('now'));
         $task->setViewOperator(false);
@@ -83,6 +84,54 @@ class TaskService
         $this->em->flush();
 
     }
+
+
+//    public function taskPeriodic($user)
+//    {
+//        $tasks = $user->getTask()->toArray();// created array user's tasks
+//        $dataNoW = new \DateTime('now');//data actuality
+//        foreach ($tasks as $task) {
+//            /**
+//             * @var Task $task
+//             */
+//            if ($task->getPeriodic() != null && ($task== end($tasks))) {//if task is  periodic and element last
+//                $fechaCreated = $task->getCreatedAt();
+//                if($task->getPeriodic()==1){ //todo: each day
+//                    date_add($fechaCreated, date_interval_create_from_date_string("1 day"));
+//                    $fechaCreated = date_format($fechaCreated, 'd-m-Y');
+//                    date_add($dataNoW, date_interval_create_from_date_string("1 day"));
+//                    $dataNoW = date_format($dataNoW, 'd-m-Y');
+//                    if ($dataNoW == $fechaCreated) {
+//                            $users=$task->getIduser()->toArray();
+//                        $newTask= new Task();
+//                        $newTask->setTitle($task->getTitle());
+//                        $newTask->setMaterial($task->getMaterial());
+//                        $newTask->setDescription($task->getDescription());
+//                        $newTask->setService($task->getService());
+//                        $newTask->setState(0);
+//                        $newTask->setTime(0);
+//                        $newTask->setViewOperator(0);
+//                        $newTask->setCompany($task->getCompany());
+//                        $newTask->setCreatedAt(new \DateTime('now'));
+//                        $newTask->setPeriodic($task->getPeriodic());
+//                        foreach ($users as $user){
+//                            $newTask->addIduser($user);
+//                        }
+//                        $this->em->persist($newTask);
+//                        $this->em->flush();
+//                    } else {
+//                        dump('No son iguales');
+//                        die();
+//                    }
+//                }
+//
+//
+//            }
+//
+//        }
+//
+//
+//    }
 
 
 }

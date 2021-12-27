@@ -188,3 +188,12 @@ function confirStateService(id) {
 
 
 
+
+
+// function reloadPage(time){
+//     setTimeout("location.reload(true);", time);
+// }
+// //Podemos ejecutar la función de este modo
+// //La página se actualizará dentro de 10 segundos
+// reloadPage(10000);
+//
