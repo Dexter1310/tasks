@@ -4,7 +4,6 @@ $(document).ready(function () {
 
     removeItemsOptions('#select-state');
     removeItemsOptions('#select-periodic');
-
     function removeItemsOptions(select) {
         var finishItems = {};
         $(select + " > option").each(function () {

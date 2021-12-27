@@ -95,7 +95,7 @@ class UserService
 
     public function countTaskPendienteOperator( $user, $countTaskPendiente)
     {
-        if ($user->getTask()->toArray()) { //if exist task pendiente for operator
+        if ($user && $user->getTask()->toArray()) { //if exist task pendiente for operator
             $tasksUser = $user->getTask()->toArray();
             foreach ($tasksUser as $task) {
                 if ($task->getState() == 0) {
