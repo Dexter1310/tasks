@@ -6,12 +6,22 @@ $(document).ready(function () {
     } else {
         $('#select-specilialized').hide();
     }
+    if (valueselect == 'client') {
+        $('#new-info-client').show();
+    } else {
+        $('#new-info-client').hide();
+    }
     $('#user_type').change(function () {
         var value = this.value;
         if (value == "operator") {
             $('#select-specilialized').fadeIn();
         } else {
             $('#select-specilialized').fadeOut();
+        }
+        if (value == "client") {
+            $('#new-info-client').fadeIn();
+        } else {
+            $('#new-info-client').fadeOut();
         }
     })
 

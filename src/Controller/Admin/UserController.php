@@ -3,9 +3,11 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Company;
+use App\Entity\Infoclient;
 use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
+use App\Form\InfoClientType;
 use App\Form\TaskType;
 use App\Form\UserType;
 use App\Repository\TaskRepository;
@@ -109,15 +111,19 @@ class UserController extends AbstractController
     public function newUser(Request $request)
     {
         $user = new User();
-        if ($this->getUser()->getCompany()) {
-            $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
-        } else {
-            $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+        if($this->getUser()){
+            if ($this->getUser()->getCompany()) {
+                $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
+            } else {
+                $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+            }
         }
-
+        else{
+            $services=null;
+        }
         $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
-        return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company];
+        return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company ];
     }
 
 
@@ -127,6 +133,8 @@ class UserController extends AbstractController
      */
     public function newUserAjaxAction(Request $re, UserPasswordEncoderInterface $encoder): Response
     {
+
+
         $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();
         $form = $this->createForm(UserType::class, $user);

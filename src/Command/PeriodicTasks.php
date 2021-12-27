@@ -50,7 +50,7 @@ class PeriodicTasks extends Command
                     $dataNoW = new \DateTime('now');//data actuality
                     date_add($fechaCreated, date_interval_create_from_date_string("1 day"));
                     $fechaCreated = date_format($fechaCreated, 'd-m-Y');
-                    //  date_add($dataNoW, date_interval_create_from_date_string("1 day"));
+//                     date_add($dataNoW, date_interval_create_from_date_string("1 day"));
                     $dataNoW = date_format($dataNoW, 'd-m-Y');
                     $this->createTaskPeriodic($dataNoW, $fechaCreated, $task);
 

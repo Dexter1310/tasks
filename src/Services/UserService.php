@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Entity\Infoclient;
 use App\Entity\Service;
 use App\Entity\User;
 use App\Form\UserType;
@@ -65,6 +66,15 @@ class UserService
             $user->setRoles(User::R_OPERATOR);
         } else {
             $user->setRoles(User::R_USER);
+            $infoClient = new Infoclient();
+            $infoClient->setAddress($data->get('address'));
+            $infoClient->setProvince($data->get('province'));
+            $infoClient->setTown($data->get('town'));
+            $infoClient->setCP($data->get('cp'));
+            $infoClient->setNumber($data->get('number'));
+            $infoClient->setOtherTlf($data->get('otherTlf'));
+            $infoClient->setInfoExtra($data->get('infoExtra'));
+            $user->setInfoclient($infoClient);
         }
         $user->setActive(0);
         $user->setService($service);
@@ -93,7 +103,7 @@ class UserService
         $this->em->flush();
     }
 
-    public function countTaskPendienteOperator( $user, $countTaskPendiente)
+    public function countTaskPendienteOperator($user, $countTaskPendiente)
     {
         if ($user && $user->getTask()->toArray()) { //if exist task pendiente for operator
             $tasksUser = $user->getTask()->toArray();

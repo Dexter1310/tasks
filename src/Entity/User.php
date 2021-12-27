@@ -113,6 +113,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $company;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Infoclient::class, mappedBy="idUser", cascade={"persist", "remove"})
+     */
+    private $infoclient;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
@@ -409,6 +414,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getInfoclient(): ?Infoclient
+    {
+        return $this->infoclient;
+    }
+
+    public function setInfoclient(?Infoclient $infoclient): self
+    {
+        // unset the owning side of the relation if necessary
+        if ($infoclient === null && $this->infoclient !== null) {
+            $this->infoclient->setIdUser(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($infoclient !== null && $infoclient->getIdUser() !== $this) {
+            $infoclient->setIdUser($this);
+        }
+
+        $this->infoclient = $infoclient;
 
         return $this;
     }
