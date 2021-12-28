@@ -31,16 +31,18 @@ $(document).ready(function () {
         $('#newTask').toggle();
     });
 
-    //TODO selected company
+    //TODO selected company superAdmin
 
     if ($('select[name="company"]').length) {  // if exists element select company in the form
         $('select[name="service"]').empty();
         $('select[name="operator"]').empty();
         $('select[name="specialized"]').empty();
+        $('select[name="client"]').empty();
         $('select[name="company"]').change(function () {
             $('select[name="service"]').empty();
             $('select[name="operator"]').empty();
             $('select[name="specialized"]').empty();
+            $('select[name="client"]').empty();
             var idCompany = this.value;
             $.ajax({
                 type: 'POST',
@@ -49,13 +51,30 @@ $(document).ready(function () {
                 async: true,
                 success: function (data, status, object) {
                     var services = object.responseJSON;
+
                     if (services || $('select[name="specialized"]').length) {
                         $('select[name="service"],select[name="specialized"]').append("<option value='' disabled selected>SELECCIONA SERVICIO</option>");
                         $.each(services, function (index, value) {
                             $('select[name="service"],select[name="specialized"]').append("<option value=" + value.id + ">" + value.name + "</option>");
                         });
                     }
-
+                },
+                error: function (data, status, object) {
+                }
+            });
+            $.ajax({
+                type: 'POST',
+                url: Routing.generate('ajax.select.client.admin'),
+                data: {id: idCompany},
+                async: true,
+                success: function (data, status, object) {
+                    var clients = object.responseJSON;
+                    if (clients|| $('select[name="client"]').length) {
+                        $('select[name="client"]').append("<option value='' disabled selected>SELECCIONA ClIENTE</option>");
+                        $.each(clients, function (index, value) {
+                            $('select[name="client"]').append("<option value=" + value.id + ">" + value.name + " " +value.lastname+"</option>");
+                        });
+                    }
                 },
                 error: function (data, status, object) {
                 }
