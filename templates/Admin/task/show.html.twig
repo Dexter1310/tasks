@@ -144,7 +144,7 @@
                                         </select>
                                     {% else %}
                                         <label>Repetición de la tarea:</label>
-                                        <h5> {{period}}</h5>
+                                        <h5> {{ period }}</h5>
 
                                     {% endif %}
                                 </div>
@@ -177,6 +177,32 @@
                                     </select>
                                 </div>
                             </div>
+                            {% if app.user.type!= 'client' and client %}
+                                <div class="row mt-4 ">
+                                    <div class=" col-12">
+                                        <fieldset class="mt-3 p-3" style="background: whitesmoke;">
+                                            <h5>Datos del cliente</h5>
+                                            <table class="table">
+                                                <thead>
+                                                <tr>
+                                                    <th>Cliente</th>
+                                                    <th>Dirección</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr>
+                                                    <td>{{ client.idUser.name }} {{ client.idUser.lastname }}</td>
+                                                    <td>{{ client.address }}  <span> {{ client.number }}</span> , {{ client.town }}
+                                                        <b>({{ client.province }}) </b>, {{ client.cp }}
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </fieldset>
+                                    </div>
+                                </div>
+                            {% endif %}
+
                             <div class="row mt-4 text-center">
                                 <div class=" col-12">
                                     <button type="submit" class="btn btn-dark btn-lg">Modifica</button>

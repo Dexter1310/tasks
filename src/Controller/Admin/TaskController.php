@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Company;
+use App\Entity\Infoclient;
 use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
@@ -297,6 +298,8 @@ class TaskController extends AbstractController
     {
         $time = 0;
         $timeTotal = null;
+        $client=$this->getDoctrine()->getRepository(User::class)->findOneBy(['id'=>$task->getIdClient()]);
+        $infoClient=$this->getDoctrine()->getRepository(Infoclient::class)->findOneBy(['idUser'=>$client]);
         if ($this->getUser()) {
             if ($task->getTime() != 0 && $task->getTimeEnd() != 0) {//calcul for hours execute task
 
@@ -307,6 +310,7 @@ class TaskController extends AbstractController
                 $time = date(" H:i:s", strtotime('-1 hours', $t));
                 if (($this->getUser()->getType() == 'operator' && $task->getState() != 3) || $task->getTimeTotal() == null) {
                     $task->setTimeTotal($time);
+
                 } else {
                     $time = $task->getTimeTotal();
                 }
@@ -317,10 +321,12 @@ class TaskController extends AbstractController
                     $timeTotal[1] = (int)$timeTotal[1];//minute
                     $timeTotal[2] = (int)$timeTotal[2];//seconds
                 }
-
             }
         }
-        return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal, 'pendientes' => $userService->countTaskPendienteOperator($this->getUser(), 0)];
+
+
+        return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal,
+            'pendientes' => $userService->countTaskPendienteOperator($this->getUser(), 0) ,'client'=>$infoClient];
     }
 
     /**

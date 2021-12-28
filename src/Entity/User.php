@@ -120,9 +120,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $infoclient;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Task::class, mappedBy="idClient")
+     */
+    private $tasks;
+
     public function __construct()
     {
         $this->task = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
     }
 
 
@@ -440,6 +446,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->infoclient = $infoclient;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Task[]
+     */
+    public function getTasks(): Collection
+    {
+        return $this->tasks;
     }
 
 

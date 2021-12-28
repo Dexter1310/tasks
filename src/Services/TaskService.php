@@ -42,6 +42,8 @@ class TaskService
     {
         $task->setState('Pendiente');
         $task->setPeriodic($request->request->get('period'));
+        $client=$this->em->getRepository(User::class)->findOneBy(['id'=>$request->request->get('client')]);//Search client
+        $task->setIdClient($client);
         $task->setTime(0);
         $task->setCreatedAt(new \DateTime('now'));
         $task->setUpdatedAt(new \DateTime('now'));

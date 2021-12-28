@@ -96,6 +96,11 @@ class Task
      */
     private $company;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="tasks")
+     */
+    private $idClient;
+
 
 
     public function __construct()
@@ -332,6 +337,18 @@ class Task
     public function setCompany(?Company $company): self
     {
         $this->company = $company;
+
+        return $this;
+    }
+
+    public function getIdClient(): ?User
+    {
+        return $this->idClient;
+    }
+
+    public function setIdClient(?User $idClient): self
+    {
+        $this->idClient = $idClient;
 
         return $this;
     }
