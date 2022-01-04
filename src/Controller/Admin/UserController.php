@@ -7,7 +7,6 @@ use App\Entity\Infoclient;
 use App\Entity\Service;
 use App\Entity\Task;
 use App\Entity\User;
-use App\Form\InfoClientType;
 use App\Form\TaskType;
 use App\Form\UserType;
 use App\Repository\TaskRepository;
@@ -159,17 +158,19 @@ class UserController extends AbstractController
      * @ParamConverter("user", class="App\Entity\User")
      * @Template("Admin/user/show.html.twig")
      */
-    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository,UserService $userService)
+    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository,UserService $userService,DataTableFactory $dataTableFactory)
     {
 
-        $task = new Task();
+        $task = new Task();//if show user is operator
+        $client=$userService->showInformationClient($user);
+        $table=$userService->showTaskClient($user,$dataTableFactory,$request);
         $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $user->getCompany()]);
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
         $taskUser = $user->getTask()->toArray();
         return ['user' => $user, 'formTask' => $formTask->createView(),
             'operators' => $operators, 'services' => $services, 'taskUser' => $taskUser,
-            'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0)];
+            'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0),'client'=>$client,'datatable'=>$table];
     }
 
 

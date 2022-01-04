@@ -36,7 +36,7 @@
                     {% if  user.type == 'operator' %}
                         <br>
                         <a href="#" style="float: right">
-                            <button class="btn btn-dark" id="btn-task-admin">Asignar nueva tarea</button>
+                            <button class="btn btn-dark" id="btn-task-admin">Tarea rápida</button>
                         </a>
                     {% endif %}
                 {% endif %}
@@ -103,10 +103,6 @@
 
 
 
-
-
-
-
         {% if user.type == 'operator' %}
             <div id="newTask">
                 <h4>Nueva actividad para {{ user.name }} {{ user.lastname }}</h4>
@@ -146,12 +142,19 @@
                     </div>
                 </div>
                 <div id="info-task"></div>
-                <div class="form-group col-md-1 mt-2">
-                    <button class="btn btn-dark" type="submit">Hecho</button>
+                <div class="form-group col-md-12 mt-2 text-center">
+                    <button class="btn btn-dark btn-lg" type="submit">Enviar</button>
                 </div>
                 {{ form_end(formTask) }}
             </div>
             <br>
+        {% endif %}
+
+        {% if user.type == 'client' %}
+            {% if client %}
+
+                {{ include('Admin/user/showClient.html.twig') }}
+            {% endif %}
         {% endif %}
 
     </div>

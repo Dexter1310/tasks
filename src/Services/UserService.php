@@ -15,6 +15,9 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
+use Omines\DataTablesBundle\Column\TextColumn;
+use Omines\DataTablesBundle\DataTableFactory;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -114,6 +117,26 @@ class UserService
             }
         }
         return $countTaskPendiente;
+    }
+
+    public function showInformationClient($user)
+    {
+        return $this->em->getRepository(Infoclient::class)->findOneBy(['idUser' => $user->getId()]);
+    }
+
+    public function showTaskClient($user, $dataTableFactory,$request)
+    {
+
+        $table = $dataTableFactory->create()
+            ->add('town', TextColumn::class,  ['label' => 'Titulo', 'className' => 'bold'])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => Infoclient::class,
+            ])->handleRequest($request);
+        if ($table->isCallback()) {
+            return $table->getResponse();
+        }
+
+        return $table;
     }
 
 
