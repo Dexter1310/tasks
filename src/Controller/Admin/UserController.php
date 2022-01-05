@@ -14,6 +14,7 @@ use App\Repository\UserRepository;
 use App\Services\UserService;
 use Doctrine\ORM\QueryBuilder;
 use Omines\DataTablesBundle\Adapter\Doctrine\ORMAdapter;
+use Omines\DataTablesBundle\Column\DateTimeColumn;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +33,11 @@ class UserController extends AbstractController
      */
     private $userService;
 
+    /**
+     * @var int $idUserClient
+     */
+
+    private $idUserClient;
 
     /**
      * @Route("/user", name="admin.user")
@@ -110,19 +116,18 @@ class UserController extends AbstractController
     public function newUser(Request $request)
     {
         $user = new User();
-        if($this->getUser()){
+        if ($this->getUser()) {
             if ($this->getUser()->getCompany()) {
                 $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
             } else {
                 $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
             }
-        }
-        else{
-            $services=null;
+        } else {
+            $services = null;
         }
         $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         $formUser = $this->createForm(UserType::class, $user);//todo: if new user added. this is your form
-        return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company ];
+        return ['formUser' => $formUser->createView(), 'services' => $services, 'company' => $company];
     }
 
 
@@ -132,8 +137,6 @@ class UserController extends AbstractController
      */
     public function newUserAjaxAction(Request $re, UserPasswordEncoderInterface $encoder): Response
     {
-
-
         $this->userService = new UserService($encoder, $this->getDoctrine()->getManager());
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -143,7 +146,6 @@ class UserController extends AbstractController
             $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $re->request->get('company')]);
             $user->setCompany($company);
         }
-
         $us = $this->userService->addUser($re, $form, $user);
         if ($us) {
             return $this->json("se grabo el usuario");
@@ -158,19 +160,40 @@ class UserController extends AbstractController
      * @ParamConverter("user", class="App\Entity\User")
      * @Template("Admin/user/show.html.twig")
      */
-    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository,UserService $userService,DataTableFactory $dataTableFactory)
+    public function showUserAction(Request $request, User $user, TaskRepository $taskRepository, UserService $userService, DataTableFactory $dataTableFactory)
     {
 
         $task = new Task();//if show user is operator
-        $client=$userService->showInformationClient($user);
-        $table=$userService->showTaskClient($user,$dataTableFactory,$request);
+        $client = $userService->showInformationClient($user);
+        $this->idUserClient=$user->getId();
+        $table = $dataTableFactory->create()
+            ->add('title', TextColumn::class, ['label' => 'Tarea', 'className' => 'bold'])
+            ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
+            ->add('updatedAt', DateTimeColumn::class, ['label' => 'Actualizada', 'className' => 'bold', 'render' => function ($value, $context) {
+                return date_format($context->getUpdatedAt(), 'd-m-Y (H:i \h.\)');
+            }])
+            ->createAdapter(ORMAdapter::class, [
+                'entity' => Task::class,
+                'query' => function (QueryBuilder $builder, $client) {
+                    $builder
+                        ->select(Task::ALIAS)
+                        ->from(Task::class, Task::ALIAS)
+                        ->andWhere(Task::ALIAS . '.idClient = :val')
+                        ->setParameter('val', $this->idUserClient);
+
+                }
+            ])->handleRequest($request);
+        if ($table->isCallback()) {
+            return $table->getResponse();
+        }
         $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $user->getCompany()]);
         $operators = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator']);
         $formTask = $this->createForm(TaskType::class, $task);
         $taskUser = $user->getTask()->toArray();
+
         return ['user' => $user, 'formTask' => $formTask->createView(),
             'operators' => $operators, 'services' => $services, 'taskUser' => $taskUser,
-            'pendientes'=>$userService->countTaskPendienteOperator($this->getUser(),0),'client'=>$client,'datatable'=>$table];
+            'pendientes' => $userService->countTaskPendienteOperator($this->getUser(), 0), 'client' => $client, 'datatable' => $table];
     }
 
 

@@ -6,7 +6,7 @@
         {{ parent() }}
     {% endblock %}
     <section id="show-task">
-        <div class="container-jumbotron">
+        <div class="container-jumbotron mb-4">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 <a href="{{ path("admin.task") }}">
                     <button class="btn btn-warning">Volver</button>

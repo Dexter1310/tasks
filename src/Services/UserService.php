@@ -124,20 +124,5 @@ class UserService
         return $this->em->getRepository(Infoclient::class)->findOneBy(['idUser' => $user->getId()]);
     }
 
-    public function showTaskClient($user, $dataTableFactory,$request)
-    {
-
-        $table = $dataTableFactory->create()
-            ->add('town', TextColumn::class,  ['label' => 'Titulo', 'className' => 'bold'])
-            ->createAdapter(ORMAdapter::class, [
-                'entity' => Infoclient::class,
-            ])->handleRequest($request);
-        if ($table->isCallback()) {
-            return $table->getResponse();
-        }
-
-        return $table;
-    }
-
 
 }
