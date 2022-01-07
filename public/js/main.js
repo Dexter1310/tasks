@@ -173,7 +173,6 @@ $(document).ready(function () {
         e.preventDefault();
         var form = $(this).closest('form');
         var formSerialize = form.serialize();
-        console.log(form);
         $.ajax({
             type: 'POST',
             url: Routing.generate('ajax.new.company'),
@@ -224,6 +223,26 @@ $(document).ready(function () {
 
             },
             error: function () {
+            }
+        });
+    });
+
+
+    //TODO :new REQUEST  CLIENT
+
+    $('form[name="request"]').submit(function (e) {
+        e.preventDefault();
+        var form = $(this).closest('form');
+        var formSerialize = form.serialize();
+        $.ajax({
+            type: 'POST',
+            url: Routing.generate('ajax.new.request'),
+            data: formSerialize,
+            async: true,
+            success: function (data, status, object) {
+                //location.href = "/";
+            },
+            error: function (data, status, object) {
             }
         });
     });

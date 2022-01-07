@@ -46,8 +46,20 @@ class ClientController extends AbstractController
     {
         $request= new \App\Entity\Request();
         $formRequest = $this->createForm(RequestType::class, $request);
-
         return ['formRequest'=>$formRequest->createView()];
+
+
+    }
+    /**
+     * @Route("/ajax/new-request",  options={"expose"=true}, name="ajax.new.request")
+     * @return Response
+     */
+    public function newRequestAjaxAction(Request $request): Response
+    {
+
+       $data= $request->request;
+        return  $this->json($data);
+
     }
 
 
