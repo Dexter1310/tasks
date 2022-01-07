@@ -3,13 +3,28 @@
 {% block title %}Home{% endblock %}
 {% block body %}
     {% block nav %}
-
         {{ parent() }}
-
     {% endblock %}
-    <div class="container-jumbotron img-responsive image-home-admin hidden-md">
-        <img style="width: 60%"
-             src="https://comunidades.cepal.org/elac/sites/elac/files/styles/640x320/public/group-images/Transformaci%C3%B3n%20digital%20y%20econom%C3%ADa%20digital_0.jpg?h=2a647c80&itok=NQZYH16l"
-             alt="CoolBrand">
+    <div class="row">
+{#        <div class="col-md-8">#}
+{#            <div class="container-jumbotron img-responsive image-home-admin hidden-md">#}
+{#                <div class="container text-center">#}
+{#                <img class="image-responsive"#}
+{#                        src="https://comunidades.cepal.org/elac/sites/elac/files/styles/640x320/public/group-images/Transformaci%C3%B3n%20digital%20y%20econom%C3%ADa%20digital_0.jpg?h=2a647c80&itok=NQZYH16l"#}
+{#                        alt="CoolBrand">#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+        <div class="col-md-12">
+            <div class="image-home-admin text-center">
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <h3>Bienvenido {{ app.user.name }}  {{ app.user.lastname }}</h3>
+                    {% if is_granted('ROLE_USER') %}
+{#                        <a href="{{ path('front.client') }}"><button class="btn btn-primary" style="background:#EABE3F;color: black;border-radius: 30px">#}
+{#                                Informe de peticiones</button></a>#}
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
     </div>
 {% endblock %}

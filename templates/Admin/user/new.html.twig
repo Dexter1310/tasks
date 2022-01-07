@@ -13,17 +13,12 @@
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
                 {{ form_start(formUser,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
                 <div class="row">
-                    <div class="form-group col-md-4">
-                        <label>usuario:</label>
-                        {{ form_widget(formUser.username,{ 'attr': {'class': 'form-control','placeholder':'usuario' ,'value':''} }) }}
-                        {{ form_errors(formUser.username) }}
-                    </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label>Nombre:</label>
                         {{ form_widget(formUser.name,{ 'attr': {'class': 'form-control','placeholder':'Nombre' } }) }}
                         {{ form_errors(formUser.name) }}
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label>Apellidos:</label>
                         {{ form_widget(formUser.lastname,{ 'attr': {'class': 'form-control','placeholder':'Apellidos' } }) }}
                         {{ form_errors(formUser.lastname) }}

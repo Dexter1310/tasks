@@ -11,7 +11,7 @@
                 <a href="{{ path("admin.task") }}">
                     <button class="btn btn-warning">Volver</button>
                 </a>
-                {% if not is_granted('ROLE_OPERATOR') %}
+                {% if not is_granted('ROLE_OPERATOR')%}
                     <a href="{{ path("admin.task.delete",{id:task.id}) }}" style="float: right">
                         <button class="btn btn-danger">Borrar <i class="bi bi-trash"></i></button>
                     </a>

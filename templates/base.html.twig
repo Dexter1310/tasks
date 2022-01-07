@@ -18,7 +18,6 @@
     {% block javascripts %}
 
         <script src="{{ asset('js/bootstrap.js') }}"></script>
-
         <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
         <script src="{{ asset('js/jquery.js') }}"></script>
         <script src="{{ asset('js/datatables.min.js') }}"></script>
@@ -52,9 +51,19 @@
                         <span class="navbar-toggler-icon"></span>
                     </button>
                     <div class="collapse navbar-collapse" id="navbarCollapse">
+
+                        {% if is_granted('ROLE_USER') %}
                         <div class="navbar-nav">
-                            <a href="{{ path('home') }}" class="nav-item nav-link active">HOME</a>
+                            <a href="{{ path('front.client.request') }}" class="nav-item nav-link active" title="Solicitar petición">PETICIONES</a>
                         </div>
+                            <div class="navbar-nav">
+                                <a href="{{ path('front.client',{ 'id': app.user.id }) }}" class="nav-item nav-link active" title="Informes de peticiones">INFORME</a>
+                            </div>
+                        {% else %}
+                            <div class="navbar-nav">
+                                <a href="{{ path('home') }}" class="nav-item nav-link active">INICIO</a>
+                            </div>
+                        {% endif %}
                         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
 
                             {% if is_granted('ROLE_SUPER_ADMIN') %}
@@ -71,21 +80,24 @@
                                        class="nav-item nav-link"><b>SERVICIOS</b></a>
                                 </div>
                             {% endif %}
-                            <div class="nav-item nav-link">
-                                <a href="{{ path('admin.task') }}"
-                                   class="nav-item nav-link"><b>TAREAS</b></a>
-                            </div>
+                            {% if not is_granted('ROLE_USER') %}
+                                <div class="nav-item nav-link">
+                                    <a href="{{ path('admin.task') }}"
+                                       class="nav-item nav-link"><b>TAREAS</b></a>
+                                </div>
+                            {% endif %}
                             <div class="nav-item nav-link">
                                 <a href="{{ path('admin.user.show', { 'id': app.user.id }) }}"
-                                   class="nav-item nav-link">USUARIO: <b>{{ app.user.username }}</b></a>
+                                   class="nav-item nav-link"> <b>{{ app.user.name }} {{ app.user.lastname }}</b></a>
                             </div>
                             <div class="nav-item nav-link" style=" margin-left: auto;">
                                 {% if is_granted('ROLE_OPERATOR') %}
-                                    <a href="{{ path('admin.task') }}"    style="color:red;margin-right: 10px;">
-                                            {% if pendientes > 0 %}
-                                                <span
-                                                    style="color: #0c0c0c">Tareas pendientes : </span><b> {{ pendientes }} </b>
-                                            {% endif %}
+                                    <a href="{{ path('admin.task') }}" style="color:red;margin-right: 10px;">
+                                        {% if pendientes > 0 %}
+                                            <span
+                                                    style="color: #0c0c0c">Tareas pendientes : </span>
+                                            <b> {{ pendientes }} </b>
+                                        {% endif %}
                                     </a>
                                 {% endif %}
                                 <a href="/logout" title="Salir" style="color: red">

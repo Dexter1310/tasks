@@ -117,7 +117,7 @@ $(document).ready(function () {
                 $('#label-operator').html('Operador de ' + service);
                 $('select[name="operator"]').empty();
                 $.each(operator, function (index, value) {
-                    $('select[name="operator"]').append("<option value=" + value.id + ">" + value.username + "</option>");
+                    $('select[name="operator"]').append("<option value=" + value.id + ">" + value.name + " "+value.lastname+"</option>");
                 });
                 addcheckOperator($('select[name="type-task"]').val());
             },

@@ -1,0 +1,57 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Nueva tarea{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+    <div class="container-fluid content-client"></div>
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2>Informe sobre peticiones </h2>
+        </div>
+        <table id="table-client" class="table-responsive table">
+            <thead>
+            <th>Tarea</th>
+            <th>Descripción</th>
+            <th>Detalles</th>
+            </thead>
+            <tbody>
+            {% for task in task %}
+                <tr>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.description }}</td>
+                    <td><a href="#">Ver más</a></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#table-client').DataTable({
+                language: {
+                    "decimal": "",
+                    "emptyTable": "No hay información",
+                    "info": "Mostrando _START_ a _END_ de _TOTAL_ Entradas",
+                    "infoEmpty": "Mostrando 0 to 0 of 0 Entradas",
+                    "infoFiltered": "(Filtrado de _MAX_ total entradas)",
+                    "infoPostFix": "",
+                    "thousands": ",",
+                    "lengthMenu": "Mostrar _MENU_ Entradas",
+                    "loadingRecords": "Cargando...",
+                    "processing": "Procesando...",
+                    "search": "Buscar:",
+                    "zeroRecords": "Sin resultados encontrados",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Ultimo",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                },
+            });
+        });
+    </script>
+
+{% endblock %}

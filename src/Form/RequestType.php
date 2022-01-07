@@ -1,13 +1,22 @@
 <?php
+/**
+ *
+ * Form type ServiceType.php
+ * Created by : Javier Orti
+ * Date: 30 - 11 - 2021
+ *
+ */
 
 namespace App\Form;
 
 
-use App\Entity\User;
+use App\Entity\Request;
+use App\Entity\Service;
+
+
+use phpDocumentor\Reflection\Types\Boolean;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -18,22 +27,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
-class UserType extends AbstractType
+class RequestType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, ['constraints' => new NotBlank()])
-            ->add('lastname', TextType::class, ['constraints' => new NotBlank()])
-            ->add('password', PasswordType::class)
-            ->add('email', EmailType::class, ['constraints' => new NotBlank()])
-            ->add('type', ChoiceType::class, [
-                'choices' => [
-                    'Operador' => "operator",
-                    'Cliente' => "client",
-                    'Administrador' => "admin",
-                ],
-            ])->add('information', TextareaType::class);
+            ->add('description', TextareaType::class, [
+                'label' => 'Comentario',
+            ]);
 
     }
 
@@ -42,7 +43,7 @@ class UserType extends AbstractType
         parent::configureOptions($resolver);
 
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => Request::class,
         ]);
     }
 }

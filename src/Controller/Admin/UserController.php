@@ -46,18 +46,14 @@ class UserController extends AbstractController
     public function userAction(Request $request, DataTableFactory $dataTableFactory, UserRepository $userRepository)
     {
         $table = $dataTableFactory->create()
-            ->add('username', TextColumn::class, ['label' => 'Usuario',
+            ->add('logo', TextColumn::class, ['label' => 'Empresa',
                 'render' => function ($value, $context) {
-                    $id = $context->getId();
-                    $username = $context->getUsername();
-                    $show = '<a style="float:left;" href="/admin-user-show/' . $id . '" title="visualiza"><span style="color:green">' . $username . '</span></a>';
                     if ($context->getCompany()) {
-                        $company = ' <img style="float: right;" src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"> ';
+                        $company = ' <div class="text-center"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"></div> ';
                     } else {
                         $company = null;
                     }
-                    return $company . '
-                    <div class="text-center">' . $show . '</div>';
+                    return $company;
                 }
             ])
             ->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
@@ -241,7 +237,7 @@ class UserController extends AbstractController
                 }
             }
             $userService->updateUser($user);
-            return $this->json("Se actualizo " . $data->get('user')['username']);
+            return $this->json("Se actualizo ");
         } else {
             return $this->json('no se actulizado');
         }

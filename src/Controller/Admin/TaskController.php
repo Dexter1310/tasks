@@ -78,7 +78,7 @@ class TaskController extends AbstractController
                 if ($user) {
                     $nameUser = [];
                     foreach ($user as $us) {
-                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getUsername() . '</span></a>';
+                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getName() .'  '. $us->getLastName().'</span></a>';
                         array_push($nameUser, $name . "</br>");
                     }
                 } else {
