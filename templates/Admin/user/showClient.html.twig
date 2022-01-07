@@ -22,7 +22,7 @@
             </tbody>
         </table>
     </fieldset>
-    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+    {% if is_granted('IS_AUTHENTICATED_REMEMBERED') and app.user.type!='client' %}
         <div class="mb-5 mt-5">
 
             <div id="admin-task-client" class="table-responsive">Loading...</div>
