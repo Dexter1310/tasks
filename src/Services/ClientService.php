@@ -45,5 +45,15 @@ class ClientService
         return $this->em->getRepository(Task::class)->findBy(['idClient' => $user->getId()]);
     }
 
+    public function addRequest($description,$userClient){
+
+        $newRequest= new \App\Entity\Request();
+        $newRequest->setIdUser($userClient);
+        $newRequest->setDescription($description);
+        $this->em->persist($newRequest);
+        $this->em->flush();
+
+    }
+
 
 }

@@ -53,12 +53,17 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
 
                         {% if is_granted('ROLE_USER') %}
-                        <div class="navbar-nav">
-                            <a href="{{ path('front.client.request') }}" class="nav-item nav-link active" title="Solicitar petición">PETICIONES</a>
-                        </div>
-                            <div class="navbar-nav">
-                                <a href="{{ path('front.client',{ 'id': app.user.id }) }}" class="nav-item nav-link active" title="Informes de peticiones">INFORME</a>
-                            </div>
+                            {% if app.user.type=='client' %}
+
+                                <div class="navbar-nav">
+                                    <a href="{{ path('front.client.request') }}" class="nav-item nav-link active"
+                                       title="Solicitar petición">PETICIONES</a>
+                                </div>
+                                <div class="navbar-nav">
+                                    <a href="{{ path('front.client',{ 'id': app.user.id }) }}"
+                                       class="nav-item nav-link active" title="Informes de peticiones">INFORME</a>
+                                </div>
+                            {% endif %}
                         {% else %}
                             <div class="navbar-nav">
                                 <a href="{{ path('home') }}" class="nav-item nav-link active">INICIO</a>
@@ -80,7 +85,7 @@
                                        class="nav-item nav-link"><b>SERVICIOS</b></a>
                                 </div>
                             {% endif %}
-                            {% if not is_granted('ROLE_USER') %}
+                            {% if app.user.type!='client' %}
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('admin.task') }}"
                                        class="nav-item nav-link"><b>TAREAS</b></a>
