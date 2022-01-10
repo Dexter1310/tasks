@@ -69,10 +69,10 @@ $(document).ready(function () {
                 async: true,
                 success: function (data, status, object) {
                     var clients = object.responseJSON;
-                    if (clients|| $('select[name="client"]').length) {
+                    if (clients || $('select[name="client"]').length) {
                         $('select[name="client"]').append("<option value='' disabled selected>SELECCIONA ClIENTE</option>");
                         $.each(clients, function (index, value) {
-                            $('select[name="client"]').append("<option value=" + value.id + ">" + value.name + " " +value.lastname+"</option>");
+                            $('select[name="client"]').append("<option value=" + value.id + ">" + value.name + " " + value.lastname + "</option>");
                         });
                     }
                 },
@@ -117,7 +117,7 @@ $(document).ready(function () {
                 $('#label-operator').html('Operador de ' + service);
                 $('select[name="operator"]').empty();
                 $.each(operator, function (index, value) {
-                    $('select[name="operator"]').append("<option value=" + value.id + ">" + value.name + " "+value.lastname+"</option>");
+                    $('select[name="operator"]').append("<option value=" + value.id + ">" + value.name + " " + value.lastname + "</option>");
                 });
                 addcheckOperator($('select[name="type-task"]').val());
             },
@@ -169,7 +169,7 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data, status, object) {
-                location.href="/admin/task/show/"+data.id;
+                location.href = "/admin/task/show/" + data.id;
                 alert("Editado el tiempo");
             },
             error: function (data, status, object) {
@@ -177,6 +177,35 @@ $(document).ready(function () {
         });
 
     });
+
+
+
+    //TODO images reactions
+    (function () {
+        var longpress = 1000;
+        var start;
+        $(".imgTask1").on('mousedown', function (e) {
+            start = new Date().getTime();
+        });
+        $(".imgTask1").on('mouseleave', function (e) {
+            start = 0;
+        });
+        $(".imgTask1").on('mouseup', function (e) {
+            if (new Date().getTime() >= (start + longpress)) {
+              //todo: delete image
+                if (confirm('¿Quiere eliminar la imagen 1?')) {
+                  $('.imgTask1').hide();
+                  $('input[name="imgDelete"]').attr('value','delete');
+                }
+
+            } else {
+                //todo: zoom foto
+                alert('short press!');
+            }
+        });
+    }());
+
+
 
 
 });
@@ -214,9 +243,6 @@ function confirStateService(id) {
         });
     }
 }
-
-
-
 
 
 // function reloadPage(time){

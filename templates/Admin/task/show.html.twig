@@ -11,7 +11,7 @@
                 <a href="{{ path("admin.task") }}">
                     <button class="btn btn-warning">Volver</button>
                 </a>
-                {% if not is_granted('ROLE_OPERATOR')%}
+                {% if not is_granted('ROLE_OPERATOR') %}
                     <a href="{{ path("admin.task.delete",{id:task.id}) }}" style="float: right">
                         <button class="btn btn-danger">Borrar <i class="bi bi-trash"></i></button>
                     </a>
@@ -81,7 +81,7 @@
                     </table>
                 </div>
                 <div class="container-jumbotron">
-                    <form name="editTaskOperator" method="Post">
+                    <form name="editTaskOperator" method="Post" enctype="multipart/form-data">
                         <input type="hidden" name="id" value="{{ task.id }}">
                         <div class="row mb-2">
                             <div class="col-12">
@@ -164,7 +164,6 @@
                                         {% set state="Selecciona un estado" %}
                                     {% endif %}
 
-
                                     <label>Selecciona el estado:</label>
                                     <select name="stateOper" class="form-select" required id="select-state">
                                         <option value="{{ task.state }}" selected>{{ state }}</option>
@@ -176,7 +175,19 @@
                                         {% endif %}
                                     </select>
                                 </div>
+                                <div class="ro mt-4">
+                                    {% if task.imgTask %}
+                                        <div class="mb-1">
+                                            <img src="/uploads/images/{{ task.imgTask }}" title="imagen 1" width="75" class="imgTask1">
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-group col-md-3 col-sm-12">
+                                        <input type="file" name="imgTask[]" class="form-control"  value="">
+                                        <input type="hidden" name="imgDelete" class="form-control"  value="">
+                                    </div>
+                                </div>
                             </div>
+                            {#Todo :only when user client #}
                             {% if app.user.type!= 'client' and client %}
                                 <div class="row mt-4 ">
                                     <div class=" col-12">
@@ -192,7 +203,8 @@
                                                 <tbody>
                                                 <tr>
                                                     <td>{{ client.idUser.name }} {{ client.idUser.lastname }}</td>
-                                                    <td>{{ client.address }}  <span> {{ client.number }}</span> , {{ client.town }}
+                                                    <td>{{ client.address }} <span> {{ client.number }}</span>
+                                                        , {{ client.town }}
                                                         <b>({{ client.province }}) </b>, {{ client.cp }}
                                                     </td>
                                                 </tr>
@@ -202,7 +214,6 @@
                                     </div>
                                 </div>
                             {% endif %}
-
                             <div class="row mt-4 text-center">
                                 <div class=" col-12">
                                     <button type="submit" class="btn btn-dark btn-lg">Modifica</button>

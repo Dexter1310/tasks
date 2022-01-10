@@ -57,8 +57,7 @@ class ClientController extends AbstractController
     public function newRequestAjaxAction(Request $request, ClientService $clientService): Response
     {
         $data = $request->request;
-       $clientService->addRequest($data->get('request')['description'],$this->getUser());
-
+        $clientService->addRequest($data->get('request')['description'], $this->getUser());
         return $this->json($data->get('request')['description']);
 
     }

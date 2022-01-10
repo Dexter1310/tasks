@@ -17,6 +17,7 @@ use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use phpDocumentor\Reflection\DocBlock\Serializer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,6 +26,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 use Symfony\Component\Validator\Constraints\DateTime;
 use Tests\Fixtures\AppBundle\AppBundle;
@@ -73,12 +75,20 @@ class TaskController extends AbstractController
                 }
                 return sprintf($nameService);
             }])
+            ->add('imgTask', TextColumn::class, ['label' => 'Imagen', 'render' => function ($value, $context) {
+                if ($context->getImgTask()) {
+                    $nameImage = $context->getImgTask();
+                } else {
+                    $nameImage = 'Sin imagen';
+                }
+                return '<img  width=75 src="/uploads/images/' . $nameImage . '">';
+            }])
             ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
                 $user = $context->getIduser()->toArray();
                 if ($user) {
                     $nameUser = [];
                     foreach ($user as $us) {
-                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getName() .'  '. $us->getLastName().'</span></a>';
+                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getName() . '  ' . $us->getLastName() . '</span></a>';
                         array_push($nameUser, $name . "</br>");
                     }
                 } else {
@@ -165,17 +175,17 @@ class TaskController extends AbstractController
     {
         $task = new Task();
 
-            if ($this->getUser()->getType() == 'super') {
-                $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
-                $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
-                $users = $this->getDoctrine()->getRepository(User::class)->findAll();
-                $clients = null;
-            } else {
-                $company = null;
-                $clients = $taskService->clientsCompany($this->getUser()->getCompany());
-                $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
-                $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
-            }
+        if ($this->getUser()->getType() == 'super') {
+            $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+            $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
+            $users = $this->getDoctrine()->getRepository(User::class)->findAll();
+            $clients = null;
+        } else {
+            $company = null;
+            $clients = $taskService->clientsCompany($this->getUser()->getCompany());
+            $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
+            $users = $this->getDoctrine()->getRepository(User::class)->findBy(['type' => 'operator', 'company' => $this->getUser()->getCompany()]);
+        }
 
 
         if (count($services) == 0) {
@@ -193,15 +203,16 @@ class TaskController extends AbstractController
      * @Route("/ajax/task/advanced",  options={"expose"=true}, name="ajax.new.advanced.task")
      * @return Response
      */
-    public function newTaskAdvancedAjaxAction(Request $re): Response
+    public function newTaskAdvancedAjaxAction(Request $re, TaskService $taskService): Response
     {
-        $this->taskService = new TaskService($this->getDoctrine()->getManager());
         $data = $re->request;
         $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $data->get('service')]);
-
         $operator = $data->get('operator');
+
+
+        $task = new Task();
         if (is_array($operator)) { //when is many opoerator task
-            $task = new Task();
+
             foreach ($operator as $oper) {
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);
@@ -213,10 +224,9 @@ class TaskController extends AbstractController
                 }
                 $user->addTask($task);
                 $formTask = $this->createForm(TaskType::class, $task);
-                $this->taskService->addTask($re, $formTask, $task);
+                $taskService->addTask($re, $formTask, $task);
             }
         } else { //when is one operator task
-            $task = new Task();
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
             $task->addIduser($user);
             $task->setService($service);
@@ -227,8 +237,9 @@ class TaskController extends AbstractController
             }
             $user->addTask($task);
             $formTask = $this->createForm(TaskType::class, $task);
-            $this->taskService->addTask($re, $formTask, $task);
+            $taskService->addTask($re, $formTask, $task);
         }
+
         return $this->json($data);
     }
 
@@ -256,7 +267,7 @@ class TaskController extends AbstractController
     public function newTaskAdvancedSelectClientsAjaxAction(Request $re, SerializerInterface $serializer): Response
     {
         $data = $re->request;
-        $user = $this->getDoctrine()->getRepository(User::class)->findBy(['company' => $data->get('id'),'type'=>'client']);
+        $user = $this->getDoctrine()->getRepository(User::class)->findBy(['company' => $data->get('id'), 'type' => 'client']);
         $jsonUser = $serializer->serialize(
             $user,
             'json',
@@ -298,8 +309,8 @@ class TaskController extends AbstractController
     {
         $time = 0;
         $timeTotal = null;
-        $client=$this->getDoctrine()->getRepository(User::class)->findOneBy(['id'=>$task->getIdClient()]);
-        $infoClient=$this->getDoctrine()->getRepository(Infoclient::class)->findOneBy(['idUser'=>$client]);
+        $client = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $task->getIdClient()]);
+        $infoClient = $this->getDoctrine()->getRepository(Infoclient::class)->findOneBy(['idUser' => $client]);
         if ($this->getUser()) {
             if ($task->getTime() != 0 && $task->getTimeEnd() != 0) {//calcul for hours execute task
 
@@ -326,7 +337,7 @@ class TaskController extends AbstractController
 
 
         return ['task' => $task, 'time' => $time . 's.', 'timeTotal' => $timeTotal,
-            'pendientes' => $userService->countTaskPendienteOperator($this->getUser(), 0) ,'client'=>$infoClient];
+            'pendientes' => $userService->countTaskPendienteOperator($this->getUser(), 0), 'client' => $infoClient];
     }
 
     /**
@@ -374,6 +385,20 @@ class TaskController extends AbstractController
         $task->setState($stateOper);
         $task->setDescription($data->get('description'));
         $task->setMaterial($data->get('material'));
+
+
+        if ($_FILES["imgTask"]['name'] || $data->get('imgDelete') == 'delete') {  //TODO IMAGE TASK UPDATE
+            $taskService->checkFile('../public/uploads/images/', $task->getImgTask());
+            if ($data->get('imgDelete') == 'delete') {
+                $task->setImgTask(null);
+            }else{
+                $taskService->setTargetDirectory('uploads/images');
+                $nameImdage = $taskService->upload($request->files->get('imgTask')[0]);
+                $task->setImgTask($nameImdage);
+            }
+        }
+
+
         if ($stateOper == 0) {
             $task->setTime(0);
             $task->setTimeEnd(null);

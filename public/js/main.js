@@ -150,14 +150,14 @@ $(document).ready(function () {
 
     $('form[name="newAdvancedTask"]').submit(function (e) {
         e.preventDefault();
-        var form = $(this).closest('form');
-        var formSerialize = form.serialize();
-        console.log(form);
+        var data = new FormData(this);
         $.ajax({
             type: 'POST',
             url: Routing.generate('ajax.new.advanced.task'),
-            data: formSerialize,
-            async: true,
+            data: data,
+            contentType: false,
+            cache: false,
+            processData: false,
             success: function (data, status, object) {
                 location.href = "/task";
             },
@@ -219,7 +219,7 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 alert("Actualización correcta")
-                location.reload();
+                 location.reload();
 
             },
             error: function () {
@@ -240,7 +240,7 @@ $(document).ready(function () {
             data: formSerialize,
             async: true,
             success: function (data, status, object) {
-                //location.href = "/";
+                location.href = "/";
             },
             error: function (data, status, object) {
             }

@@ -47,6 +47,13 @@ class TaskType extends AbstractType
                         'Verificado' => '3'
                     ]
                 ],
+            ])->add('imgTask', FileType::class, [
+                'label' => 'Imagen',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File()
+                ],
             ]);;
 
     }

@@ -101,6 +101,10 @@ class Task
      */
     private $idClient;
 
+    /**
+     * @ORM\Column(type="string", name="imgTask", length=255,nullable=true)
+     */
+    private $imgTask;
 
 
     public function __construct()
@@ -352,4 +356,22 @@ class Task
 
         return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getImgTask()
+    {
+        return $this->imgTask;
+    }
+
+    /**
+     * @param mixed $imgTask
+     */
+    public function setImgTask($imgTask): void
+    {
+        $this->imgTask = $imgTask;
+    }
+
+
 }

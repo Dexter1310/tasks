@@ -50,6 +50,7 @@ class ClientService
         $newRequest= new \App\Entity\Request();
         $newRequest->setIdUser($userClient);
         $newRequest->setDescription($description);
+        $newRequest->setCreatedAt(new \DateTime('now'));
         $this->em->persist($newRequest);
         $this->em->flush();
 
