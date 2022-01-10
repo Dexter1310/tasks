@@ -179,33 +179,39 @@ $(document).ready(function () {
     });
 
 
-
     //TODO images reactions
     (function () {
+        var ok = false;
         var longpress = 1000;
         var start;
         $(".imgTask1").on('mousedown', function (e) {
             start = new Date().getTime();
+
         });
         $(".imgTask1").on('mouseleave', function (e) {
             start = 0;
+
         });
         $(".imgTask1").on('mouseup', function (e) {
             if (new Date().getTime() >= (start + longpress)) {
-              //todo: delete image
+                //todo: delete image
                 if (confirm('¿Quiere eliminar la imagen 1?')) {
-                  $('.imgTask1').hide();
-                  $('input[name="imgDelete"]').attr('value','delete');
+                    $('.imgTask1').hide();
+                    $('input[name="imgDelete"]').attr('value', 'delete');
                 }
-
             } else {
                 //todo: zoom foto
-                alert('short press!');
+                if (ok) {
+                    $(this).animate({'zoom': 1}, 600)
+                    ok = false;
+                } else {
+                    $(this).animate({'zoom': 3.5}, 600);
+                    ok = true;
+                }
+
             }
         });
     }());
-
-
 
 
 });
