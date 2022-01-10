@@ -77,11 +77,11 @@ class TaskController extends AbstractController
             }])
             ->add('imgTask', TextColumn::class, ['label' => 'Imagen', 'render' => function ($value, $context) {
                 if ($context->getImgTask()) {
-                    $nameImage = $context->getImgTask();
+                    $nameImage='<img  width=75 src="/uploads/images/' .$context->getImgTask(). '">';
                 } else {
-                    $nameImage = 'Sin imagen';
+                    $nameImage = '';
                 }
-                return '<img  width=75 src="/uploads/images/' . $nameImage . '">';
+                return $nameImage;
             }])
             ->add('username', TextColumn::class, ['label' => 'Operario/s', 'render' => function ($value, $context) {
                 $user = $context->getIduser()->toArray();
