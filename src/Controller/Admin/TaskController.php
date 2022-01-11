@@ -400,10 +400,6 @@ class TaskController extends AbstractController
                 $task->setImgTask(null);
             }
         }
-
-
-
-
         if ($stateOper == 0) {
             $task->setTime(0);
             $task->setTimeEnd(null);

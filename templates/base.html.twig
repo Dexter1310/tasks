@@ -91,6 +91,12 @@
                                        class="nav-item nav-link"><b>TAREAS</b></a>
                                 </div>
                             {% endif %}
+                        {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
+                                  <div class="nav-item nav-link">
+                                    <a href="{{ path('admin.task') }}"
+                                       class="nav-item nav-link"><b>PETICIONES</b></a>
+                                </div>
+                            {% endif %}
                             <div class="nav-item nav-link">
                                 <a href="{{ path('admin.user.show', { 'id': app.user.id }) }}"
                                    class="nav-item nav-link"> <b>{{ app.user.name }} {{ app.user.lastname }}</b></a>
