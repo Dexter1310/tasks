@@ -213,6 +213,13 @@ $(document).ready(function () {
         });
     }());
 
+    $('.tr-client .show-info-task-client').click(function () {
+        $(this).find('table').toggle();
+        $(this).find('table').css({'position':'absolute','left':0,'background':'#F1EECF'});
+
+
+    })
+
 
 });
 
