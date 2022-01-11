@@ -386,17 +386,22 @@ class TaskController extends AbstractController
         $task->setDescription($data->get('description'));
         $task->setMaterial($data->get('material'));
 
+        if($request->files->get('imgTask')) {
+            if ($_FILES["imgTask"]['name'] ) {  //TODO IMAGE TASK UPDATE
+                    $taskService->setTargetDirectory('uploads/images');
+                    $nameImdage = $taskService->upload($request->files->get('imgTask')[0]);
+                    $task->setImgTask($nameImdage);
+                }
+            }
 
-        if ($_FILES["imgTask"]['name'] || $data->get('imgDelete') == 'delete') {  //TODO IMAGE TASK UPDATE
+        if( $data->get('imgDelete') == 'delete'){
             $taskService->checkFile('../public/uploads/images/', $task->getImgTask());
             if ($data->get('imgDelete') == 'delete') {
                 $task->setImgTask(null);
-            }else{
-                $taskService->setTargetDirectory('uploads/images');
-                $nameImdage = $taskService->upload($request->files->get('imgTask')[0]);
-                $task->setImgTask($nameImdage);
             }
         }
+
+
 
 
         if ($stateOper == 0) {

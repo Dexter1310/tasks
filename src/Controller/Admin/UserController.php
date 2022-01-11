@@ -18,6 +18,8 @@ use Omines\DataTablesBundle\Column\DateTimeColumn;
 use Omines\DataTablesBundle\Column\TextColumn;
 use Omines\DataTablesBundle\DataTableFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -205,9 +207,13 @@ class UserController extends AbstractController
         if ($this->getUser()->getType() == 'super') {
             $services = $this->getDoctrine()->getRepository(Service::class)->findAll();
             $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+
         } else {
             $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
             $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
+        }
+        if($user->getType()=='super'){
+            $form->add('type');
         }
 
         $form->handleRequest($request);
@@ -225,12 +231,13 @@ class UserController extends AbstractController
         $data = $request->request;
         $user = $em->getRepository(User::class)->findOneBy(['id' => $data->get('id')]);
         $service = $em->getRepository(Service::class)->findOneBy(['id' => $data->get('specialized')]);
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserType::class, $user); $form->add('type');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setService($service);
             $userAdmin = $this->getUser();
             if ($userAdmin->getRoles() == USER::R_SUPER_ADMIN) {// if user is ADMIN
+
                 if ($userAdmin) {
                     $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $request->request->get('company')]);
                     $user->setCompany($company);

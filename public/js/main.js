@@ -80,7 +80,7 @@ $(document).ready(function () {
             cache: false,
             processData: false,
             success: function (data, status, object) {
-                $('#info-admin').html("<span style='color: green'>Actualizada el usuario : " + data + "</span>");
+                alert('Se acaba de modificar el usuario');
                 location.href = "/user";
             },
             error: function () {
@@ -220,7 +220,6 @@ $(document).ready(function () {
             success: function (data, status, object) {
                 alert("Actualización correcta")
                  location.reload();
-
             },
             error: function () {
             }
