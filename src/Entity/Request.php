@@ -42,6 +42,11 @@ class Request
      */
     protected $updatedAt;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="requests")
+     */
+    private $idCompany;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -113,5 +118,17 @@ class Request
         if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
+    }
+
+    public function getIdCompany(): ?Company
+    {
+        return $this->idCompany;
+    }
+
+    public function setIdCompany(?Company $idCompany): self
+    {
+        $this->idCompany = $idCompany;
+
+        return $this;
     }
 }

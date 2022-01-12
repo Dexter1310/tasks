@@ -93,7 +93,7 @@
                             {% endif %}
                         {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
                                   <div class="nav-item nav-link">
-                                    <a href="{{ path('admin.task') }}"
+                                    <a href="{{ path('admin.request') }}"
                                        class="nav-item nav-link"><b>PETICIONES</b></a>
                                 </div>
                             {% endif %}
@@ -112,7 +112,6 @@
                                     </a>
                                 {% endif %}
                                 <a href="/logout" title="Salir" style="color: red">
-
                                     <button
                                             class="btn btn-outline-danger " style="border: 0">
                                         <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> <b>SALIR</b>

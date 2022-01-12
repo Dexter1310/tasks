@@ -49,6 +49,7 @@ class ClientService
 
         $newRequest= new \App\Entity\Request();
         $newRequest->setIdUser($userClient);
+        $newRequest->setIdCompany($userClient->getCompany());
         $newRequest->setDescription($description);
         $newRequest->setCreatedAt(new \DateTime('now'));
         $this->em->persist($newRequest);

@@ -4,6 +4,7 @@ $(document).ready(function () {
 
     removeItemsOptions('#select-state');
     removeItemsOptions('#select-periodic');
+
     function removeItemsOptions(select) {
         var finishItems = {};
         $(select + " > option").each(function () {
@@ -219,7 +220,7 @@ $(document).ready(function () {
             processData: false,
             success: function (data, status, object) {
                 alert("Actualización correcta")
-                 location.reload();
+                location.reload();
             },
             error: function () {
             }
@@ -245,6 +246,7 @@ $(document).ready(function () {
             }
         });
     });
+
 
 
 });

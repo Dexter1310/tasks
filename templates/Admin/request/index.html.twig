@@ -1,0 +1,62 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Company{% endblock %}
+{% block body %}
+    {% block nav %}
+        {{ parent() }}
+    {% endblock %}
+
+
+    <section id="request-admin">
+        <div class="m-3 container-fluid">
+            <h3>Peticiones de clientes</h3>
+
+            <table id="table-client" class="table-responsive table">
+                <thead>
+                <th>Petición</th>
+                <th>Cliente</th>
+                <th>Fecha/hora</th>
+                <th></th>
+                </thead>
+                <tbody>
+                {% for request in requests %}
+                    <tr class="tr-client">
+                        <td>{{ request.description }}
+                        </td>
+                        <td>{{ request.idUser.name }} {{ request.idUser.lastname }}
+                        </td>
+                        <td>
+                            {{ request.createdAt|date }}
+                        </td>
+                        <td>
+                            <a href="{{ path('new.multi.task') }}">Generar tarea</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="m-3 container-fluid">
+            <form method="post" name="filterRequest" enctype='multipart/form-data'>
+                <div class="row">
+                    <div class="col-md-6">
+                        <select class="form-select" name="client">
+                            {% for client in clients %}
+                                <option value="{{ client.id }}">{{ client.name }} {{ client.lastname }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="col-md-6">
+                    <button class="btn btn-dark" type="submit">Buscar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </section>
+
+
+    <script src="{{ asset('js/datatable.js') }}"></script>
+
+{% endblock %}

@@ -82,11 +82,17 @@ class Company
      */
     private $task;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Request::class, mappedBy="idCompany")
+     */
+    private $requests;
+
     public function __construct()
     {
         $this->service = new ArrayCollection();
         $this->user = new ArrayCollection();
         $this->task = new ArrayCollection();
+        $this->requests = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -299,6 +305,36 @@ class Company
             // set the owning side to null (unless already changed)
             if ($task->getCompany() === $this) {
                 $task->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Request[]
+     */
+    public function getRequests(): Collection
+    {
+        return $this->requests;
+    }
+
+    public function addRequest(Request $request): self
+    {
+        if (!$this->requests->contains($request)) {
+            $this->requests[] = $request;
+            $request->setIdCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRequest(Request $request): self
+    {
+        if ($this->requests->removeElement($request)) {
+            // set the owning side to null (unless already changed)
+            if ($request->getIdCompany() === $this) {
+                $request->setIdCompany(null);
             }
         }
 

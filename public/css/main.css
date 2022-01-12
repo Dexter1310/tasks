@@ -101,7 +101,8 @@
     padding-top: 100px;
 }
 
-.login-user-front, #new-user, #front-show-user, #new-service, .image-home-admin, .user-admin-index, .task-admin-index, #new-multi-task, #new-company, #show-task,.content-client {
+.login-user-front, #new-user, #front-show-user, #new-service, .image-home-admin, .user-admin-index,
+.task-admin-index, #new-multi-task, #new-company, #show-task,.content-client,#request-admin{
     padding-top: 100px;
     width: 90%;
     margin: auto;
