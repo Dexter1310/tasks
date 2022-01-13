@@ -43,10 +43,11 @@
                     </div>
                 {% endif %}
                 <br>
+
                 <div class="row" id="block-recover-pass" style="display: none">
                     <div class="form-group col-md-6">
                         <label>Contraseña:</label>
-                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' } }) }}
+                        {{ form_widget(formUser.password,{ 'attr': {'class': 'form-control passUser','placeholder':'Contraseña','type':'password' ,'value': 'null'} }) }}
                         {{ form_errors(formUser.password) }}
                     </div>
                     <div class="form-group col-md-6">

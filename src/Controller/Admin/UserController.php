@@ -163,7 +163,7 @@ class UserController extends AbstractController
 
         $task = new Task();//if show user is operator
         $client = $userService->showInformationClient($user);
-        $this->idUserClient=$user->getId();
+        $this->idUserClient = $user->getId();
         $table = $dataTableFactory->create()
             ->add('title', TextColumn::class, ['label' => 'Tarea', 'className' => 'bold'])
             ->add('description', TextColumn::class, ['label' => 'Descripción', 'className' => 'bold'])
@@ -212,7 +212,7 @@ class UserController extends AbstractController
             $services = $this->getDoctrine()->getRepository(Service::class)->findBy(['company' => $this->getUser()->getCompany()]);
             $company = $this->getDoctrine()->getRepository(Company::class)->findAll();
         }
-        if($user->getType()=='super'){
+        if ($user->getType() == 'super') {
             $form->add('type');
         }
 
@@ -229,21 +229,24 @@ class UserController extends AbstractController
 
         $em = $this->getDoctrine()->getManager();
         $data = $request->request;
-        $user = $em->getRepository(User::class)->findOneBy(['id' => $data->get('id')]);
+        $user = $userService->userShow($data->get('id'));
+        $pass=$user->getPassword();
+
         $service = $em->getRepository(Service::class)->findOneBy(['id' => $data->get('specialized')]);
-        $form = $this->createForm(UserType::class, $user); $form->add('type');
+        $form = $this->createForm(UserType::class, $user);
+        $form->add('type');
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setService($service);
             $userAdmin = $this->getUser();
             if ($userAdmin->getRoles() == USER::R_SUPER_ADMIN) {// if user is ADMIN
-
                 if ($userAdmin) {
                     $company = $this->getDoctrine()->getRepository(Company::class)->findOneBy(['id' => $request->request->get('company')]);
                     $user->setCompany($company);
                 }
             }
-            $userService->updateUser($user);
+            $userService->updateUser($user,$pass);
+
             return $this->json("Se actualizo ");
         } else {
             return $this->json('no se actulizado');

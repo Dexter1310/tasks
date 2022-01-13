@@ -94,14 +94,23 @@ class UserService
         return $data;
     }
 
-    public function updateUser($user)
+    public function updateUser($user, $password)
     {
         /**
          * @var User $user
          */
+
         $pass = $user->getPassword();
-        $en = $this->encoder->encodePassword($user, $pass);
-        $user->setPassword($en);
+
+
+        if ($pass != 'null') {
+            $en = $this->encoder->encodePassword($user, $pass);
+            $user->setPassword($en);
+        } else {
+            $user->setPassword($password);
+        }
+
+
         $this->em->persist($user);
         $this->em->flush();
     }
@@ -124,5 +133,10 @@ class UserService
         return $this->em->getRepository(Infoclient::class)->findOneBy(['idUser' => $user->getId()]);
     }
 
+    public function userShow($user)
+    {
+        return $this->em->getRepository(User::class)->findOneBy(['id' => $user]);
+
+    }
 
 }
