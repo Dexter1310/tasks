@@ -110,7 +110,6 @@ class UserService
             $user->setPassword($password);
         }
 
-
         $this->em->persist($user);
         $this->em->flush();
     }

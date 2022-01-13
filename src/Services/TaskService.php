@@ -63,9 +63,11 @@ class TaskService
         $data = $request->request;
         $form->handleRequest($request);
         $this->setTargetDirectory('uploads/images');//TODO IMAGE TASK
-        $nameImdage = $this->upload($form['imgTask']->getData());
-        $task->setImgTask($nameImdage);
 
+        if($form['imgTask']->getData()){
+            $nameImdage = $this->upload($form['imgTask']->getData());
+            $task->setImgTask($nameImdage);
+        }
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($task);
             $this->em->flush();

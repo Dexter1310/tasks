@@ -200,7 +200,7 @@ class TaskController extends AbstractController
     }
 
     /**
-     * @Route("/ajax/task/advanced",  options={"expose"=true}, name="ajax.new.advanced.task")
+     * @Route("/ajax/task/advanced/admin",  options={"expose"=true}, name="ajax.new.advanced.task")
      * @return Response
      */
     public function newTaskAdvancedAjaxAction(Request $re, TaskService $taskService): Response
@@ -208,11 +208,9 @@ class TaskController extends AbstractController
         $data = $re->request;
         $service = $this->getDoctrine()->getRepository(Service::class)->findOneBy(['id' => $data->get('service')]);
         $operator = $data->get('operator');
-
-
         $task = new Task();
         if (is_array($operator)) { //when is many opoerator task
-
+//            dump($operator);die();
             foreach ($operator as $oper) {
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);
@@ -223,10 +221,11 @@ class TaskController extends AbstractController
                     $task->setCompany($this->getUser()->getCompany());
                 }
                 $user->addTask($task);
-                $formTask = $this->createForm(TaskType::class, $task);
-                $taskService->addTask($re, $formTask, $task);
             }
+            $formTask = $this->createForm(TaskType::class, $task);
+            $taskService->addTask($re, $formTask, $task);
         } else { //when is one operator task
+
             $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $operator]);
             $task->addIduser($user);
             $task->setService($service);
