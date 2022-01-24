@@ -18,10 +18,10 @@
         <div class="col-md-12 p-0">
             <div class="container-fluid image-home-admin text-center">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                   <div id="welcome"><h3>Bienvenido {{ app.user.name }}  {{ app.user.lastname }}</h3></div>
-                    {% if is_granted('ROLE_USER') %}
-{#                        <a href="{{ path('front.client') }}"><button class="btn btn-primary" style="background:#EABE3F;color: black;border-radius: 30px">#}
-{#                                Informe de peticiones</button></a>#}
+                   <div id="welcome"></div>
+                    {% if app.user.type =='client' %}
+                        <a href="{{ path('front.client',{ 'id': app.user.id }) }}" id="btn-informe-client">INFORME</a>
+                        <a href="{{ path('front.client.request') }}" id="btn-request-client">PETICIONES</a>
                     {% endif %}
                 {% endif %}
             </div>

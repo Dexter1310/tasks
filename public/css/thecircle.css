@@ -84,7 +84,8 @@
 
 .thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,
 .thecircle .btn-view-task, .thecircle #btn-edit-task, .thecircle #request-admin button,
-.thecircle #new-multi-task button,.thecircle #new-user button {
+.thecircle #new-multi-task button,.thecircle #new-user button,.thecircle #btn-informe-client,
+.thecircle #btn-request-client{
     background: #E5A65E;
     border-radius: 0;
     border: 0;
@@ -93,13 +94,15 @@
 
 .thecircle .user-admin-index a b, .thecircle #new-service span a b,
 .thecircle .task-admin-index a, .thecircle #request-admin button,
-.thecircle #new-multi-task button,.thecircle #new-user button{
+.thecircle #new-multi-task button,.thecircle #new-user button,
+.thecircle #btn-informe-client,.thecircle #btn-request-client{
     background: #E5A65E;
     padding: 10px;
     font-weight: 300;
 }
 
-.thecircle #request-admin button, .thecircle #new-multi-task button,.thecircle #new-user button {
+.thecircle #request-admin button, .thecircle #new-multi-task button,
+.thecircle #new-user button,.thecircle #btn-request-client,.thecircle #btn-informe-client {
     width: 50%;
     /*float: left;*/
 }
@@ -129,6 +132,25 @@
 .thecircle .task-admin-index a:hover {
     background: #cc9900;
 }
+.thecircle #btn-request-client{
+    top:500px;
+    position: absolute;
+    right: 25%;
+    text-decoration: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    box-shadow: 0px 10px 10px -6px black;
+}
+.thecircle #btn-informe-client{
+    top:600px;
+    position: absolute;
+    right: 25%;
+    text-decoration: none;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    box-shadow: 0px 10px 10px -6px black;
+
+}
 
 
 .thecircle #btn-request-send, .thecircle #btn-edit-task {
@@ -141,7 +163,7 @@
 
 .thecircle .task-admin-index h1, .thecircle #new-multi-task h1, .thecircle .content-client h2,
 .thecircle #front-show-user h1, .thecircle #request-admin h1, .thecircle #new-service h1,
-.thecircle .user-admin-index h1, .thecircle #new-user h1 {
+.thecircle .user-admin-index h1, .thecircle #new-user h1,.thecircle #btn-informe-client,.thecircle #btn-request-client {
     color: white;
 }
 
