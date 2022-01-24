@@ -31,12 +31,15 @@ class ServiceController extends AbstractController
      */
     public function serviceAction(Request $request, DataTableFactory $dataTableFactory)
     {
-        $table = $dataTableFactory->create()
-            ->add('company', TextColumn::class, ['label' => 'Empresa', 'render' => function ($value, $context) {
+        $table = $dataTableFactory->create();
+        if ($this->getUser()->getType() == 'super'){
+            $table->add('company', TextColumn::class, ['label' => 'Empresa', 'render' => function ($value, $context) {
                 $company = ' <img style="float: right;" src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"> ' . '<small >' . $context->getCompany()->getName() . '</small>';
                 return $company;
-            }])
-            ->add('name', TextColumn::class, ['label' => 'Servicio', 'className' => 'bold'])
+            }]);
+            }
+
+            $table->add('name', TextColumn::class, ['label' => 'Servicio', 'className' => 'bold'])
             ->add('active', TextColumn::class, ['label' => 'Estado', 'render' => function ($value, $context) {
                 $id = $context->getId();
                 if ($context->getActive() == 1) {
