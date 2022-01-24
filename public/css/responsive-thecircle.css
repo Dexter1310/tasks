@@ -1,7 +1,8 @@
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width:600px) {
-    .thecircle .image-home-admin{
-        background-size: contain!important;
+
+    .thecircle .image-home-admin {
+        background-size: initial!important;
     }
 
 }
