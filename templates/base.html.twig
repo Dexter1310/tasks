@@ -119,10 +119,11 @@
                             </div>
                             <div class="nav-item nav-link" style=" margin-left: auto;">
                                 {% if is_granted('ROLE_OPERATOR') %}
-                                    <a href="{{ path('admin.task') }}" style="color:red;margin-right: 10px;">
+                                    <a href="{{ path('admin.task') }}" style="color:red;margin-right: 10px;text-decoration: none">
                                         {% if pendientes > 0 %}
-                                            <span
-                                                    style="color: #0c0c0c">Tareas pendientes : </span>
+{#                                            <span#}
+{#                                                    style="color: #0c0c0c">Tareas pendientes : </span>#}
+                                            tareas pendientes:
                                             <b> {{ pendientes }} </b>
                                         {% endif %}
                                     </a>
