@@ -20,3 +20,4 @@ $('#table-client').DataTable({
         }
     },
 });
+$('#table-client').removeClass('dataTable');

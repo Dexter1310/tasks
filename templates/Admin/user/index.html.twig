@@ -8,8 +8,8 @@
     {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
         <div class="container-jumbotron user-admin-index">
             <h1>Usuarios
-                <a style="color: #1d2124;float: right" href="{{ path('newuser') }}"
-                   class="nav-item nav-link"><b><i class="bi bi-person-plus-fill"></i></b></a>
+                <span><a style="color: #1d2124;float: right;font-size: 0.5em" href="{{ path('newuser') }}"
+                   class="nav-item nav-link"><b><i class="bi bi-person-plus-fill"></i> NUEVO USUARIO</b></a></span>
             </h1>
             <p id="info-admin"></p>
             <div  id="admin-user" class="table-responsive">Loading...</div>
