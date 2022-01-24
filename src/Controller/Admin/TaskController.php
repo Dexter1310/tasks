@@ -66,7 +66,7 @@ class TaskController extends AbstractController
         $table->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold',
             'render' => function ($value, $context) {
                 if ($context->getCreatedAt()) {
-                    $dayCreated = "<div><scan style='font-size:0.8em'>Fecha: " . date_format($context->getCreatedAt(), 'd-m-Y') . " </scan><br><br><p><b>
+                    $dayCreated = "<div><scan style='font-size:0.8em'>".date_format($context->getCreatedAt(), 'd-m-Y') . " </scan><br><br><p><b>
 " . $context->getTitle() . "</b></p>
 </div>";
                 }

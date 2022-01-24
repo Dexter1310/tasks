@@ -149,3 +149,6 @@
     padding: 10px;
 
 }
+.thecircle .navbar-expand-lg .navbar-nav .nav-link {
+    font-weight: 400;
+}

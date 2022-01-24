@@ -8,6 +8,7 @@
     <section id="new-service">
         <div class="container-jumbotron">
             {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                <h1>Nuevo servicio</h1>
                 {{ form_start(formService,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
                 <div class="row">
                     <div class="form-group col-md-6">
