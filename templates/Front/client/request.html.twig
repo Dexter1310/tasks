@@ -5,24 +5,22 @@
     {% block nav %}
         {{ parent() }}
     {% endblock %}
-    <div class="container-fluid content-client"></div>
-    <div class="container">
-        <div class="text-center mb-5">
-            <h2>Solicitar petición </h2>
+    <div class="container-fluid content-client">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2>Solicitar petición </h2>
 
-            {{ form_start(formRequest,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
-            <div class="row">
-                <div class="form-group col-md-12">
-                    <label></label>
-                    {{ form_widget(formRequest.description,{ 'attr': {'class': 'form-control','placeholder':'Escriba aquí ' ,'rows':6} }) }}
-                    {{ form_errors(formRequest.description) }}
+                {{ form_start(formRequest,{ 'attr': {'enctype': 'multipart/form-data' } }) }}
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <label></label>
+                        {{ form_widget(formRequest.description,{ 'attr': {'class': 'form-control','placeholder':'Escriba aquí ' ,'rows':10} }) }}
+                        {{ form_errors(formRequest.description) }}
+                    </div>
                 </div>
+                <button class="btn btn-dark mt-2" id="btn-request-send">ENVIAR</button>
+                {{ form_end(formRequest) }}
             </div>
-            <button class="btn btn-dark m-5">Enviar</button>
-            {{ form_end(formRequest)  }}
         </div>
-
-
-
     </div>
 {% endblock %}

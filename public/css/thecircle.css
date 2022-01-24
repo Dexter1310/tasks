@@ -3,21 +3,23 @@
 }
 
 /*todo NAV */
-.thecircle .navbar-light .navbar-toggler{
-    background:#f4eae1;
+.thecircle .navbar-light .navbar-toggler {
+    background: #f4eae1;
 }
+
 .thecircle .navbar {
     background-color: black !important;
 }
 
-.thecircle .navbar a {
-    color: grey;
+.thecircle .navbar a, .thecircle .navbar a {
+    color: grey !important;
     font-weight: 100;
     font-size: 1.4em;
 }
 
+
 .thecircle .navbar a:hover {
-    color: white;
+    color: white !important;
     font-weight: bold;
 }
 
@@ -56,47 +58,60 @@
 }
 
 
-.thecircle .dataTables_wrapper .dataTables_filter input,.thecircle .dataTables_length select{
+.thecircle .dataTables_wrapper .dataTables_filter input, .thecircle .dataTables_length select {
     border: 0;
 }
-.thecircle .task-admin-index,.thecircle #new-multi-task,.thecircle #show-task{
+
+.thecircle .task-admin-index, .thecircle #new-multi-task, .thecircle #show-task, .thecircle .content-client {
     position: absolute;
     right: 5%;
     top: 150px;
 }
-.thecircle .task-admin-index a,.thecircle #new-multi-task a{
-background:#E5A65E;
+
+.thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,.thecircle .btn-view-task {
+    background: #E5A65E;
+    border-radius: 0;
+    border:0;
+
 }
-.thecircle .task-admin-index h1,.thecircle #new-multi-task h1{
+.thecircle #btn-request-send:hover{
+    background-color:#cc9900;
+}
+.thecircle #btn-request-send{
+    width: 100%;
+}
+.thecircle .content-client textarea{
+    border:0;
+}
+
+.thecircle .task-admin-index h1, .thecircle #new-multi-task h1, .thecircle .content-client h2 {
     color: white;
-
 }
 
 
-
-
-
-#block-grey{
+#block-grey {
     height: 250px;
-    background:darkgrey;
+    background: darkgrey;
     position: relative;
     opacity: 0.5;
 }
 
 
 /*TODO: table*/
-.thecircle table i{
+.thecircle table i {
     font-size: 1.4em;
 }
 
-.thecircle  td, .thecircle  th,.thecircle .d-md-block{
+.thecircle td, .thecircle th, .thecircle .d-md-block {
     background: #f4eae1;
 
 }
-.thecircle thead,.thecircle  td{
-    border-color:#f4eae1;
+
+.thecircle thead, .thecircle td {
+    border-color: #f4eae1;
 }
-.thecircle table tr{
+
+.thecircle table tr {
 
     line-height: 1;
     padding: 10px;

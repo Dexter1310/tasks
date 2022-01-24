@@ -11,7 +11,7 @@
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
         {% if app.user.type!='super' %}
-        {% if(app.user.company.id == 1 ) %}
+        {% if(app.user.company.id == 2 ) %}
             {% set style='thecircle' %}
         {% endif %}
     {% endif %}
