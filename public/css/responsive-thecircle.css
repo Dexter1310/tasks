@@ -5,10 +5,10 @@
         background-size: initial !important;
     }
 
-    .thecircle #request-admin button, .thecircle #new-multi-task button {
+    .thecircle #request-admin button, .thecircle #new-multi-task button,.thecircle #new-user button  {
         width: 100% !important;
         margin-top: 10px;
-        float: inherit;
+        /*float: inherit;*/
     }
 
 

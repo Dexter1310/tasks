@@ -84,7 +84,7 @@
 
 .thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,
 .thecircle .btn-view-task, .thecircle #btn-edit-task, .thecircle #request-admin button,
-.thecircle #new-multi-task button {
+.thecircle #new-multi-task button,.thecircle #new-user button {
     background: #E5A65E;
     border-radius: 0;
     border: 0;
@@ -92,17 +92,20 @@
 }
 
 .thecircle .user-admin-index a b, .thecircle #new-service span a b,
-.thecircle .task-admin-index a, .thecircle #request-admin button, .thecircle #new-multi-task button {
+.thecircle .task-admin-index a, .thecircle #request-admin button,
+.thecircle #new-multi-task button,.thecircle #new-user button{
     background: #E5A65E;
     padding: 10px;
     font-weight: 300;
 }
 
-.thecircle #request-admin button, .thecircle #new-multi-task button {
+.thecircle #request-admin button, .thecircle #new-multi-task button,.thecircle #new-user button {
     width: 50%;
-    float: left;
+    /*float: left;*/
 }
-
+.thecircle #new-user button:hover{
+    background-color: #cc9900;
+}
 .thecircle #request-admin button:hover {
     background-color: #cc9900;
 }

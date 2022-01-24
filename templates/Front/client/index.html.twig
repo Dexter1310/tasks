@@ -10,49 +10,51 @@
             <div class="text-center mb-5">
                 <h2>Informe sobre peticiones </h2>
             </div>
-            <table id="table-client" class="table-responsive table">
-                <thead>
-                <th>Tarea</th>
-                <th>Descripción</th>
-                <th>Detalles</th>
-                </thead>
-                <tbody>
-                {% for task in task %}
-                    <tr class="tr-client">
-                        <td class="title-task-client">{{ task.title }}
-                        </td>
-                        <td class="description-task-client">{{ task.description }}</td>
+            <div class="pt-5">
+                <table id="table-client" class="table-responsive table ">
+                    <thead>
+                    <th>Tarea</th>
+                    <th>Descripción</th>
+                    <th>Detalles</th>
+                    </thead>
+                    <tbody>
+                    {% for task in task %}
+                        <tr class="tr-client">
+                            <td class="title-task-client">{{ task.title }}
+                            </td>
+                            <td class="description-task-client">{{ task.description }}</td>
 
-                        <td colspan="4" class="show-info-task-client">
-                            <button class="btn btn-primary btn-view-task">Ver más</button>
-                            <div class="container-fluid" style="background:papayawhip;">
-                                <table class="table info-task-client" style="display: none;">
-                                    <thead>
-                                    <th>Servicio</th>
-                                    <th>Imágenes</th>
-                                    <th>Descripción</th>
-                                    <th>Materiales</th>
-                                    <th>Fecha actualizada</th>
-                                    </thead>
-                                    <tbody>
-                                    <td>{{ task.service.name }}</td>
-                                    <td>
-                                        {% if task.imgTask %}
-                                            <img class="img-responsive imgTask1"
-                                                 src="/uploads/images/{{ task.imgTask }}" width="50">
-                                        {% endif %}
-                                    </td>
-                                    <td>{{ task.description }}</td>
-                                    <td>{{ task.material }}</td>
-                                    <td>{{ task.updatedAt |date("d-m-Y  (H:i)") }}</td>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                            <td colspan="4" class="show-info-task-client">
+                                <button class="btn btn-primary btn-view-task">Ver más</button>
+                                <div class="container-fluid" style="background:papayawhip;">
+                                    <table class="table info-task-client" style="display: none;">
+                                        <thead>
+                                        <th>Servicio</th>
+                                        <th>Imágenes</th>
+                                        <th>Descripción</th>
+                                        <th>Materiales</th>
+                                        <th>Fecha actualizada</th>
+                                        </thead>
+                                        <tbody>
+                                        <td>{{ task.service.name }}</td>
+                                        <td>
+                                            {% if task.imgTask %}
+                                                <img class="img-responsive imgTask1"
+                                                     src="/uploads/images/{{ task.imgTask }}" width="50">
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ task.description }}</td>
+                                        <td>{{ task.material }}</td>
+                                        <td>{{ task.updatedAt |date("d-m-Y  (H:i)") }}</td>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     <script src="{{ asset('js/datatable.js') }}"></script>

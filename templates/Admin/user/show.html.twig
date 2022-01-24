@@ -5,53 +5,53 @@
         {{ parent() }}
     {% endblock %}
     <div class="container-jumbotron" id="front-show-user">
-        <div class="row">
-            <div class="col-md-6"><h1>Información del usuario </h1></div>
-            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
-                <div class="col-md-6"><a  href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado
-                            de Usuarios</b></a></div>
-            {% endif %}
-        </div>
-        <br>
-        <div class="row mt-5">
-            <div class="col-md-2">
-                <b>Usuario: </b><span>{{ user.username }} <small>({{ user.name }} {{ user.lastname }})</small></span>
-            </div>
-            <div class="col-md-2">
-                <b>Email: </b> <span>{{ user.email }}</span>
-            </div>
-            <div class="col-md-2">
-                <b>Tipo de usuario: </b> <span>{{ user.type }}</span>
-            </div>
-            <div class="col-md-3">
-                {% if user.service %}
-                    <b>Especialidad: </b> <span>{{ user.service.name }}</span>
-                {% else %}
-                    <b>Especialidad: </b> <span>Sin especificar</span>
+
+        {% if user.type!= 'client' %}
+            <div class="row">
+                <div class="col-md-6"><h1>Información del usuario </h1></div>
+                {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
+                    <div class="col-md-6"><a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>Listado
+                                de Usuarios</b></a></div>
                 {% endif %}
             </div>
-
-            <div class="col-md-3 text-center">
-                {% if not is_granted('ROLE_OPERATOR') %}
-                    {% if  user.type == 'operator' %}
-{#                        <br>#}
-{#                        <a href="#" style="float: right">#}
-{#                            <button class="btn btn-dark" id="btn-task-admin">Tarea rápida</button>#}
-{#                        </a>#}
+            <br>
+            <div class="row mt-5">
+                <div class="col-md-2">
+                    <b>Usuario: </b><span>{{ user.username }} <small>({{ user.name }} {{ user.lastname }})</small></span>
+                </div>
+                <div class="col-md-2">
+                    <b>Email: </b> <span>{{ user.email }}</span>
+                </div>
+                <div class="col-md-2">
+                    <b>Tipo de usuario: </b> <span>{{ user.type }}</span>
+                </div>
+                <div class="col-md-3">
+                    {% if user.service %}
+                        <b>Especialidad: </b> <span>{{ user.service.name }}</span>
+                    {% else %}
+                        <b>Especialidad: </b> <span>Sin especificar</span>
                     {% endif %}
-                {% endif %}
+                </div>
+
+                <div class="col-md-3 text-center">
+                    {% if not is_granted('ROLE_OPERATOR') %}
+                        {% if  user.type == 'operator' %}
+                            {#                        <br> #}
+                            {#                        <a href="#" style="float: right"> #}
+                            {#                            <button class="btn btn-dark" id="btn-task-admin">Tarea rápida</button> #}
+                            {#                        </a> #}
+                        {% endif %}
+                    {% endif %}
+                </div>
             </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <label> <b>Información sobre {{ user.name }} {{ user.lastname }} :</b></label>
-                <p style="color:blue">{{ user.information }}</p>
+            <div class="row">
+                <div class="col-md-12">
+                    <label> <b>Información sobre {{ user.name }} {{ user.lastname }} :</b></label>
+                    <p style="color:blue">{{ user.information }}</p>
+                </div>
             </div>
-        </div>
-
-        <hr>
-
+            <hr>
+        {% endif %}
         {#        <div class="row"> #}
         {#            <h3>Tareas pendientes </h3> #}
         {#            <div class="col-md-12 mt-2"> #}
@@ -104,60 +104,59 @@
 
 
         {% if user.type == 'operator' %}
-{#            <div id="newTask">#}
-{#                <h4>Nueva actividad para {{ user.name }} {{ user.lastname }}</h4>#}
-{#                {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }}#}
-{#                <div class="row">#}
-{#                    <input name="user" type="hidden" value="{{ user.id }}">#}
-{#                    <div class="form-group col-md-4">#}
-{#                        <label>Título:</label>#}
-{#                        {{ form_widget(formTask.title,{ 'attr': {'class': 'form-control','placeholder':'titulo' } }) }}#}
-{#                        {{ form_errors(formTask.title) }}#}
-{#                    </div>#}
-{#                    <div class="form-group col-md-4">#}
-{#                        <label>Servicio:</label>#}
-{#                        <select name="service" class="form-select">#}
-{#                            <option value="" disabled selected>SELECCIONA UN SERVICIO</option>#}
-{#                            {% for service in services %}#}
-{#                                <option value="{{ service.id }}">{{ service.name|e }}</option>#}
-{#                            {% endfor %}#}
-{#                        </select>#}
-{#                    </div>#}
-{#                    <div class="form-group col-md-4">#}
-{#                        <label>Estado:</label>#}
-{#                        {{ form_widget(formTask.state,{ 'attr': {'class': 'form-select','placeholder':'titulo' } }) }}#}
-{#                        {{ form_errors(formTask.state) }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="row">#}
-{#                    <div class="form-group col-md-6">#}
-{#                        <label>Descripción de la tarea:</label>#}
-{#                        {{ form_widget(formTask.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción de la tarea' } }) }}#}
-{#                        {{ form_errors(formTask.description) }}#}
-{#                    </div>#}
-{#                    <div class="form-group col-md-6">#}
-{#                        <label>Material utilizado:</label>#}
-{#                        {{ form_widget(formTask.material,{ 'attr': {'class': 'form-control','placeholder':'Material utilizado' } }) }}#}
-{#                        {{ form_errors(formTask.material) }}#}
-{#                    </div>#}
-{#                </div>#}
-{#                <div class="form-group col-md-3 col-sm-12">#}
-{#                        {{ form_row(formTask.imgTask,{'attr':{'class':'form-control ', }}) }}#}
-{#                        {{ form_errors(formTask.imgTask) }}#}
-{#                </div>#}
-{#                #}
-{#                <div id="info-task"></div>#}
-{#                <div class="form-group col-md-12 mt-2 text-center">#}
-{#                    <button class="btn btn-dark btn-lg" type="submit">Enviar</button>#}
-{#                </div>#}
-{#                {{ form_end(formTask) }}#}
-{#            </div>#}
-{#            <br>#}
+            {#            <div id="newTask"> #}
+            {#                <h4>Nueva actividad para {{ user.name }} {{ user.lastname }}</h4> #}
+            {#                {{ form_start(formTask,{ 'attr': {'enctype': 'multipart/form-data'},'name':'newTask'}) }} #}
+            {#                <div class="row"> #}
+            {#                    <input name="user" type="hidden" value="{{ user.id }}"> #}
+            {#                    <div class="form-group col-md-4"> #}
+            {#                        <label>Título:</label> #}
+            {#                        {{ form_widget(formTask.title,{ 'attr': {'class': 'form-control','placeholder':'titulo' } }) }} #}
+            {#                        {{ form_errors(formTask.title) }} #}
+            {#                    </div> #}
+            {#                    <div class="form-group col-md-4"> #}
+            {#                        <label>Servicio:</label> #}
+            {#                        <select name="service" class="form-select"> #}
+            {#                            <option value="" disabled selected>SELECCIONA UN SERVICIO</option> #}
+            {#                            {% for service in services %} #}
+            {#                                <option value="{{ service.id }}">{{ service.name|e }}</option> #}
+            {#                            {% endfor %} #}
+            {#                        </select> #}
+            {#                    </div> #}
+            {#                    <div class="form-group col-md-4"> #}
+            {#                        <label>Estado:</label> #}
+            {#                        {{ form_widget(formTask.state,{ 'attr': {'class': 'form-select','placeholder':'titulo' } }) }} #}
+            {#                        {{ form_errors(formTask.state) }} #}
+            {#                    </div> #}
+            {#                </div> #}
+            {#                <div class="row"> #}
+            {#                    <div class="form-group col-md-6"> #}
+            {#                        <label>Descripción de la tarea:</label> #}
+            {#                        {{ form_widget(formTask.description,{ 'attr': {'class': 'form-control','placeholder':'Descripción de la tarea' } }) }} #}
+            {#                        {{ form_errors(formTask.description) }} #}
+            {#                    </div> #}
+            {#                    <div class="form-group col-md-6"> #}
+            {#                        <label>Material utilizado:</label> #}
+            {#                        {{ form_widget(formTask.material,{ 'attr': {'class': 'form-control','placeholder':'Material utilizado' } }) }} #}
+            {#                        {{ form_errors(formTask.material) }} #}
+            {#                    </div> #}
+            {#                </div> #}
+            {#                <div class="form-group col-md-3 col-sm-12"> #}
+            {#                        {{ form_row(formTask.imgTask,{'attr':{'class':'form-control ', }}) }} #}
+            {#                        {{ form_errors(formTask.imgTask) }} #}
+            {#                </div> #}
+            {#                #}
+            {#                <div id="info-task"></div> #}
+            {#                <div class="form-group col-md-12 mt-2 text-center"> #}
+            {#                    <button class="btn btn-dark btn-lg" type="submit">Enviar</button> #}
+            {#                </div> #}
+            {#                {{ form_end(formTask) }} #}
+            {#            </div> #}
+            {#            <br> #}
         {% endif %}
 
         {% if user.type == 'client' %}
             {% if client %}
-
                 {{ include('Admin/user/showClient.html.twig') }}
             {% endif %}
         {% endif %}
