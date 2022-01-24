@@ -47,9 +47,9 @@ class UserController extends AbstractController
      */
     public function userAction(Request $request, DataTableFactory $dataTableFactory, UserRepository $userRepository)
     {
-        $table = $dataTableFactory->create()
-
-            ->add('logo', TextColumn::class, ['label' => 'Empresa','className' => 'd-none d-xl-block',
+        $table = $dataTableFactory->create();
+        if ($this->getUser()->getType() == 'super') {
+            $table->add('logo', TextColumn::class, ['label' => 'Empresa', 'className' => 'd-none d-xl-block',
                 'render' => function ($value, $context) {
                     if ($context->getCompany()) {
                         $company = ' <div class="text-center"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"></div> ';
@@ -58,19 +58,23 @@ class UserController extends AbstractController
                     }
                     return $company;
                 }
-            ])->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
-                /**
-                 * @var User $context
-                 * Todo : defined service user if exist operator
-                 */
-                $type = $context->getType();
-                if ($context->getService()) {
-                    $especialized = "<i> (" . $context->getService()->getName() . ")</i>";
-                } else {
-                    $especialized = "";
-                }
-                return sprintf($type . $especialized);
-            }])
+            ]);
+        }
+
+        $table->add('type', TextColumn::class, ['label' => 'Usuario', 'orderable' => false, 'render' => function ($value, $context) {
+            /**
+             * @var User $context
+             * Todo : defined service user if exist operator
+             */
+            $us= '<span style="color:green;">'.$context->getName().' '.$context->getLastname().'</span><br><br>';
+            $type = $context->getType();
+            if ($context->getService()) {
+                $especialized = "<i style='font-size: 0.8em'> (" . $context->getService()->getName() . ")</i>";
+            } else {
+                $especialized = "";
+            }
+            return sprintf($us.$type . $especialized);
+        }])
             ->add('email', TextColumn::class, ['label' => 'E-mail', 'className' => 'email-user', 'orderable' => false, 'render' => function ($value, $context) {
                     return sprintf('
                     <a href="mailto:' . $context->getEmail() . '">' . $context->getEmail() . '</a>
@@ -230,7 +234,7 @@ class UserController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $data = $request->request;
         $user = $userService->userShow($data->get('id'));
-        $pass=$user->getPassword();
+        $pass = $user->getPassword();
 
         $service = $em->getRepository(Service::class)->findOneBy(['id' => $data->get('specialized')]);
         $form = $this->createForm(UserType::class, $user);
@@ -245,7 +249,7 @@ class UserController extends AbstractController
                     $user->setCompany($company);
                 }
             }
-            $userService->updateUser($user,$pass);
+            $userService->updateUser($user, $pass);
 
             return $this->json("Se actualizo ");
         } else {

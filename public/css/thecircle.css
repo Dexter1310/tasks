@@ -62,13 +62,20 @@
     border: 0;
 }
 
-.thecircle .task-admin-index, .thecircle #new-multi-task, .thecircle #show-task, .thecircle .content-client {
+.thecircle .task-admin-index, .thecircle #new-multi-task,
+.thecircle #show-task, .thecircle .content-client,.thecircle #new-service,.thecircle .user-admin-index {
     position: absolute;
     right: 5%;
     top: 150px;
 }
+.thecircle #front-show-user,.thecircle #request-admin{
+    top: 200px;
+    position: absolute;
+    right: 5%;
+}
 
-.thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,.thecircle .btn-view-task ,.thecircle #btn-edit-task{
+.thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,
+.thecircle .btn-view-task ,.thecircle #btn-edit-task{
     background: #E5A65E;
     border-radius: 0;
     border:0;
@@ -87,7 +94,8 @@
     border:0;
 }
 
-.thecircle .task-admin-index h1, .thecircle #new-multi-task h1, .thecircle .content-client h2 {
+.thecircle .task-admin-index h1, .thecircle #new-multi-task h1, .thecircle .content-client h2 ,
+.thecircle #front-show-user h3,.thecircle #request-admin h3,.thecircle #new-service h1,.thecircle .user-admin-index h1{
     color: white;
 }
 
