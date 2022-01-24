@@ -47,8 +47,9 @@ class TaskController extends AbstractController
     public function taskAction(Request $request, DataTableFactory $dataTableFactory, UserService $userService)
     {
 
-        $table = $dataTableFactory->create()
-            ->add('company', TextColumn::class, ['label' => 'Home', 'render' => function ($valus, $context) {
+        $table = $dataTableFactory->create();
+        if ($this->getUser()->getType() == 'super') {
+            $table->add('company', TextColumn::class, ['label' => 'Home', 'render' => function ($valus, $context) {
                 $periodic = "";
                 if ($context->getPeriodic()) {
                     $periodic = '<i class="bi bi-file-ppt"></i>';
@@ -59,11 +60,15 @@ class TaskController extends AbstractController
                     $company = null . $periodic;
                 }
                 return $company;
-            }])
-            ->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold'])
-            ->add('created_at', TextColumn::class, ['label' => 'Creada', 'render' => function ($value, $context) {
+            }]);
+        }
+
+        $table->add('title', TextColumn::class, ['label' => 'Titulo', 'className' => 'bold',
+            'render' => function ($value, $context) {
                 if ($context->getCreatedAt()) {
-                    $dayCreated = date_format($context->getCreatedAt(), 'd-m-Y');
+                    $dayCreated = "<div><scan style='font-size:0.8em'>Fecha: " . date_format($context->getCreatedAt(), 'd-m-Y') . " </scan><br><br><p><b>
+" . $context->getTitle() . "</b></p>
+</div>";
                 }
                 return $dayCreated;
             }])
@@ -75,9 +80,9 @@ class TaskController extends AbstractController
                 }
                 return sprintf($nameService);
             }])
-            ->add('imgTask', TextColumn::class, ['label' => 'Imagen', 'render' => function ($value, $context) {
+            ->add('imgTask', TextColumn::class, ['label' => 'Imagen', 'className' => 'd-none d-xl-block', 'render' => function ($value, $context) {
                 if ($context->getImgTask()) {
-                    $nameImage='<img  width=75 src="/uploads/images/' .$context->getImgTask(). '">';
+                    $nameImage = '<img  width=75 src="/uploads/images/' . $context->getImgTask() . '">';
                 } else {
                     $nameImage = '';
                 }
@@ -384,15 +389,15 @@ class TaskController extends AbstractController
         $task->setDescription($data->get('description'));
         $task->setMaterial($data->get('material'));
 
-        if($request->files->get('imgTask')) {
-            if ($_FILES["imgTask"]['name'] ) {  //TODO IMAGE TASK UPDATE
-                    $taskService->setTargetDirectory('uploads/images');
-                    $nameImdage = $taskService->upload($request->files->get('imgTask')[0]);
-                    $task->setImgTask($nameImdage);
-                }
+        if ($request->files->get('imgTask')) {
+            if ($_FILES["imgTask"]['name']) {  //TODO IMAGE TASK UPDATE
+                $taskService->setTargetDirectory('uploads/images');
+                $nameImdage = $taskService->upload($request->files->get('imgTask')[0]);
+                $task->setImgTask($nameImdage);
             }
+        }
 
-        if( $data->get('imgDelete') == 'delete'){
+        if ($data->get('imgDelete') == 'delete') {
             $taskService->checkFile('../public/uploads/images/', $task->getImgTask());
             if ($data->get('imgDelete') == 'delete') {
                 $task->setImgTask(null);

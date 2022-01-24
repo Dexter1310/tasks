@@ -68,7 +68,7 @@
     top: 150px;
 }
 
-.thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,.thecircle .btn-view-task {
+.thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,.thecircle .btn-view-task ,.thecircle #btn-edit-task{
     background: #E5A65E;
     border-radius: 0;
     border:0;
@@ -77,7 +77,10 @@
 .thecircle #btn-request-send:hover{
     background-color:#cc9900;
 }
-.thecircle #btn-request-send{
+.thecircle #btn-edit-task:hover{
+    background-color:#cc9900;
+}
+.thecircle #btn-request-send,.thecircle #btn-edit-task{
     width: 100%;
 }
 .thecircle .content-client textarea{
@@ -109,6 +112,9 @@
 
 .thecircle thead, .thecircle td {
     border-color: #f4eae1;
+}
+.thecircle .dataTable tbody tr{
+    background-color: #f4eae1!important;
 }
 
 .thecircle table tr {
