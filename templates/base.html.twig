@@ -6,17 +6,32 @@
     <meta name="description" content="">
     <meta name="author" content="Javier Ortí">
     <title>{% block title %}Welcome!{% endblock %}</title>
+
+    {% set style='default' %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        {% if app.user.type!='super' %}
+        {% if(app.user.company.id == 2 ) %}
+            {% set style='thecircle' %}
+        {% endif %}
+    {% endif %}
+
+    {% endif %}
     {% block stylesheets %}
+
         <!-- Bootstrap core CSS -->
         <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
         <link href="{{ asset('css/main.css') }}" rel="stylesheet">
         <link href="{{ asset('css/responsive.css') }}" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.6.1/font/bootstrap-icons.css">
         <link href="{{ asset('css/datatables.min.css') }}" rel="stylesheet">
+        {% if(style=='thecircle') %}
+            <link href="{{ asset('css/responsive-thecircle.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/thecircle.css') }}" rel="stylesheet">
+        {% endif %}
         <!-- in the <head> section -->
     {% endblock %}
     {% block javascripts %}
-
         <script src="{{ asset('js/bootstrap.js') }}"></script>
         <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
         <script src="{{ asset('js/jquery.js') }}"></script>
@@ -25,10 +40,11 @@
         <script src="{{ asset('js/gestio.js') }}"></script>
         <script src="{{ asset('bundles/fosjsrouting/js/router.min.js') }}"></script>
         <script src="{{ path('fos_js_routing_js', { callback: 'fos.Router.setData' }) }}"></script>
-
     {% endblock %}
 </head>
-<body>
+
+
+<body class="{{ style }}">
 {% block body %}
     {% block nav %}
         <div>
@@ -78,7 +94,7 @@
                             {% endif %}
                             {% if is_granted('ROLE_ADMIN') or  is_granted('ROLE_SUPER_ADMIN') %}
                                 <div class="nav-item nav-link">
-                                    <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b>USUARIOS</b></a>
+                                    <a href="{{ path('admin.user') }}" class="nav-item nav-link"><b><i class="bi bi-person"></i> USUARIOS</b></a>
                                 </div>
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('service') }}"
@@ -88,11 +104,11 @@
                             {% if app.user.type!='client' %}
                                 <div class="nav-item nav-link">
                                     <a href="{{ path('admin.task') }}"
-                                       class="nav-item nav-link"><b>TAREAS</b></a>
+                                       class="nav-item nav-link"><b><i class="bi bi-tools"></i> TAREAS</b></a>
                                 </div>
                             {% endif %}
-                        {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
-                                  <div class="nav-item nav-link">
+                            {% if is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') %}
+                                <div class="nav-item nav-link">
                                     <a href="{{ path('admin.request') }}"
                                        class="nav-item nav-link"><b>PETICIONES</b></a>
                                 </div>
@@ -114,7 +130,7 @@
                                 <a href="/logout" title="Salir" style="color: red">
                                     <button
                                             class="btn btn-outline-danger " style="border: 0">
-                                        <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> <b>SALIR</b>
+                                        <i class="bi bi-box-arrow-left" style="font-size: 0.7em;"></i> <b>SALIR{{ app.user.company.id }}</b>
                                     </button>
 
                                 </a>
@@ -131,6 +147,10 @@
                 </div>
             </nav>
         </div>
+        {% if  app.request.pathinfo !='/' %}
+            <div id="block-grey">  {{ app.request.pathinfo }}</div>
+        {% endif %}
+
     {% endblock %}
 {% endblock %}
 </body>

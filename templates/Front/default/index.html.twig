@@ -16,9 +16,9 @@
 {#            </div>#}
 {#        </div>#}
         <div class="col-md-12">
-            <div class="image-home-admin text-center">
+            <div class="container-fluid image-home-admin text-center">
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                    <h3>Bienvenido {{ app.user.name }}  {{ app.user.lastname }}</h3>
+                   <div id="welcome"><h3>Bienvenido {{ app.user.name }}  {{ app.user.lastname }}</h3></div>
                     {% if is_granted('ROLE_USER') %}
 {#                        <a href="{{ path('front.client') }}"><button class="btn btn-primary" style="background:#EABE3F;color: black;border-radius: 30px">#}
 {#                                Informe de peticiones</button></a>#}

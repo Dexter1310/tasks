@@ -88,7 +88,7 @@ class TaskController extends AbstractController
                 if ($user) {
                     $nameUser = [];
                     foreach ($user as $us) {
-                        $name = '<a style="color:green;" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getName() . '  ' . $us->getLastName() . '</span></a>';
+                        $name = '<a style="color:green;background:transparent" href="/admin-user-show/' . $us->getId() . '" title="visualiza"><span>' . $us->getName() . '  ' . $us->getLastName() . '</span></a>';
                         array_push($nameUser, $name . "</br>");
                     }
                 } else {
@@ -210,7 +210,6 @@ class TaskController extends AbstractController
         $operator = $data->get('operator');
         $task = new Task();
         if (is_array($operator)) { //when is many opoerator task
-//            dump($operator);die();
             foreach ($operator as $oper) {
                 $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(['id' => $oper]);
                 $task->addIduser($user);

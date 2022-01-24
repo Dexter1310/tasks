@@ -48,7 +48,8 @@ class UserController extends AbstractController
     public function userAction(Request $request, DataTableFactory $dataTableFactory, UserRepository $userRepository)
     {
         $table = $dataTableFactory->create()
-            ->add('logo', TextColumn::class, ['label' => 'Empresa',
+
+            ->add('logo', TextColumn::class, ['label' => 'Empresa','className' => 'd-none d-xl-block',
                 'render' => function ($value, $context) {
                     if ($context->getCompany()) {
                         $company = ' <div class="text-center"><img  src="' . $context->getCompany()->getLogo() . '" height="28" alt="CoolBrand"></div> ';
@@ -57,8 +58,7 @@ class UserController extends AbstractController
                     }
                     return $company;
                 }
-            ])
-            ->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
+            ])->add('type', TextColumn::class, ['label' => 'Tipo', 'orderable' => false, 'render' => function ($value, $context) {
                 /**
                  * @var User $context
                  * Todo : defined service user if exist operator
