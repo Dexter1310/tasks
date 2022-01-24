@@ -1,19 +1,29 @@
 /* Extra small devices (phones, 600px and down) */
-@media only screen and (max-width:600px) {
+@media only screen and (max-width: 600px) {
 
     .thecircle .image-home-admin {
-        background-size: initial!important;
+        background-size: initial !important;
     }
+
+    .thecircle #request-admin button, .thecircle #new-multi-task button {
+        width: 100% !important;
+        margin-top: 10px;
+        float: inherit;
+    }
+
 
 }
 
 
 /* Medium devices (landscape tablets, 768px and up) */
-@media only screen and (min-width:321px) and (max-width:768px) {}
+@media only screen and (min-width: 321px) and (max-width: 768px) {
+}
 
 /* Large devices (laptops/desktops, 992px and up) */
-@media only screen and (min-width: 992px) {}
+@media only screen and (min-width: 992px) {
+}
 
 /* Extra large devices (large laptops and desktops, 1200px and up) */
-@media only screen and (min-width: 1200px) {}
+@media only screen and (min-width: 1200px) {
+}
 

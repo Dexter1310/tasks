@@ -3,6 +3,17 @@
 }
 
 /*todo NAV */
+
+
+.thecircle .navbar-light .navbar-toggler {
+    background: transparent !important;
+}
+
+.navbar-toggler-icon {
+    font-size: 1.4em;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(255,255,255, 1)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E") !important;
+}
+
 .thecircle .navbar-light .navbar-toggler {
     background: #f4eae1;
 }
@@ -72,34 +83,49 @@
 
 
 .thecircle .task-admin-index a, .thecircle #new-multi-task a, .thecircle #btn-request-send,
-.thecircle .btn-view-task, .thecircle #btn-edit-task {
+.thecircle .btn-view-task, .thecircle #btn-edit-task, .thecircle #request-admin button,
+.thecircle #new-multi-task button {
     background: #E5A65E;
     border-radius: 0;
     border: 0;
 
 }
 
-.thecircle .user-admin-index a b, .thecircle #new-service span a b,.thecircle .task-admin-index  a {
+.thecircle .user-admin-index a b, .thecircle #new-service span a b,
+.thecircle .task-admin-index a, .thecircle #request-admin button, .thecircle #new-multi-task button {
     background: #E5A65E;
     padding: 10px;
     font-weight: 300;
+}
+
+.thecircle #request-admin button, .thecircle #new-multi-task button {
+    width: 50%;
+    float: left;
+}
+
+.thecircle #request-admin button:hover {
+    background-color: #cc9900;
+}
+
+.thecircle #new-multi-task button:hover {
+    background-color: #cc9900;
 }
 
 .thecircle .user-admin-index a b:hover {
     background-color: #cc9900;
 }
 
-.thecircle  #new-service span a b:hover {
+.thecircle #new-service span a b:hover {
     background-color: #cc9900;
 }
 
 .thecircle #btn-request-send:hover {
     background-color: #cc9900;
 }
-.thecircle .task-admin-index  a:hover{
+
+.thecircle .task-admin-index a:hover {
     background: #cc9900;
 }
-
 
 
 .thecircle #btn-request-send, .thecircle #btn-edit-task {
@@ -149,6 +175,9 @@
     padding: 10px;
 
 }
+
 .thecircle .navbar-expand-lg .navbar-nav .nav-link {
     font-weight: 400;
 }
+
+
