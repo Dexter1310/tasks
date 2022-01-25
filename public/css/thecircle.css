@@ -133,7 +133,7 @@
     background: #cc9900;
 }
 .thecircle #btn-request-client{
-    top:500px;
+    top:400px;
     position: absolute;
     right: 25%;
     text-decoration: none;
@@ -142,7 +142,7 @@
     box-shadow: 0px 10px 10px -6px black;
 }
 .thecircle #btn-informe-client{
-    top:600px;
+    top:500px;
     position: absolute;
     right: 25%;
     text-decoration: none;
