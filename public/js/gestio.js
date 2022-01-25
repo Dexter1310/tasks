@@ -264,5 +264,5 @@ function reloadPage(time) {
 
 //Podemos ejecutar la función de este modo
 //La página se actualizará dentro de 10 segundos
-reloadPage(10000);
+reloadPage(100000);
 
