@@ -215,7 +215,7 @@ $(document).ready(function () {
 
     $('.tr-client .show-info-task-client').click(function () {
         $(this).find('table').toggle();
-        $(this).find('table').css({'position':'absolute','left':0,'background':'#F1EECF'});
+        $(this).find('table').css({'position': 'absolute', 'left': 0, 'background': '#F1EECF'});
 
 
     })
@@ -258,10 +258,11 @@ function confirStateService(id) {
 }
 
 
-// function reloadPage(time){
-//     setTimeout("location.reload(true);", time);
-// }
-// //Podemos ejecutar la función de este modo
-// //La página se actualizará dentro de 10 segundos
-// reloadPage(10000);
-//
+function reloadPage(time) {
+    setTimeout("location.reload(true);", time);
+}
+
+//Podemos ejecutar la función de este modo
+//La página se actualizará dentro de 10 segundos
+reloadPage(10000);
+
