@@ -69,6 +69,10 @@
                     <div class="collapse navbar-collapse" id="navbarCollapse">
 
                         {% if is_granted('ROLE_USER') %}
+                            <div class="navbar-nav">
+                                <a href="/" class="nav-item nav-link active"
+                                   title="Inicio">HOME</a>
+                            </div>
                             {% if app.user.type=='client' %}
 
                                 <div class="navbar-nav">
